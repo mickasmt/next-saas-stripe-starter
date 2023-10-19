@@ -11,7 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { UserAvatar } from "@/components/user-avatar"
+import { UserAvatar } from "@/components/shared/user-avatar"
+import { CreditCard, LayoutDashboard, LogOut, Settings } from "lucide-react"
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
   user: Pick<User, "name" | "image" | "email">
@@ -39,13 +40,22 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/dashboard">Dashboard</Link>
+          <Link href="/dashboard" className="flex items-center space-x-2.5">
+            <LayoutDashboard className="h-4 w-4" />
+            <p className="text-sm">Dashboard</p>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/dashboard/billing">Billing</Link>
+          <Link href="/dashboard/billing" className="flex items-center space-x-2.5">
+            <CreditCard className="h-4 w-4" />
+            <p className="text-sm">Billing</p>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/dashboard/settings">Settings</Link>
+          <Link href="/dashboard/settings" className="flex items-center space-x-2.5">
+            <Settings className="h-4 w-4" />
+            <p className="text-sm">Settings</p>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -57,7 +67,10 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
             })
           }}
         >
-          Sign out
+          <div className="flex items-center space-x-2.5">
+            <LogOut className="h-4 w-4" />
+            <p className="text-sm">Log out </p>
+          </div>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

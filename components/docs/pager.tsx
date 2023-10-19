@@ -4,7 +4,7 @@ import { Doc } from "contentlayer/generated"
 import { docsConfig } from "@/config/docs"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
-import { Icons } from "@/components/icons"
+import { Icons } from "@/components/shared/icons"
 
 interface DocsPagerProps {
   doc: Doc

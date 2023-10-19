@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { allAuthors, allPosts } from "contentlayer/generated"
 
-import { Mdx } from "@/components/mdx-components"
+import { Mdx } from "@/components/content/mdx-components"
 
 import "@/styles/mdx.css"
 import { Metadata } from "next"
@@ -11,7 +11,7 @@ import Link from "next/link"
 import { env } from "@/env.mjs"
 import { absoluteUrl, cn, formatDate } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
-import { Icons } from "@/components/icons"
+import { Icons } from "@/components/shared/icons"
 
 interface PostPageProps {
   params: {

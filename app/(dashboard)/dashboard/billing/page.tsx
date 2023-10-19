@@ -12,10 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { BillingForm } from "@/components/billing-form"
-import { DashboardHeader } from "@/components/header"
-import { Icons } from "@/components/icons"
-import { DashboardShell } from "@/components/shell"
+import { BillingForm } from "@/components/forms/billing-form"
+import { DashboardHeader } from "@/components/dashboard/header"
+import { Icons } from "@/components/shared/icons"
+import { DashboardShell } from "@/components/dashboard/shell"
 
 export const metadata = {
   title: "Billing",

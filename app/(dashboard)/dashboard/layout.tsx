@@ -2,10 +2,10 @@ import { notFound } from "next/navigation"
 
 import { dashboardConfig } from "@/config/dashboard"
 import { getCurrentUser } from "@/lib/session"
-import { MainNav } from "@/components/main-nav"
-import { DashboardNav } from "@/components/nav"
-import { SiteFooter } from "@/components/site-footer"
-import { UserAccountNav } from "@/components/user-account-nav"
+import { MainNav } from "@/components/layout/main-nav"
+import { DashboardNav } from "@/components/layout/nav"
+import { SiteFooter } from "@/components/layout/site-footer"
+import { UserAccountNav } from "@/components/layout/user-account-nav"
 
 interface DashboardLayoutProps {
   children?: React.ReactNode

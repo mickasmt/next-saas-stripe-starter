@@ -3,8 +3,8 @@ import Link from "next/link"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
-import { Icons } from "@/components/icons"
-import { UserAuthForm } from "@/components/user-auth-form"
+import { Icons } from "@/components/shared/icons"
+import { UserAuthForm } from "@/components/forms/user-auth-form"
 
 export const metadata: Metadata = {
   title: "Login",
