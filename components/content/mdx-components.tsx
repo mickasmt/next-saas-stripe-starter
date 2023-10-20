@@ -1,5 +1,5 @@
 import * as React from "react"
-import Image from "next/image"
+import NextImage, { ImageProps } from "next/image"
 import { useMDXComponent } from "next-contentlayer/hooks"
 
 import { cn } from "@/lib/utils"
@@ -147,7 +147,7 @@ const components = {
       {...props}
     />
   ),
-  Image,
+  Image: (props: ImageProps) => <NextImage {...props} />,
   Callout,
   Card: MdxCard,
 }
