@@ -43,7 +43,7 @@ export function DocsSidebarNavItems({
       {items.map((item, index) =>
         !item.disabled && item.href ? (
           <Link
-            key={index}
+            key={index+item.href}
             href={item.href}
             className={cn(
               "flex w-full items-center rounded-md p-2 hover:underline",

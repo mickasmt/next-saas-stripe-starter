@@ -7,7 +7,8 @@ import { absoluteUrl, cn } from "@/lib/utils"
 import { Toaster } from "@/components/ui/toaster"
 import { Analytics } from "@/components/analytics"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/providers/theme-provider"
+import AuthProvider from "@/components/providers/auth-provider"
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -82,12 +83,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontHeading.variable
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-          <Analytics />
-          <Toaster />
-          <TailwindIndicator />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+            <Analytics />
+            <Toaster />
+            <TailwindIndicator />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   )
