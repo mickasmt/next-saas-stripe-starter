@@ -9,7 +9,6 @@ const nextConfig = {
     domains: ["avatars.githubusercontent.com", "lh3.googleusercontent.com"],
   },
   experimental: {
-    appDir: true,
     serverComponentsExternalPackages: ["@prisma/client"],
   },
 }
