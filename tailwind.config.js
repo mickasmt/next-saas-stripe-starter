@@ -9,6 +9,9 @@ module.exports = {
     "./content/**/*.{md,mdx}",
   ],
   darkMode: ["class"],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     container: {
       center: true,
@@ -60,6 +63,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        urban: ["var(--font-urban)", ...fontFamily.sans],
         heading: ["var(--font-heading)", ...fontFamily.sans],
       },
       keyframes: {
@@ -71,10 +75,68 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        // Fade up and down
+        "fade-up": {
+          "0%": {
+            opacity: 0,
+            transform: "translateY(10px)",
+          },
+          "80%": {
+            opacity: 0.7,
+          },
+          "100%": {
+            opacity: 1,
+            transform: "translateY(0px)",
+          },
+        },
+        "fade-down": {
+          "0%": {
+            opacity: 0,
+            transform: "translateY(-10px)",
+          },
+          "80%": {
+            opacity: 0.6,
+          },
+          "100%": {
+            opacity: 1,
+            transform: "translateY(0px)",
+          },
+        },
+        // Fade in and out
+        "fade-in": {
+          "0%": {
+            opacity: 0,
+          },
+          "50%": {
+            opacity: 0.6,
+          },
+          "100%": {
+            opacity: 1,
+          },
+        },
+        "fade-out": {
+          "0%": {
+            opacity: 0,
+          },
+          "50%": {
+            opacity: 0.6,
+          },
+          "100%": {
+            opacity: 1,
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+
+        // Fade up and down
+        "fade-up": "fade-up 0.5s",
+        "fade-down": "fade-down 0.5s",
+
+        // Fade in and out
+        "fade-in": "fade-in 0.4s",
+        "fade-out": "fade-out 0.4s",
       },
     },
   },

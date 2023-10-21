@@ -41,7 +41,7 @@ export function UserAccountNav() {
       <DropdownMenuTrigger>
         <UserAvatar
           user={{ name: user?.name || null, image: user?.image || null }}
-          className="h-8 w-8"
+          className="h-8 w-8 animate-fade-in"
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
