@@ -101,6 +101,7 @@ export default async function IndexPage() {
               <Link
                 key={feature.title} href={feature.href}
                 className="flex flex-col items-center transition duration-300 hover:text-black dark:hover:text-white"
+                target="_blank"
               >
                 {feature.icon}
               </Link>
