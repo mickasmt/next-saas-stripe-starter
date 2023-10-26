@@ -53,7 +53,8 @@ export default async function IndexPage() {
             style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
           >
             <Balancer>
-              Start faster with this{" "}
+              {/* Start faster with this{" "} */}
+              Kick off with a bang with{" "}
               <span className="relative bg-gradient-to-r from-indigo-500 to-purple-500/80 bg-clip-text font-extrabold text-transparent">
                 SaaS Starter
               </span>
