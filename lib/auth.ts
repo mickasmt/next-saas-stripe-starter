@@ -2,13 +2,12 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { NextAuthOptions } from "next-auth"
 import EmailProvider from "next-auth/providers/email"
 import GoogleProvider from "next-auth/providers/google"
-import { Client } from "postmark"
 
-import { env } from "@/env.mjs"
 import { siteConfig } from "@/config/site"
+import MagicLinkEmail from "@/emails/magic-link-email"
+import { env } from "@/env.mjs"
 import { prisma } from "@/lib/db"
-
-const postmarkClient = new Client(env.POSTMARK_API_TOKEN)
+import { resend } from "./email"
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -35,40 +34,31 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
-        console.log(user)
+        const userVerified = user?.emailVerified ? true : false;
+        const authSubject = userVerified ? `Sign-in link for ${siteConfig.name}` : "Activate your account";
 
-        // TODO: replace postmark with resend
-        const templateId = user?.emailVerified
-          ? true
-          : false
+        try {
+          const result = await resend.emails.send({
+            from: 'SaaS Starter App <onboarding@resend.dev>',
+            to: process.env.NODE_ENV === "development" ? 'delivered@resend.dev' : identifier,
+            subject: authSubject,
+            react: MagicLinkEmail({
+              firstName: user?.name as string,
+              actionUrl: url,
+              mailType: userVerified ? "login" : "register",
+              siteName: siteConfig.name
+            }),
+            // Set this to prevent Gmail from threading emails.
+            // More info: https://resend.com/changelog/custom-email-headers
+            headers: {
+              'X-Entity-Ref-ID': new Date().getTime() + "",
+            },
+          });
 
-        console.log(templateId)
-        
-        // if (!templateId) {
-        //   throw new Error("Missing template id")
-        // }
-
-        // const result = await postmarkClient.sendEmailWithTemplate({
-        //   TemplateId: parseInt(templateId),
-        //   To: identifier,
-        //   From: provider.from as string,
-        //   TemplateModel: {
-        //     action_url: url,
-        //     product_name: siteConfig.name,
-        //   },
-        //   Headers: [
-        //     {
-        //       // Set this to prevent Gmail from threading emails.
-        //       // See https://stackoverflow.com/questions/23434110/force-emails-not-to-be-grouped-into-conversations/25435722.
-        //       Name: "X-Entity-Ref-ID",
-        //       Value: new Date().getTime() + "",
-        //     },
-        //   ],
-        // })
-
-        // if (result.ErrorCode) {
-        //   throw new Error(result.Message)
-        // }
+          // console.log(result)
+        } catch (error) {
+          throw new Error(error)
+        }
       },
     }),
   ],
