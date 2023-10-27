@@ -72,6 +72,7 @@
     "react-hook-form": "^7.47.0",
     "react-textarea-autosize": "^8.5.3",
     "react-wrap-balancer": "^1.1.0",
+    "resend": "^1.1.0",
     "sharp": "^0.32.6",
     "shiki": "^0.14.5",
     "stripe": "^14.1.0",
