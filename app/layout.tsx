@@ -2,7 +2,6 @@ import "@/styles/globals.css"
 
 import { fontHeading, fontSans, fontUrban } from "@/assets/fonts"
 import { Analytics } from "@/components/analytics"
-import AuthProvider from "@/components/providers/auth-provider"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { Toaster } from "@/components/ui/toaster"
@@ -72,14 +71,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontHeading.variable
         )}
       >
-        <AuthProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
-            <Analytics />
-            <Toaster />
-            <TailwindIndicator />
-          </ThemeProvider>
-        </AuthProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+          <Analytics />
+          <Toaster />
+          <TailwindIndicator />
+        </ThemeProvider>
       </body>
     </html>
   )

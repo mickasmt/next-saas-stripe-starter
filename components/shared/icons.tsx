@@ -23,7 +23,7 @@ import {
   Twitter,
   User,
   X,
-  type Icon as LucideIcon,
+  LucideIcon,
 } from "lucide-react"
 
 export type Icon = LucideIcon

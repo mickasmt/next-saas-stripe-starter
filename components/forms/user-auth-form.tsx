@@ -15,11 +15,13 @@ import { Label } from "@/components/ui/label"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/shared/icons"
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
+interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
+  type?: string
+}
 
 type FormData = z.infer<typeof userAuthSchema>
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
   const {
     register,
     handleSubmit,
@@ -85,7 +87,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Sign In with Email
+            {type === "register"
+              ? "Sign Up with Email"
+              : "Sign In with Email"}
           </button>
         </div>
       </form>

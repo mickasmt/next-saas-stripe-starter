@@ -1,47 +1,31 @@
 "use client"
 
+import { signOut } from "next-auth/react"
 import Link from "next/link"
-import { signOut, useSession } from "next-auth/react"
 
+import { UserAvatar } from "@/components/shared/user-avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { UserAvatar } from "@/components/shared/user-avatar"
 import { CreditCard, LayoutDashboard, LogOut, Settings } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { buttonVariants } from "../ui/button"
+import type { User } from "next-auth"
 
+interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
+  user: Pick<User, "name" | "image" | "email">
+}
 
-export function UserAccountNav() {
-  const { data: session, status } = useSession()
-  const user = session?.user
-
-  if (status === "loading") return null 
-
-  if (status === "unauthenticated") {
-    return (
-      <Link
-        href="/login"
-        className={cn(
-          buttonVariants({ variant: "secondary", size: "sm" }),
-          "px-4"
-        )}
-      >
-        Login
-      </Link>
-    );
-  }
+export function UserAccountNav({ user }: UserAccountNavProps) {
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <UserAvatar
           user={{ name: user?.name || null, image: user?.image || null }}
-          className="h-8 w-8 animate-fade-in"
+          className="h-8 w-8"
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

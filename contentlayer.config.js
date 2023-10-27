@@ -160,7 +160,17 @@ export default makeSource({
             }
           },
           onVisitHighlightedLine(node) {
-            node.properties.className.push("line--highlighted")
+            // node.properties.className.push("line--highlighted")
+
+            // FIX: I changed remark-gmf 4.0.0 to 3.0.1 (return a lot errors in mdx?)
+            // And solve error on onVisitHighlightedLine with code from : https://stackoverflow.com/questions/76549262/onvisithighlightedline-cannot-push-classname-using-rehype-pretty-code
+            const nodeClass = node.properties.className;
+
+            if (nodeClass && nodeClass.length > 0) {
+                node.properties.className.push("line--highlighted");
+            }else{
+                node.properties.className = ["line--highlighted"];
+            }
           },
           onVisitHighlightedWord(node) {
             node.properties.className = ["word--highlighted"]

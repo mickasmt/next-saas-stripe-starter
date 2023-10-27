@@ -6,15 +6,12 @@ import { Client } from "postmark"
 
 import { env } from "@/env.mjs"
 import { siteConfig } from "@/config/site"
-import { db } from "@/lib/db"
+import { prisma } from "@/lib/db"
 
 const postmarkClient = new Client(env.POSTMARK_API_TOKEN)
 
 export const authOptions: NextAuthOptions = {
-  // huh any! I know.
-  // This is a temporary fix for prisma client.
-  // @see https://github.com/prisma/prisma/issues/16117
-  adapter: PrismaAdapter(db as any),
+  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
@@ -29,7 +26,7 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       from: env.SMTP_FROM,
       sendVerificationRequest: async ({ identifier, url, provider }) => {
-        const user = await db.user.findUnique({
+        const user = await prisma.user.findUnique({
           where: {
             email: identifier,
           },
@@ -82,7 +79,7 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async jwt({ token, user }) {
-      const dbUser = await db.user.findFirst({
+      const dbUser = await prisma.user.findFirst({
         where: {
           email: token.email,
         },

@@ -37,7 +37,7 @@ export default async function IndexPage() {
 
   return (
     <>
-      <section className="space-y-6 py-10 md:pb-12 lg:py-28">
+      <section className="space-y-6 pb-12 pt-16 lg:py-28">
         <div className="container flex max-w-[64rem] flex-col items-center gap-5 text-center">
           <Link
             href={siteConfig.links.twitter}
@@ -96,7 +96,7 @@ export default async function IndexPage() {
         <div className="container mx-auto">
           <h2 className="text-center text-sm font-semibold uppercase">Powered by</h2>
 
-          <div className="my-6 flex flex-wrap items-center justify-center gap-14">
+          <div className="my-7 flex flex-wrap items-center justify-center gap-10 gap-y-8 lg:gap-14">
             {features.map((feature) => (
               <Link
                 key={feature.title} href={feature.href}
