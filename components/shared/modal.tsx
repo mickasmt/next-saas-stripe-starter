@@ -48,7 +48,7 @@ export default function Modal({
   return (
     <Dialog open={showModal} onOpenChange={setShowModal}>
       <DialogContent
-        className="overflow-hidden p-0 md:max-w-md md:rounded-2xl md:border md:border-gray-200"
+        className="overflow-hidden p-0 md:max-w-md md:rounded-2xl md:border"
       // onOpenAutoFocus={(e) => e.preventDefault()}
       // onCloseAutoFocus={(e) => e.preventDefault()}
       >
