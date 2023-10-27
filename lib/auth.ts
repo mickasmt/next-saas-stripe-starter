@@ -24,46 +24,51 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
     EmailProvider({
-      from: env.SMTP_FROM,
       sendVerificationRequest: async ({ identifier, url, provider }) => {
         const user = await prisma.user.findUnique({
           where: {
             email: identifier,
           },
           select: {
+            name: true,
             emailVerified: true,
           },
-        })
+        });
+
+        console.log(user)
 
         // TODO: replace postmark with resend
         const templateId = user?.emailVerified
-          ? env.POSTMARK_SIGN_IN_TEMPLATE
-          : env.POSTMARK_ACTIVATION_TEMPLATE
-        if (!templateId) {
-          throw new Error("Missing template id")
-        }
+          ? true
+          : false
 
-        const result = await postmarkClient.sendEmailWithTemplate({
-          TemplateId: parseInt(templateId),
-          To: identifier,
-          From: provider.from as string,
-          TemplateModel: {
-            action_url: url,
-            product_name: siteConfig.name,
-          },
-          Headers: [
-            {
-              // Set this to prevent Gmail from threading emails.
-              // See https://stackoverflow.com/questions/23434110/force-emails-not-to-be-grouped-into-conversations/25435722.
-              Name: "X-Entity-Ref-ID",
-              Value: new Date().getTime() + "",
-            },
-          ],
-        })
+        console.log(templateId)
+        
+        // if (!templateId) {
+        //   throw new Error("Missing template id")
+        // }
 
-        if (result.ErrorCode) {
-          throw new Error(result.Message)
-        }
+        // const result = await postmarkClient.sendEmailWithTemplate({
+        //   TemplateId: parseInt(templateId),
+        //   To: identifier,
+        //   From: provider.from as string,
+        //   TemplateModel: {
+        //     action_url: url,
+        //     product_name: siteConfig.name,
+        //   },
+        //   Headers: [
+        //     {
+        //       // Set this to prevent Gmail from threading emails.
+        //       // See https://stackoverflow.com/questions/23434110/force-emails-not-to-be-grouped-into-conversations/25435722.
+        //       Name: "X-Entity-Ref-ID",
+        //       Value: new Date().getTime() + "",
+        //     },
+        //   ],
+        // })
+
+        // if (result.ErrorCode) {
+        //   throw new Error(result.Message)
+        // }
       },
     }),
   ],
@@ -100,4 +105,5 @@ export const authOptions: NextAuthOptions = {
       }
     },
   },
+  debug: process.env.NODE_ENV !== "production"
 }
