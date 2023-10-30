@@ -2,11 +2,12 @@ import "@/styles/globals.css"
 
 import { fontHeading, fontSans, fontUrban } from "@/assets/fonts"
 import { Analytics } from "@/components/analytics"
-import { ThemeProvider } from "@/components/providers/theme-provider"
+import { Providers } from "@/components/providers"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { Toaster } from "@/components/ui/toaster"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
+import { SignInModal } from "@/components/layout/sign-in-modal"
 
 interface RootLayoutProps {
   children: React.ReactNode
@@ -60,6 +61,7 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -71,12 +73,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontHeading.variable
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <Providers attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Analytics />
+          <SignInModal />
           <Toaster />
           <TailwindIndicator />
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   )

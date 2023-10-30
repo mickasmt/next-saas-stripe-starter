@@ -19,12 +19,10 @@ interface NavBarProps {
 }
 
 export function NavBar({ user, items, children, rightElements, scroll = false }: NavBarProps) {
-  const { SignInModal, setShowSignInModal } = useSignInModal();
+  const { openSignInModal } = useSignInModal();
   const scrolled = useScroll(50);
 
   return (
-    <>
-      <SignInModal />
       <header
         className={`sticky top-0 z-40 flex w-full justify-center bg-background/60 backdrop-blur-xl transition-all ${scroll ? scrolled
           ? "border-b"
@@ -51,11 +49,10 @@ export function NavBar({ user, items, children, rightElements, scroll = false }:
             {user ? (
               <UserAccountNav user={user} />
             ) : (
-              <Button className="px-3" variant="default" size="sm" onClick={() => setShowSignInModal(true)}>Sign In</Button>
+              <Button className="px-3" variant="default" size="sm" onClick={openSignInModal}>Sign In</Button>
             )}
           </div>
         </div>
       </header>
-    </>
   );
 }

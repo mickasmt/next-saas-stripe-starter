@@ -6,9 +6,11 @@ import { pricingData } from "@/config/subscriptions";
 import { useState } from 'react';
 import Balancer from "react-wrap-balancer";
 import { Icons } from "../shared/icons";
+import { useSignInModal } from "../layout/sign-in-modal";
 
 export function PricingCards() {
   const [isYearly, setIsYearly] = useState<boolean>(true);
+  const { openSignInModal } = useSignInModal();
 
   const toggleBilling = () => {
     setIsYearly(!isYearly);
@@ -80,7 +82,7 @@ export function PricingCards() {
                 ))}
               </ul>
 
-              <Button>Create first post</Button>
+              <Button onClick={openSignInModal}>Create first post</Button>
             </div>
           </div>
         ))}

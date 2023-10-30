@@ -61,6 +61,7 @@
     "concurrently": "^8.2.2",
     "contentlayer": "^0.3.4",
     "date-fns": "^2.30.0",
+    "jotai": "^2.5.0",
     "lucide-react": "^0.290.0",
     "ms": "^2.1.3",
     "next": "14.0.0",
