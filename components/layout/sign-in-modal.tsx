@@ -1,3 +1,4 @@
+import { usePathname } from 'next/navigation'
 import Modal from "@/components/shared/modal";
 import { siteConfig } from "@/config/site";
 import { signIn } from "next-auth/react";
@@ -18,6 +19,7 @@ const SignInModal = ({
   setShowSignInModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [signInClicked, setSignInClicked] = useState(false);
+  const pathname = usePathname()
 
   return (
     <Modal showModal={showSignInModal} setShowModal={setShowSignInModal}>
@@ -39,7 +41,7 @@ const SignInModal = ({
             disabled={signInClicked}
             onClick={() => {
               setSignInClicked(true);
-              signIn("google");
+              signIn("google", {callbackUrl: pathname as string});
             }}
           >
             {signInClicked ? (

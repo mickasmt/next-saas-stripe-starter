@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
 
           // console.log(result)
         } catch (error) {
-          throw new Error(error)
+          throw new Error("Failed to send verification email.")
         }
       },
     }),
@@ -95,5 +95,5 @@ export const authOptions: NextAuthOptions = {
       }
     },
   },
-  debug: process.env.NODE_ENV !== "production"
+  // debug: process.env.NODE_ENV !== "production"
 }
