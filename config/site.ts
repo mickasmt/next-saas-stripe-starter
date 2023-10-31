@@ -7,7 +7,7 @@ const site_url = process.env.NODE_ENV === "development"
 export const siteConfig: SiteConfig = {
   name: "SaaS Starter",
   description:
-    "An open source application built using the new router, server components and everything new in Next.js 13.",
+    "An open source application built using the new router, server components and everything new in Next.js 14.",
   url: site_url,
   ogImage: `${site_url}/og.jpg`,
   links: {
