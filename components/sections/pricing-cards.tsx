@@ -8,6 +8,7 @@ import { Icons } from "../shared/icons";
 import { useSignInModal } from "../layout/sign-in-modal";
 import Link from "next/link";
 import { UserSubscriptionPlan } from "@/types";
+import { BillingFormButton } from "../billing-form-button";
 
 interface PricingCardsProps {
   userId?: string;
@@ -15,7 +16,8 @@ interface PricingCardsProps {
 }
 
 export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
-  const [isYearly, setIsYearly] = useState<boolean>(subscriptionPlan?.interval === "year" || true);
+  const isYearlyDefault = (!subscriptionPlan?.interval || subscriptionPlan.interval === "year") ? true : false;
+  const [isYearly, setIsYearly] = useState<boolean>(!!isYearlyDefault);
   const { openSignInModal } = useSignInModal();
 
   const toggleBilling = () => {
@@ -88,7 +90,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
                 ))}
               </ul>
 
-              {userId ? (
+              {userId && subscriptionPlan ? (
                 offer.title === 'Starter' ? (
                   <Link
                     href="/dashboard"
@@ -100,18 +102,10 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
                     Go to dashboard
                   </Link>
                 ) : (
-                  <Link
-                    href="/dashboard/billing"
-                    className={buttonVariants({
-                      className: 'w-full',
-                      variant: 'default',
-                    })}
-                  >
-                    Upgrade now
-                  </Link>
+                  <BillingFormButton year={isYearly} offer={offer} subscriptionPlan={subscriptionPlan} />
                 )
               ) : (
-                <Button onClick={openSignInModal}>Create first post</Button>
+                <Button onClick={openSignInModal}>Sign in</Button>
               )}
 
             </div>
@@ -120,7 +114,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
       </div>
 
       <p className="mt-3 text-center text-base text-muted-foreground">
-        Email <a className="font-medium text-primary" href="mailto:support@saas-starter.com">support@saas-starter.com</a> for to contact our support team.
+        Email <a className="font-medium text-primary hover:underline" href="mailto:support@saas-starter.com">support@saas-starter.com</a> for to contact our support team.
         <br />
         <strong>You can test the subscriptions and won&apos;t be charged.</strong>
       </p>

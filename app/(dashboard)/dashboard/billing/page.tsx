@@ -24,15 +24,6 @@ export default async function BillingPage() {
 
   const subscriptionPlan = await getUserSubscriptionPlan(user.id)
 
-  // If user has a pro plan, check cancel status on Stripe.
-  let isCanceled = false
-  if (subscriptionPlan.isPaid && subscriptionPlan.stripeSubscriptionId) {
-    const stripePlan = await stripe.subscriptions.retrieve(
-      subscriptionPlan.stripeSubscriptionId
-    )
-    isCanceled = stripePlan.cancel_at_period_end
-  }
-
   return (
     <DashboardShell>
       <DashboardHeader
@@ -44,7 +35,7 @@ export default async function BillingPage() {
           <Icons.warning />
           <AlertTitle>This is a demo app.</AlertTitle>
           <AlertDescription>
-            Taxonomy app is a demo app using a Stripe test environment. You can
+            SaaS Starter app is a demo app using a Stripe test environment. You can
             find a list of test card numbers on the{" "}
             <a
               href="https://stripe.com/docs/testing#cards"
@@ -58,10 +49,7 @@ export default async function BillingPage() {
           </AlertDescription>
         </Alert>
         <BillingForm
-          subscriptionPlan={{
-            ...subscriptionPlan,
-            isCanceled,
-          }}
+          subscriptionPlan={subscriptionPlan}
         />
       </div>
     </DashboardShell>

@@ -1,20 +1,6 @@
 import { SubscriptionPlan } from "types"
 import { env } from "@/env.mjs"
 
-// export const freePlan: SubscriptionPlan = {
-//   name: "Free",
-//   description:
-//     "The free plan is limited to 3 posts. Upgrade to the PRO plan for unlimited posts.",
-//   stripePriceId: "",
-// }
-
-// export const proPlan: SubscriptionPlan = {
-//   name: "PRO",
-//   description: "The PRO plan has unlimited posts.",
-//   stripePriceId: "",
-//   stripePriceId: env.STRIPE_PRO_MONTHLY_PLAN_ID || "",
-// }
-
 export const pricingData: SubscriptionPlan[] = [
   {
     title: 'Starter',
@@ -23,9 +9,9 @@ export const pricingData: SubscriptionPlan[] = [
       'Up to 100 monthly posts',
       'Basic analytics and reporting',
       'Access to standard templates',
-      'Priority access to new features.',
     ],
     limitations: [
+      'No priority access to new features.',
       'Limited customer support',
       'No custom branding',
       'Limited access to business resources.',
@@ -58,8 +44,8 @@ export const pricingData: SubscriptionPlan[] = [
       yearly: 144,
     },
     stripeIds: {
-      monthly: env.STRIPE_PRO_MONTHLY_PLAN_ID,
-      yearly: env.STRIPE_PRO_YEARLY_PLAN_ID,
+      monthly: env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PLAN_ID,
+      yearly: env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PLAN_ID,
     },
   },
   {
@@ -78,9 +64,8 @@ export const pricingData: SubscriptionPlan[] = [
       yearly: 300,
     },
     stripeIds: {
-      monthly: env.STRIPE_BUSINESS_MONTHLY_PLAN_ID,
-      yearly: env.STRIPE_BUSINESS_YEARLY_PLAN_ID,
+      monthly: env.NEXT_PUBLIC_STRIPE_BUSINESS_MONTHLY_PLAN_ID,
+      yearly: env.NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID,
     },
   },
 ];
-

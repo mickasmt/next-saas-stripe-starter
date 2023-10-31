@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth/next"
 import { z } from "zod"
 
-import { proPlan } from "@/config/subscriptions"
 import { authOptions } from "@/lib/auth"
 import { stripe } from "@/lib/stripe"
 import { getUserSubscriptionPlan } from "@/lib/subscription"
@@ -9,7 +8,10 @@ import { absoluteUrl } from "@/lib/utils"
 
 const billingUrl = absoluteUrl("/dashboard/billing")
 
-export async function GET(req: Request) {
+export async function POST(request: Request) {
+  const res = await request.json();
+  const cardPriceId = res.priceId;
+  
   try {
     const session = await getServerSession(authOptions)
 
@@ -19,9 +21,11 @@ export async function GET(req: Request) {
 
     const subscriptionPlan = await getUserSubscriptionPlan(session.user.id)
 
-    // The user is on the pro plan.
+    // console.log(subscriptionPlan)
+
+    // The user is on the paid plan.
     // Create a portal session to manage subscription.
-    if (subscriptionPlan.isPro && subscriptionPlan.stripeCustomerId) {
+    if (subscriptionPlan.isPaid && subscriptionPlan.stripeCustomerId) {
       const stripeSession = await stripe.billingPortal.sessions.create({
         customer: subscriptionPlan.stripeCustomerId,
         return_url: billingUrl,
@@ -41,7 +45,7 @@ export async function GET(req: Request) {
       customer_email: session.user.email,
       line_items: [
         {
-          price: proPlan.stripePriceId,
+          price: cardPriceId,
           quantity: 1,
         },
       ],
