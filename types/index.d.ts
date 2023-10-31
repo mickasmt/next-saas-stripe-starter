@@ -54,13 +54,23 @@ export type DashboardConfig = {
 }
 
 export type SubscriptionPlan = {
-  name: string
-  description: string
-  stripePriceId: string
+  title: string;
+  description: string;
+  benefits: string[];
+  limitations: string[];
+  prices: {
+    monthly: number;
+    yearly: number;
+  };
+  stripeIds: {
+    monthly: string | null;
+    yearly: string | null;
+  };
 }
 
 export type UserSubscriptionPlan = SubscriptionPlan &
   Pick<User, "stripeCustomerId" | "stripeSubscriptionId"> & {
     stripeCurrentPeriodEnd: number
-    isPro: boolean
+    isPaid: boolean
+    interval: "month" | "year" | null
   }

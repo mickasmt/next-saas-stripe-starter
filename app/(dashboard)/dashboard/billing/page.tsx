@@ -5,13 +5,6 @@ import { getCurrentUser } from "@/lib/session"
 import { stripe } from "@/lib/stripe"
 import { getUserSubscriptionPlan } from "@/lib/subscription"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { BillingForm } from "@/components/forms/billing-form"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { Icons } from "@/components/shared/icons"
@@ -33,7 +26,7 @@ export default async function BillingPage() {
 
   // If user has a pro plan, check cancel status on Stripe.
   let isCanceled = false
-  if (subscriptionPlan.isPro && subscriptionPlan.stripeSubscriptionId) {
+  if (subscriptionPlan.isPaid && subscriptionPlan.stripeSubscriptionId) {
     const stripePlan = await stripe.subscriptions.retrieve(
       subscriptionPlan.stripeSubscriptionId
     )

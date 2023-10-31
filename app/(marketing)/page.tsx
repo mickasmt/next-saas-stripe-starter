@@ -1,5 +1,4 @@
 import Link from "next/link"
-import Balancer from "react-wrap-balancer"
 
 import { buttonVariants } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
@@ -52,22 +51,17 @@ export default async function IndexPage() {
             className="animate-fade-up font-urban text-4xl font-extrabold tracking-tight opacity-0 sm:text-5xl md:text-6xl lg:text-7xl"
             style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
           >
-            <Balancer>
-              {/* Start faster with this{" "} */}
-              Kick off with a bang with{" "}
-              <span className="relative bg-gradient-to-r from-indigo-500 to-purple-500/80 bg-clip-text font-extrabold text-transparent">
-                SaaS Starter
-              </span>
-            </Balancer>
+            Kick off with a bang with{" "}
+            <span className="relative bg-gradient-to-r from-indigo-500 to-purple-500/80 bg-clip-text font-extrabold text-transparent">
+              SaaS Starter
+            </span>
           </h1>
 
           <p
             className="max-w-[42rem] animate-fade-up leading-normal text-muted-foreground opacity-0 sm:text-xl sm:leading-8"
             style={{ animationDelay: "0.35s", animationFillMode: "forwards" }}
           >
-            <Balancer>
-              Build your next project using Next.js 13, Prisma, Planetscale, Auth.js, Resend, Shadcn/ui, Stripe.
-            </Balancer>
+            Build your next project using Next.js 13, Prisma, Planetscale, Auth.js, Resend, Shadcn/ui, Stripe.
           </p>
 
           <div

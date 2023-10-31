@@ -1,15 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Switch } from '@/components/ui/switch';
 import { pricingData } from "@/config/subscriptions";
 import { useState } from 'react';
-import Balancer from "react-wrap-balancer";
 import { Icons } from "../shared/icons";
 import { useSignInModal } from "../layout/sign-in-modal";
+import Link from "next/link";
+import { UserSubscriptionPlan } from "@/types";
 
-export function PricingCards() {
-  const [isYearly, setIsYearly] = useState<boolean>(true);
+interface PricingCardsProps {
+  userId?: string;
+  subscriptionPlan?: UserSubscriptionPlan;
+}
+
+export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
+  const [isYearly, setIsYearly] = useState<boolean>(subscriptionPlan?.interval === "year" || true);
   const { openSignInModal } = useSignInModal();
 
   const toggleBilling = () => {
@@ -21,7 +27,7 @@ export function PricingCards() {
       <div className="mx-auto mb-10 flex w-full flex-col gap-5">
         <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground">Pricing</p>
         <h2 className="font-heading text-3xl leading-[1.1] md:text-5xl">
-          <Balancer>Start at full speed !</Balancer>
+          Start at full speed !
         </h2>
       </div>
 
@@ -82,18 +88,41 @@ export function PricingCards() {
                 ))}
               </ul>
 
-              <Button onClick={openSignInModal}>Create first post</Button>
+              {userId ? (
+                offer.title === 'Starter' ? (
+                  <Link
+                    href="/dashboard"
+                    className={buttonVariants({
+                      className: 'w-full',
+                      variant: 'default',
+                    })}
+                  >
+                    Go to dashboard
+                  </Link>
+                ) : (
+                  <Link
+                    href="/dashboard/billing"
+                    className={buttonVariants({
+                      className: 'w-full',
+                      variant: 'default',
+                    })}
+                  >
+                    Upgrade now
+                  </Link>
+                )
+              ) : (
+                <Button onClick={openSignInModal}>Create first post</Button>
+              )}
+
             </div>
           </div>
         ))}
       </div>
 
       <p className="mt-3 text-center text-base text-muted-foreground">
-        <Balancer>
-          Email <a className="font-medium text-primary" href="mailto:support@saas-starter.com">support@saas-starter.com</a> for to contact our support team.
-          <br />
-          <strong>You can test the subscriptions and won&apos;t be charged.</strong>
-        </Balancer>
+        Email <a className="font-medium text-primary" href="mailto:support@saas-starter.com">support@saas-starter.com</a> for to contact our support team.
+        <br />
+        <strong>You can test the subscriptions and won&apos;t be charged.</strong>
       </p>
     </section>
   )
