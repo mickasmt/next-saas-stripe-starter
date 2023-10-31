@@ -33,6 +33,7 @@ export const metadata = {
     },
   ],
   creator: "shadcn",
+  metadataBase: new URL(siteConfig.url),
   openGraph: {
     type: "website",
     locale: "en_US",

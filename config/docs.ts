@@ -45,11 +45,6 @@ export const docsConfig: DocsConfig = {
           title: "Style Guide",
           href: "/docs/documentation/style-guide",
         },
-        {
-          title: "Search",
-          href: "/docs/in-progress",
-          disabled: true,
-        },
       ],
     },
     {
@@ -102,31 +97,6 @@ export const docsConfig: DocsConfig = {
         },
         {
           title: "API Routes",
-          href: "/docs/in-progress",
-          disabled: true,
-        },
-      ],
-    },
-    {
-      title: "Marketing Site",
-      items: [
-        {
-          title: "Introduction",
-          href: "/docs/in-progress",
-          disabled: true,
-        },
-        {
-          title: "File Structure",
-          href: "/docs/in-progress",
-          disabled: true,
-        },
-        {
-          title: "Tailwind CSS",
-          href: "/docs/in-progress",
-          disabled: true,
-        },
-        {
-          title: "Typography",
           href: "/docs/in-progress",
           disabled: true,
         },
