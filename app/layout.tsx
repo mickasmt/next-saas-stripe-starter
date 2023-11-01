@@ -1,13 +1,13 @@
-import "@/styles/globals.css"
+import "@/styles/globals.css";
 
-import { fontHeading, fontSans, fontUrban } from "@/assets/fonts"
-import { Analytics } from "@/components/analytics"
-import { Providers } from "@/components/providers"
-import { TailwindIndicator } from "@/components/tailwind-indicator"
-import { Toaster } from "@/components/ui/toaster"
-import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
-import { SignInModal } from "@/components/layout/sign-in-modal"
+import { fontHeading, fontSans, fontUrban } from "@/assets/fonts";
+import { Analytics } from "@/components/analytics";
+import { ModalProvider } from "@/components/modal-provider";
+import { Providers } from "@/components/providers";
+import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { Toaster } from "@/components/ui/toaster";
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
 
 interface RootLayoutProps {
   children: React.ReactNode
@@ -72,8 +72,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <Providers attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Analytics />
-          <SignInModal />
           <Toaster />
+          <ModalProvider />
           <TailwindIndicator />
         </Providers>
       </body>

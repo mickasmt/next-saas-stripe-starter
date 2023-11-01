@@ -58,7 +58,8 @@ pnpm dev
 
 - [ ] Update OG image  
 - [ ] Update documentation
-- [ ] Switch subscription plan 
+- [ ] Use Server Actions
+- [ ] Switch subscription plan
 
 ## Tech Stack + Features
 

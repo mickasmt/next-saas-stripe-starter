@@ -1,9 +1,8 @@
 
-import { PricingCards } from '@/components/sections/pricing-cards';
-import { PricingFaq } from '@/components/sections/pricing-faq';
+import { PricingCards } from '@/components/pricing-cards';
+import { PricingFaq } from '@/components/pricing-faq';
 import { getCurrentUser } from '@/lib/session';
 import { getUserSubscriptionPlan } from '@/lib/subscription';
-import { stripe } from "@/lib/stripe"
 
 export const metadata = {
   title: "Pricing",
@@ -12,8 +11,8 @@ export const metadata = {
 export default async function PricingPage() {
   const user = await getCurrentUser()
   let subscriptionPlan;
-  
-  if(user) {
+
+  if (user) {
     subscriptionPlan = await getUserSubscriptionPlan(user.id)
   }
 

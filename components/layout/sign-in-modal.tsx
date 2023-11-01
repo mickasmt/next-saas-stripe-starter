@@ -1,27 +1,20 @@
 "use client";
 
-import Modal from "@/components/shared/modal";
+import { useState } from "react";
+
+import { Icons } from "@/components/shared/icons";
+import { Modal } from "@/components/shared/modal";
+import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
-import { signIn, useSession } from "next-auth/react";
-import {
-  useCallback,
-  useMemo, useState
-} from "react";
-import { Icons } from "../shared/icons";
-import { Button } from "../ui/button";
-import { useModal } from '@/hooks/use-modal';
+import { useSigninModal } from "@/hooks/use-signin-modal";
+import { signIn } from "next-auth/react";
 
 export const SignInModal = () => {
+  const signInModal = useSigninModal();
   const [signInClicked, setSignInClicked] = useState(false);
-  const [modal, setModal] = useModal();
-
-  const closeSignInModal = () => {
-    setSignInClicked(false);
-    setModal(() => ({ signInOpen: false }));
-  };
 
   return (
-    <Modal showModal={modal.signInOpen} setShowModal={closeSignInModal}>
+    <Modal showModal={signInModal.isOpen} setShowModal={signInModal.onClose}>
       <div className="w-full">
         <div className="flex flex-col items-center justify-center space-y-3 border-b bg-background px-4 py-6 pt-8 text-center md:px-16">
           <a href={siteConfig.url}>
@@ -41,9 +34,9 @@ export const SignInModal = () => {
             onClick={() => {
               setSignInClicked(true);
               signIn("google", { redirect: false }).then(() =>
-                // TODO: fix this without setTimeOut(), modal closes too quickly
+                // TODO: fix this without setTimeOut(), modal closes too quickly. Idea: update value before redirect
                 setTimeout(() => {
-                  closeSignInModal();
+                  signInModal.onClose();
                 }, 1000)
               );
             }}
@@ -60,17 +53,3 @@ export const SignInModal = () => {
     </Modal>
   );
 };
-
-
-export function useSignInModal() {
-  const [modal, setModal] = useModal();
-
-  const openSignInModal = useCallback(() => {
-    setModal(() => ({ signInOpen: true }));
-  }, [setModal]);
-
-  return useMemo(
-    () => ({ openSignInModal }),
-    [openSignInModal],
-  );
-}

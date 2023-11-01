@@ -1,10 +1,7 @@
-import Image from "next/image"
-import Link from "next/link"
 import { allPosts } from "contentlayer/generated"
 import { compareDesc } from "date-fns"
 
-import { formatDate } from "@/lib/utils"
-import { BlogPosts } from "@/components/sections/blog-posts"
+import { BlogPosts } from "@/components/blog-posts"
 
 export const metadata = {
   title: "Blog",

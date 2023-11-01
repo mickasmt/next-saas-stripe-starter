@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 
 
-export default function Modal({
+export function Modal({
   children,
   className,
   showModal,

@@ -1,14 +1,15 @@
 "use client";
 
+import Link from "next/link";
+import { useState } from 'react';
+
+import { BillingFormButton } from "@/components/billing-form-button";
+import { Icons } from "@/components/shared/icons";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Switch } from '@/components/ui/switch';
 import { pricingData } from "@/config/subscriptions";
-import { useState } from 'react';
-import { Icons } from "../shared/icons";
-import { useSignInModal } from "../layout/sign-in-modal";
-import Link from "next/link";
 import { UserSubscriptionPlan } from "@/types";
-import { BillingFormButton } from "../billing-form-button";
+import { useSigninModal } from "@/hooks/use-signin-modal";
 
 interface PricingCardsProps {
   userId?: string;
@@ -18,7 +19,8 @@ interface PricingCardsProps {
 export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
   const isYearlyDefault = (!subscriptionPlan?.interval || subscriptionPlan.interval === "year") ? true : false;
   const [isYearly, setIsYearly] = useState<boolean>(!!isYearlyDefault);
-  const { openSignInModal } = useSignInModal();
+  const signInModal = useSigninModal();
+
 
   const toggleBilling = () => {
     setIsYearly(!isYearly);
@@ -105,7 +107,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
                   <BillingFormButton year={isYearly} offer={offer} subscriptionPlan={subscriptionPlan} />
                 )
               ) : (
-                <Button onClick={openSignInModal}>Sign in</Button>
+                <Button onClick={signInModal.onOpen}>Sign in</Button>
               )}
 
             </div>
