@@ -114,7 +114,7 @@
     "rehype-pretty-code": "^0.10.2",
     "rehype-slug": "^6.0.0",
     "remark": "^15.0.1",
-    "remark-gfm": "^4.0.0",
+    "remark-gfm": "^3.0.1",
     "tailwindcss": "^3.3.5",
     "typescript": "5.2.2",
     "unist-util-visit": "^5.0.0"
