@@ -22,7 +22,9 @@ export function Modal({
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { isMobile } = useMediaQuery();
+  // FIX: Drawer does not want to display. Why ?
+  // const { isMobile } = useMediaQuery();
+  const isMobile = false;
 
   if (isMobile) {
     return (
@@ -47,11 +49,7 @@ export function Modal({
   }
   return (
     <Dialog open={showModal} onOpenChange={setShowModal}>
-      <DialogContent
-        className="overflow-hidden p-0 md:max-w-md md:rounded-2xl md:border"
-      // onOpenAutoFocus={(e) => e.preventDefault()}
-      // onCloseAutoFocus={(e) => e.preventDefault()}
-      >
+      <DialogContent className="overflow-hidden p-0 md:max-w-md md:rounded-2xl md:border">
         {children}
       </DialogContent>
     </Dialog>
