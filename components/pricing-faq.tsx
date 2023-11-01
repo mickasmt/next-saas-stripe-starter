@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import Balancer from "react-wrap-balancer";
 
 const pricingFaqData = [
   {
@@ -38,11 +39,13 @@ export function PricingFaq() {
     <section className="container max-w-4xl py-2">
       <div className="mb-14 space-y-6 text-center">
         <h1 className="text-center font-heading text-3xl md:text-5xl">
-          Frequently Asked Questions
+          <Balancer>Frequently Asked Questions</Balancer>
         </h1>
         <p className="text-md text-muted-foreground">
-          Explore our comprehensive FAQ to find quick answers to common inquiries.
-          If you need further assistance, don&apos;t hesitate to contact us for personalized help.
+          <Balancer>
+            Explore our comprehensive FAQ to find quick answers to common inquiries.
+            If you need further assistance, don&apos;t hesitate to contact us for personalized help.
+          </Balancer>
         </p>
       </div>
       <Accordion type="single" collapsible className="w-full">
