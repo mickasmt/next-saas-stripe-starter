@@ -108,7 +108,7 @@ export default async function IndexPage() {
 
 const features = [
   {
-    title: "Next.js 13",
+    title: "Next.js 14",
     href: "https://nextjs.org/",
     icon: (
       <svg className="h-6 w-auto" xmlns="http://www.w3.org/2000/svg" width="512px" height="104px" viewBox="0 0 512 104" version="1.1" preserveAspectRatio="xMidYMid">
@@ -127,7 +127,7 @@ const features = [
   },
   {
     title: "PlanetScale",
-    href: "https://stripe.com/",
+    href: "https://planetscale.com/",
     icon: (
       <svg version="1.0" xmlns="http://www.w3.org/2000/svg" className="h-7 w-auto" width="5666.000000pt" height="908.000000pt" viewBox="0 0 5666.000000 908.000000" preserveAspectRatio="xMidYMid meet">
         <g transform="translate(0.000000,908.000000) scale(0.100000,-0.100000)" fill="currentColor" stroke="none">
