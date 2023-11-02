@@ -5,35 +5,35 @@ import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import Balancer from "react-wrap-balancer"
 
-async function getGitHubStars(): Promise<string | null> {
-  try {
-    const response = await fetch(
-      "https://api.github.com/repos/mickasmt/ui-colorgen",
-      {
-        headers: {
-          Accept: "application/vnd.github+json",
-          // Authorization: `Bearer ${env.GITHUB_ACCESS_TOKEN}`,
-        },
-        next: {
-          revalidate: 60,
-        },
-      }
-    )
+// async function getGitHubStars(): Promise<string | null> {
+//   try {
+//     const response = await fetch(
+//       "https://api.github.com/repos/mickasmt/next-saas-stripe-starter",
+//       {
+//         headers: {
+//           Accept: "application/vnd.github+json",
+//           // Authorization: `Bearer ${env.GITHUB_ACCESS_TOKEN}`,
+//         },
+//         next: {
+//           revalidate: 60,
+//         },
+//       }
+//     )
 
-    if (!response?.ok) {
-      return null
-    }
+//     if (!response?.ok) {
+//       return null
+//     }
 
-    const json = await response.json()
+//     const json = await response.json()
 
-    return parseInt(json["stargazers_count"]).toLocaleString()
-  } catch (error) {
-    return null
-  }
-}
+//     return parseInt(json["stargazers_count"]).toLocaleString()
+//   } catch (error) {
+//     return null
+//   }
+// }
 
 export default async function IndexPage() {
-  const stars = await getGitHubStars()
+  // const stars = await getGitHubStars()
 
   return (
     <>
@@ -70,11 +70,11 @@ export default async function IndexPage() {
           </p>
 
           <div
-            className="animate-fade-up space-x-4 opacity-0"
+            className="flex animate-fade-up justify-center space-x-4 opacity-0"
             style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}
           >
-            <Link href="/login" className={cn(buttonVariants({ size: "lg" }))}>
-              Get Started
+            <Link href="/pricing" className={cn(buttonVariants({ size: "lg" }))}>
+              Go Pricing
             </Link>
             <Link
               href={siteConfig.links.github}
