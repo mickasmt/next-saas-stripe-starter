@@ -127,7 +127,7 @@ const features = [
   },
   {
     title: "PlanetScale",
-    href: "https://stripe.com/",
+    href: "https://planetscale.com/",
     icon: (
       <svg version="1.0" xmlns="http://www.w3.org/2000/svg" className="h-7 w-auto" width="5666.000000pt" height="908.000000pt" viewBox="0 0 5666.000000 908.000000" preserveAspectRatio="xMidYMid meet">
         <g transform="translate(0.000000,908.000000) scale(0.100000,-0.100000)" fill="currentColor" stroke="none">
