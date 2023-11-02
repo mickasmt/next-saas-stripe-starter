@@ -2,50 +2,40 @@ import Link from "next/link"
 
 import { buttonVariants } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
+import { cn, nFormatter } from "@/lib/utils"
 import Balancer from "react-wrap-balancer"
-
-// async function getGitHubStars(): Promise<string | null> {
-//   try {
-//     const response = await fetch(
-//       "https://api.github.com/repos/mickasmt/next-saas-stripe-starter",
-//       {
-//         headers: {
-//           Accept: "application/vnd.github+json",
-//           // Authorization: `Bearer ${env.GITHUB_ACCESS_TOKEN}`,
-//         },
-//         next: {
-//           revalidate: 60,
-//         },
-//       }
-//     )
-
-//     if (!response?.ok) {
-//       return null
-//     }
-
-//     const json = await response.json()
-
-//     return parseInt(json["stargazers_count"]).toLocaleString()
-//   } catch (error) {
-//     return null
-//   }
-// }
+import { Icons } from "@/components/shared/icons"
+import { env } from "@/env.mjs"
 
 export default async function IndexPage() {
-  // const stars = await getGitHubStars()
+  const { stargazers_count: stars } = await fetch(
+    "https://api.github.com/repos/mickasmt/next-saas-stripe-starter",
+    {
+      ...(env.GITHUB_OAUTH_TOKEN && {
+        headers: {
+          Authorization: `Bearer ${process.env.GITHUB_OAUTH_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }),
+      // data will revalidate every hour
+      next: { revalidate: 3600 },
+    },
+  )
+    .then((res) => res.json())
+    .catch((e) => console.log(e));
+
 
   return (
     <>
       <section className="space-y-6 pb-12 pt-16 lg:py-28">
         <div className="container flex max-w-[64rem] flex-col items-center gap-5 text-center">
           <Link
-            href={siteConfig.links.twitter}
+            href="https://twitter.com/miickasmt/status/1719892161095745801"
             className={cn(buttonVariants({ variant: "outline", size: "sm" }), "animate-fade-up opacity-0")}
             style={{ animationDelay: "0.15s", animationFillMode: "forwards" }}
             target="_blank"
           >
-            Follow along on Twitter
+            Introducing on <Icons.twitter className="ml-2 h-4 w-4" />
           </Link>
 
           <h1
@@ -70,7 +60,7 @@ export default async function IndexPage() {
           </p>
 
           <div
-            className="flex animate-fade-up justify-center space-x-4 opacity-0"
+            className="flex animate-fade-up justify-center space-x-2 opacity-0 md:space-x-4"
             style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}
           >
             <Link href="/pricing" className={cn(buttonVariants({ size: "lg" }))}>
@@ -80,9 +70,13 @@ export default async function IndexPage() {
               href={siteConfig.links.github}
               target="_blank"
               rel="noreferrer"
-              className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
+              className={cn(buttonVariants({ variant: "outline", size: "lg" }), "px-4")}
             >
-              GitHub
+              <Icons.gitHub className="mr-2 h-4 w-4" />
+              <p>
+                <span className="hidden sm:inline-block">Star on</span>{" "}GitHub{" "}
+                <span className="font-semibold">{nFormatter(stars)}</span>
+              </p>
             </Link>
           </div>
         </div>
