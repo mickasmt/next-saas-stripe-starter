@@ -2,8 +2,6 @@
 
 import * as React from "react"
 
-import { UserSubscriptionPlan } from "types"
-import { cn, formatDate } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import {
   Card,
@@ -13,18 +11,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { toast } from "@/components/ui/use-toast"
-import { Icons } from "@/components/shared/icons"
+import { cn, formatDate } from "@/lib/utils"
 import Link from "next/link"
+import { UserSubscriptionPlan } from "types"
 
-interface BillingFormProps extends React.HTMLAttributes<HTMLFormElement> {
+interface BillingInfoProps extends React.HTMLAttributes<HTMLFormElement> {
   subscriptionPlan: UserSubscriptionPlan;
 }
 
-export function BillingForm({
-  subscriptionPlan,
-  className
-}: BillingFormProps) {
+export function BillingInfo({
+  subscriptionPlan
+}: BillingInfoProps) {
 
   return (
     <Card>

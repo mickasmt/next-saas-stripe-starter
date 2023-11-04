@@ -2,10 +2,9 @@ import { redirect } from "next/navigation"
 
 import { authOptions } from "@/lib/auth"
 import { getCurrentUser } from "@/lib/session"
-import { stripe } from "@/lib/stripe"
 import { getUserSubscriptionPlan } from "@/lib/subscription"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { BillingForm } from "@/components/forms/billing-form"
+import { BillingInfo } from "@/components/billing-info"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { Icons } from "@/components/shared/icons"
 import { DashboardShell } from "@/components/dashboard/shell"
@@ -48,7 +47,7 @@ export default async function BillingPage() {
             .
           </AlertDescription>
         </Alert>
-        <BillingForm
+        <BillingInfo
           subscriptionPlan={subscriptionPlan}
         />
       </div>
