@@ -57,8 +57,8 @@ pnpm dev
 ## Roadmap
 
 - [x] ~Fix Vaul drawer for mobile sign in~  
+- [x] ~Update OG image~  
 - [ ] Add resend for subscriptions  
-- [ ] Update OG image  
 - [ ] Update documentation
 - [ ] Use Server Actions
 - [ ] Switch subscription plan

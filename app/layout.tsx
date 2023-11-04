@@ -22,9 +22,13 @@ export const metadata = {
   keywords: [
     "Next.js",
     "React",
-    "Tailwind CSS",
-    "Server Components",
-    "Radix UI",
+    "Prisma",
+    "PlanetScale",
+    "Auth.js",
+    "shadcn ui",
+    "Resend",
+    "React Email",
+    "Stripe"
   ],
   authors: [
     {
@@ -45,8 +49,8 @@ export const metadata = {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [`${siteConfig.url}/og.jpg`],
-    creator: "@mickasmt",
+    images: [siteConfig.ogImage],
+    creator: "@miickasmt",
   },
   icons: {
     icon: "/favicon.ico",
