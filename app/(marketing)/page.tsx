@@ -92,9 +92,11 @@ export default async function IndexPage() {
           <div className="my-7 flex flex-wrap items-center justify-center gap-10 gap-y-8 lg:gap-14">
             {features.map((feature) => (
               <Link
-                key={feature.title} href={feature.href}
-                className="flex flex-col items-center transition duration-300 hover:text-black dark:hover:text-white"
                 target="_blank"
+                key={feature.title}
+                href={feature.href}
+                aria-label={feature.title}
+                className="flex flex-col items-center transition duration-300 hover:text-black dark:hover:text-white"
               >
                 {feature.icon}
               </Link>
