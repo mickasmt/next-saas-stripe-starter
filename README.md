@@ -58,9 +58,10 @@ pnpm dev
 
 - [x] ~Fix Vaul drawer for mobile sign in~  
 - [x] ~Update OG image~  
-- [ ] Add resend for subscriptions  
+- [x] ~Add Server Actions on billing form (stripe)~
+- [ ] Add Server Actions on user form
+- [ ] Add resend for success subscriptions  
 - [ ] Update documentation
-- [ ] Use Server Actions
 - [ ] Switch subscription plan
 
 ## Tech Stack + Features
@@ -87,7 +88,7 @@ https://github.com/mickasmt/next-saas-stripe-starter/assets/62285783/828a4e0f-30
 - [Framer Motion](https://framer.com/motion) – Motion library for React to animate components with ease
 - [Lucide](https://lucide.dev/) – Beautifully simple, pixel-perfect icons
 - [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) – Optimize custom fonts and remove external network requests for improved performance
-<!-- - [`ImageResponse`](https://nextjs.org/docs/app/api-reference/functions/image-response) – Generate dynamic Open Graph images at the edge -->
+- [`ImageResponse`](https://nextjs.org/docs/app/api-reference/functions/image-response) – Generate dynamic Open Graph images at the edge
 
 ### Hooks and Utilities
 
