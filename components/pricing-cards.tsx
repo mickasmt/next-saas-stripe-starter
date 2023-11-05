@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 import { BillingFormButton } from "@/components/forms/billing-form-button";
 import { Icons } from "@/components/shared/icons";
@@ -106,7 +106,11 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
                     Go to dashboard
                   </Link>
                 ) : (
-                  <BillingFormButton year={isYearly} offer={offer} subscriptionPlan={subscriptionPlan} />
+                  <>
+                    {/* FIX: https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error */}
+                    {/* @ts-expect-error Server Component */}
+                    <BillingFormButton year={isYearly} offer={offer} subscriptionPlan={subscriptionPlan} />
+                  </>
                 )
               ) : (
                 <Button onClick={signInModal.onOpen}>Sign in</Button>
