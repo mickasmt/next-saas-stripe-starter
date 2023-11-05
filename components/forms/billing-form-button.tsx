@@ -1,8 +1,11 @@
 import * as React from "react"
-import { SubscriptionPlan, UserSubscriptionPlan } from "types"
+import { useFormState, useFormStatus } from 'react-dom'
+
+import { generateUserStripe } from '@/actions/generate-user-stripe'
+import { SubscriptionPlan, UserSubscriptionPlan } from "@/types"
 import { Button } from "@/components/ui/button"
-import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/shared/icons"
+import { toast } from "@/components/ui/use-toast"
 
 interface BillingFormButtonProps {
   offer: SubscriptionPlan;
@@ -10,50 +13,35 @@ interface BillingFormButtonProps {
   year: boolean;
 }
 
+const initialState = {
+  message: null,
+}
+
 export function BillingFormButton({ year, offer, subscriptionPlan }: BillingFormButtonProps) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const { pending } = useFormStatus();
+  const generateUserStripeSession = generateUserStripe.bind(
+    null,
+    offer.stripeIds[year ? "yearly" : "monthly"]
+  );
+  const [state, formAction] = useFormState(generateUserStripeSession, initialState)
 
-  async function onSubmit(event) {
-    event.preventDefault()
-    setIsLoading(!isLoading)
-
-    // Get a Stripe session URL.
-    const response = await fetch("/api/users/stripe", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        priceId: offer.stripeIds[year ? "yearly" : "monthly"]
-      })
+  if (state?.message) {
+    return toast({
+      title: "Something went wrong.",
+      description: state.message,
+      variant: "destructive",
     })
-
-    if (!response?.ok) {
-      return toast({
-        title: "Something went wrong.",
-        description: "Please refresh the page and try again.",
-        variant: "destructive",
-      })
-    }
-
-    // Redirect to the Stripe session.
-    // This could be a checkout page for initial upgrade.
-    // Or portal to manage an existing subscription.
-    const session = await response.json()
-    if (session) {
-      window.location.href = session.url
-    }
   }
 
   return (
-    <form onSubmit={onSubmit}>
+    <form action={formAction}>
       <Button
         type="submit"
         variant="default"
         className="w-full"
-        disabled={isLoading}
+        disabled={pending}
       >
-        {isLoading && (
+        {pending && (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         )}
         {subscriptionPlan.stripePriceId === offer.stripeIds[year ? "yearly" : "monthly"]
