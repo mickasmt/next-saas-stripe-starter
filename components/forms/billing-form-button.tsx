@@ -1,4 +1,5 @@
-import * as React from "react"
+"use client"
+
 import { useFormState, useFormStatus } from 'react-dom'
 
 import { generateUserStripe } from '@/actions/generate-user-stripe'
@@ -13,11 +14,9 @@ interface BillingFormButtonProps {
   year: boolean;
 }
 
-const initialState = {
-  message: null,
-}
 
 export function BillingFormButton({ year, offer, subscriptionPlan }: BillingFormButtonProps) {
+  const initialState = { message: null };
   const { pending } = useFormStatus();
   const generateUserStripeSession = generateUserStripe.bind(
     null,
@@ -41,12 +40,17 @@ export function BillingFormButton({ year, offer, subscriptionPlan }: BillingForm
         className="w-full"
         disabled={pending}
       >
-        {pending && (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+        {pending ? (
+          <>
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" /> Loading...
+          </>
+        ) : (
+          <>
+            {subscriptionPlan.stripePriceId === offer.stripeIds[year ? "yearly" : "monthly"]
+              ? "Manage Subscription"
+              : "Upgrade"}
+          </>
         )}
-        {subscriptionPlan.stripePriceId === offer.stripeIds[year ? "yearly" : "monthly"]
-          ? "Manage Subscription"
-          : "Upgrade"}
       </Button>
     </form>
   )

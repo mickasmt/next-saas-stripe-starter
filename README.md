@@ -59,7 +59,7 @@ pnpm dev
 - [x] ~Fix Vaul drawer for mobile sign in~  
 - [x] ~Update OG image~  
 - [x] ~Add Server Actions on billing form (stripe)~
-- [ ] Add Server Actions on user form
+- [x] ~Add Server Actions on user name form~
 - [ ] Add resend for success subscriptions  
 - [ ] Update documentation
 - [ ] Switch subscription plan

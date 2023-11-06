@@ -5,9 +5,11 @@ import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { absoluteUrl } from "@/lib/utils";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation';
 
-const billingUrl = absoluteUrl("/dashboard/billing")
+// const billingUrl = absoluteUrl("/dashboard/billing")
+const billingUrl = absoluteUrl("/pricing")
 
 export async function generateUserStripe(priceId: string) {
   let redirectUrl = "";
@@ -59,5 +61,6 @@ export async function generateUserStripe(priceId: string) {
     return { message: 'Failed to generate user stripe session' }
   }
 
+  revalidatePath("/pricing")
   redirect(redirectUrl);
 }
