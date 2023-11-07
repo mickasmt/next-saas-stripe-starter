@@ -36,7 +36,7 @@ const pricingFaqData = [
 
 export function PricingFaq() {
   return (
-    <section className="container max-w-4xl py-2">
+    <section className="container max-w-3xl py-2">
       <div className="mb-14 space-y-6 text-center">
         <h1 className="text-center font-heading text-3xl md:text-5xl">
           <Balancer>Frequently Asked Questions</Balancer>
