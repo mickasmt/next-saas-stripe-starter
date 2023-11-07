@@ -106,11 +106,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
                     Go to dashboard
                   </Link>
                 ) : (
-                  <>
-                    {/* FIX: https://nextjs.org/docs/app/building-your-application/configuring/typescript#async-server-component-typescript-error */}
-                    {/* @ts-expect-error Server Component */}
-                    <BillingFormButton year={isYearly} offer={offer} subscriptionPlan={subscriptionPlan} />
-                  </>
+                  <BillingFormButton year={isYearly} offer={offer} subscriptionPlan={subscriptionPlan} />
                 )
               ) : (
                 <Button onClick={signInModal.onOpen}>Sign in</Button>

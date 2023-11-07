@@ -1,12 +1,12 @@
 "use client"
 
-import { useFormState, useFormStatus } from 'react-dom'
-
-import { generateUserStripe } from '@/actions/generate-user-stripe'
+import { generateUserStripe, type responseAction } from '@/actions/generate-user-stripe'
 import { SubscriptionPlan, UserSubscriptionPlan } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/shared/icons"
 import { toast } from "@/components/ui/use-toast"
+import { useTransition } from 'react'
+import { redirect } from 'next/navigation'
 
 interface BillingFormButtonProps {
   offer: SubscriptionPlan;
@@ -14,44 +14,43 @@ interface BillingFormButtonProps {
   year: boolean;
 }
 
-
 export function BillingFormButton({ year, offer, subscriptionPlan }: BillingFormButtonProps) {
-  const initialState = { message: null };
-  const { pending } = useFormStatus();
+  let [isPending, startTransition] = useTransition();
   const generateUserStripeSession = generateUserStripe.bind(
     null,
     offer.stripeIds[year ? "yearly" : "monthly"]
   );
-  const [state, formAction] = useFormState(generateUserStripeSession, initialState)
 
-  if (state?.message) {
-    return toast({
+  const stripeSessionAction = () => startTransition(async () => {
+    const res: responseAction = await generateUserStripeSession();
+
+    if (res.status === "success") redirect(res.stripeUrl as string);
+
+    toast({
       title: "Something went wrong.",
-      description: state.message,
+      description: "Your name was not updated. Please try again.",
       variant: "destructive",
-    })
-  }
+    });
+  });
 
   return (
-    <form action={formAction}>
-      <Button
-        type="submit"
-        variant="default"
-        className="w-full"
-        disabled={pending}
-      >
-        {pending ? (
-          <>
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" /> Loading...
-          </>
-        ) : (
-          <>
-            {subscriptionPlan.stripePriceId === offer.stripeIds[year ? "yearly" : "monthly"]
-              ? "Manage Subscription"
-              : "Upgrade"}
-          </>
-        )}
-      </Button>
-    </form>
+    <Button
+      variant="default"
+      className="w-full"
+      disabled={isPending}
+      onClick={stripeSessionAction}
+    >
+      {isPending ? (
+        <>
+          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" /> Loading...
+        </>
+      ) : (
+        <>
+          {subscriptionPlan.stripePriceId === offer.stripeIds[year ? "yearly" : "monthly"]
+            ? "Manage Subscription"
+            : "Upgrade"}
+        </>
+      )}
+    </Button>
   )
 }

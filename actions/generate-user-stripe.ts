@@ -6,13 +6,17 @@ import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { absoluteUrl } from "@/lib/utils";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
-import { redirect } from 'next/navigation';
+
+export type responseAction = {
+  status: "success" | "error";
+  stripeUrl?: string;
+}
 
 // const billingUrl = absoluteUrl("/dashboard/billing")
 const billingUrl = absoluteUrl("/pricing")
 
-export async function generateUserStripe(priceId: string) {
-  let redirectUrl = "";
+export async function generateUserStripe(priceId: string): Promise<responseAction> {
+  let redirectUrl: string = "";
 
   try {
     const session = await getServerSession(authOptions)
@@ -54,13 +58,8 @@ export async function generateUserStripe(priceId: string) {
       redirectUrl = stripeSession.url as string
     }
 
-  // WARNING: redirect not working in try catch : https://nextjs.org/learn/dashboard-app/error-handling#adding-trycatch-to-server-actions
-  // uncomment the next line for test the error page if you want else remove all comments
-  // redirect(redirectUrl);
+    return { status: "success", stripeUrl: redirectUrl }
   } catch (error) {
-    return { message: 'Failed to generate user stripe session' }
+    return { status: "error" }
   }
-
-  revalidatePath("/pricing")
-  redirect(redirectUrl);
 }

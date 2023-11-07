@@ -44,9 +44,9 @@ export function UserNameForm({ user }: UserNameFormProps) {
 
   const onSubmit = handleSubmit(data => {
     startTransition(async () => {
-      const res = await updateUserNameWithId(data);
+      const { status } = await updateUserNameWithId(data);
 
-      if (res.status !== "success") {
+      if (status !== "success") {
         toast({
           title: "Something went wrong.",
           description: "Your name was not updated. Please try again.",
