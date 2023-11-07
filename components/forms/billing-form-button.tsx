@@ -1,12 +1,10 @@
 "use client"
 
-import { generateUserStripe, type responseAction } from '@/actions/generate-user-stripe'
-import { SubscriptionPlan, UserSubscriptionPlan } from "@/types"
-import { Button } from "@/components/ui/button"
+import { generateUserStripe } from '@/actions/generate-user-stripe'
 import { Icons } from "@/components/shared/icons"
-import { toast } from "@/components/ui/use-toast"
+import { Button } from "@/components/ui/button"
+import { SubscriptionPlan, UserSubscriptionPlan } from "@/types"
 import { useTransition } from 'react'
-import { redirect } from 'next/navigation'
 
 interface BillingFormButtonProps {
   offer: SubscriptionPlan;
@@ -21,17 +19,7 @@ export function BillingFormButton({ year, offer, subscriptionPlan }: BillingForm
     offer.stripeIds[year ? "yearly" : "monthly"]
   );
 
-  const stripeSessionAction = () => startTransition(async () => {
-    const res: responseAction = await generateUserStripeSession();
-
-    if (res.status === "success") redirect(res.stripeUrl as string);
-
-    toast({
-      title: "Something went wrong.",
-      description: "Your name was not updated. Please try again.",
-      variant: "destructive",
-    });
-  });
+  const stripeSessionAction = () => startTransition(async () => await generateUserStripeSession());
 
   return (
     <Button

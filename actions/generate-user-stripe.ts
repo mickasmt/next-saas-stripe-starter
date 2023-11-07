@@ -5,7 +5,7 @@ import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { absoluteUrl } from "@/lib/utils";
 import { getServerSession } from "next-auth";
-import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export type responseAction = {
   status: "success" | "error";
@@ -57,9 +57,10 @@ export async function generateUserStripe(priceId: string): Promise<responseActio
 
       redirectUrl = stripeSession.url as string
     }
-
-    return { status: "success", stripeUrl: redirectUrl }
   } catch (error) {
-    return { status: "error" }
+    throw new Error("Failed to generate user stripe session");
   }
+
+  // no revalidatePath because redirect
+  redirect(redirectUrl)
 }
