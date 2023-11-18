@@ -14,7 +14,7 @@ export default async function IndexPage() {
         <div className="container flex max-w-[64rem] flex-col items-center gap-5 text-center">
           <Medal className="animate-fade-up opacity-0" style={{ animationDelay: "0.05s", animationFillMode: "forwards" }} size={64} />
           <Link
-            href="https://twitter.com/miickasmt/status/1719892161095745801"
+            href="https://twitter.com/snack_xyz"
             className={cn(buttonVariants({ variant: "outline", size: "sm" }), "animate-fade-up opacity-0")}
             style={{ animationDelay: "0.15s", animationFillMode: "forwards" }}
             target="_blank"
@@ -39,7 +39,7 @@ export default async function IndexPage() {
             style={{ animationDelay: "0.35s", animationFillMode: "forwards" }}
           >
             <Balancer>
-              With Snack, you can create, organize, and publish lists of links in a snap. Whether you're a content creator, a knowledge enthusiast, or just someone who loves sharing interesting finds, Snack has got you covered!
+              With Snack, you can create, organize, and publish lists of links in a snap. Whether you&apos;re a content creator, a knowledge enthusiast, or just someone who loves sharing interesting finds, Snack has got you covered!
             </Balancer>
           </p>
 
