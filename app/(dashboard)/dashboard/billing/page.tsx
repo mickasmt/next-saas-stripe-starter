@@ -32,9 +32,9 @@ export default async function BillingPage() {
       <div className="grid gap-8">
         <Alert className="!pl-14">
           <Icons.warning />
-          <AlertTitle>This is a demo app.</AlertTitle>
+          <AlertTitle>This app is in test mode</AlertTitle>
           <AlertDescription>
-            SaaS Starter app is a demo app using a Stripe test environment. You can
+            Snack app is using a Stripe test environment. You can
             find a list of test card numbers on the{" "}
             <a
               href="https://stripe.com/docs/testing#cards"

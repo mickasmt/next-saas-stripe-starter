@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 
-import { fontHeading, fontSans, fontUrban } from "@/assets/fonts";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@/components/analytics";
 import { ModalProvider } from "@/components/modal-provider";
 import { Providers } from "@/components/providers";
@@ -32,10 +33,10 @@ export const metadata = {
   ],
   authors: [
     {
-      name: "mickasmt",
+      name: "ratlabs",
     },
   ],
-  creator: "mickasmt",
+  creator: "ratlabs",
   metadataBase: new URL(siteConfig.url),
   openGraph: {
     type: "website",
@@ -50,7 +51,7 @@ export const metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: "@miickasmt",
+    creator: "@ratlabs_",
   },
   icons: {
     icon: "/favicon.ico",
@@ -68,9 +69,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-          fontUrban.variable,
-          fontHeading.variable
+          `${GeistSans.variable} ${GeistMono.variable}`
         )}
       >
         <Providers attribute="class" defaultTheme="system" enableSystem>

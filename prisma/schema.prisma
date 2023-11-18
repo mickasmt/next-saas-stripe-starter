@@ -56,6 +56,7 @@ model User {
 
   accounts Account[]
   sessions Session[]
+  lists    List[]
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
@@ -72,4 +73,42 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map(name: "verification_tokens")
+}
+
+model List {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @default(now()) @map(name: "updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  userId String
+  items  Item[]
+
+  isPublic   Boolean @default(true) @map(name: "is_public")
+  isArchived Boolean @default(false) @map(name: "is_archived")
+
+  @@index([userId])
+  @@map(name: "lists")
+}
+
+model Item {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  listId String
+  list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
+
+  url           String
+  originalTitle String?
+  fallbackTitle String?
+  originalImage String?
+  originalDesc  String?
+
+  @@index([listId])
+  @@map(name: "items")
 }
