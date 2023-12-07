@@ -16,6 +16,11 @@
     "postinstall": "prisma generate",
     "email": "email dev --dir emails --port 3333"
   },
+  "overrides": {
+    "next-contentlayer": {
+      "next": "$next"
+    }
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
     "@next-auth/prisma-adapter": "^1.0.7",
@@ -113,7 +118,7 @@
     "rehype-pretty-code": "^0.12.0",
     "rehype-slug": "^6.0.0",
     "remark": "^15.0.1",
-    "remark-gfm": "^4.0.0",
+    "remark-gfm": "^3.0.1",
     "tailwindcss": "^3.3.6",
     "typescript": "5.3.2",
     "unist-util-visit": "^5.0.0"
