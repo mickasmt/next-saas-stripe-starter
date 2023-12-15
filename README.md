@@ -56,7 +56,8 @@ pnpm dev
 
 > [!NOTE]  
 > I use [npm-check-updates](https://www.npmjs.com/package/npm-check-updates) package for update this project.
-> Use this command for update your project: `ncu -i --format group`
+>
+> Use this command for update your project: `ncu -i --format-group`
 
 > [!CAUTION]  
 > Errors while the build if you update the `resend` & `remark-gfm` packages.

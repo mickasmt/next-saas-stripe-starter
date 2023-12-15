@@ -44,7 +44,7 @@ export default async function IndexPage() {
           >
             <Balancer>
               Kick off with a bang with{" "}
-              <span className="relative bg-gradient-to-r from-indigo-500 to-purple-500/80 bg-clip-text font-extrabold text-transparent">
+              <span className="text-gradient_indigo-purple font-extrabold">
                 SaaS Starter
               </span>
             </Balancer>
