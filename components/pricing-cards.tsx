@@ -81,14 +81,14 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
               <ul className="space-y-2 text-left text-sm font-medium leading-normal">
                 {offer.benefits.map((feature) => (
                   <li className="flex items-start" key={feature}>
-                    <Icons.check className="mr-3 h-5 w-5 shrink-0" />
+                    <Icons.check className="mr-3 size-5 shrink-0" />
                     <p>{feature}</p>
                   </li>
                 ))}
 
                 {offer.limitations.length > 0 && offer.limitations.map((feature) => (
                   <li className="flex items-start text-muted-foreground" key={feature}>
-                    <Icons.close className="mr-3 h-5 w-5 shrink-0" />
+                    <Icons.close className="mr-3 size-5 shrink-0" />
                     <p>{feature}</p>
                   </li>
                 ))}

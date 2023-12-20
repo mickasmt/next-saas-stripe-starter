@@ -35,7 +35,7 @@ export default async function IndexPage() {
             style={{ animationDelay: "0.15s", animationFillMode: "forwards" }}
             target="_blank"
           >
-            Introducing on <Icons.twitter className="ml-2 h-4 w-4" />
+            Introducing on <Icons.twitter className="ml-2 size-4" />
           </Link>
 
           <h1
@@ -72,7 +72,7 @@ export default async function IndexPage() {
               rel="noreferrer"
               className={cn(buttonVariants({ variant: "outline", size: "lg" }), "px-4")}
             >
-              <Icons.gitHub className="mr-2 h-4 w-4" />
+              <Icons.gitHub className="mr-2 size-4" />
               <p>
                 <span className="hidden sm:inline-block">Star on</span>{" "}GitHub{" "}
                 <span className="font-semibold">{nFormatter(stars)}</span>
@@ -159,7 +159,7 @@ const features = [
         fill="currentColor"
         stroke="currentColor"
         strokeWidth="1"
-        className="h-9 w-9"
+        className="size-9"
       >
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
       </svg>
@@ -207,7 +207,7 @@ const features = [
     title: "shadcn/ui",
     href: "https://ui.shadcn.com/",
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="h-10 w-10">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="size-10">
         <rect width="256" height="256" fill="none"></rect>
         <line x1="208" y1="128" x2="128" y2="208" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"></line>
         <line x1="192" y1="40" x2="40" y2="192" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16"></line>

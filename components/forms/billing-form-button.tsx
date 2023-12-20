@@ -30,7 +30,7 @@ export function BillingFormButton({ year, offer, subscriptionPlan }: BillingForm
     >
       {isPending ? (
         <>
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" /> Loading...
+          <Icons.spinner className="mr-2 size-4 animate-spin" /> Loading...
         </>
       ) : (
         <>
