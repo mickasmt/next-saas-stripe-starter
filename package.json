@@ -80,7 +80,6 @@
     "react-email": "1.10.0",
     "react-hook-form": "^7.49.2",
     "react-textarea-autosize": "^8.5.3",
-    "react-wrap-balancer": "^1.1.0",
     "resend": "^1.1.0",
     "sharp": "^0.33.0",
     "shiki": "^0.14.6",
