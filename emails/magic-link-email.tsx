@@ -32,7 +32,7 @@ export const MagicLinkEmail = ({
     <Tailwind>
       <Body className="bg-white font-sans">
         <Container className="mx-auto py-5 pb-12">
-          <Icons.logo className="m-auto block h-10 w-10" />
+          <Icons.logo className="m-auto block size-10" />
           <Text className="text-base">
             Hi {firstName},
           </Text>
@@ -40,7 +40,7 @@ export const MagicLinkEmail = ({
             Welcome to {siteName} ! Click the link below to {mailType === "login" ? "sign in to" : "activate"} your account.
           </Text>
           <Section className="my-5 text-center">
-            <Button 
+            <Button
               className="inline-block rounded-md bg-zinc-900 px-4 py-2 text-base text-white no-underline"
               href={actionUrl}
             >

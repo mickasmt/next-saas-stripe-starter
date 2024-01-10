@@ -1,7 +1,6 @@
 import { formatDate } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import Balancer from 'react-wrap-balancer';
 
 export function BlogPosts({ posts }) {
   return (
@@ -21,16 +20,12 @@ export function BlogPosts({ posts }) {
             )}
           </div>
           <div className="flex flex-col justify-center">
-            <h3 className="mb-2 font-heading text-2xl md:text-4xl">
-              <Balancer>
-                {posts[0].title}
-              </Balancer>
+            <h3 className="mb-2 text-balance font-heading text-2xl md:text-4xl">
+              {posts[0].title}
             </h3>
             {posts[0].description && (
-              <p className="text-muted-foreground md:text-lg">
-                <Balancer>
-                  {posts[0].description}
-                </Balancer>
+              <p className="text-balance text-muted-foreground md:text-lg">
+                {posts[0].description}
               </p>
             )}
             <Link href={posts[0].slug} className="absolute inset-0">

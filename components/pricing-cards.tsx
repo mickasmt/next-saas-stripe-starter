@@ -10,7 +10,6 @@ import { Switch } from '@/components/ui/switch';
 import { pricingData } from "@/config/subscriptions";
 
 import { UserSubscriptionPlan } from "@/types";
-import Balancer from "react-wrap-balancer";
 
 interface PricingCardsProps {
   userId?: string;
@@ -80,14 +79,14 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
               <ul className="space-y-2 text-left text-sm font-medium leading-normal">
                 {offer.benefits.map((feature) => (
                   <li className="flex items-start" key={feature}>
-                    <Icons.check className="mr-3 h-5 w-5 shrink-0" />
+                    <Icons.check className="mr-3 size-5 shrink-0" />
                     <p>{feature}</p>
                   </li>
                 ))}
 
                 {offer.limitations.length > 0 && offer.limitations.map((feature) => (
                   <li className="flex items-start text-muted-foreground" key={feature}>
-                    <Icons.close className="mr-3 h-5 w-5 shrink-0" />
+                    <Icons.close className="mr-3 size-5 shrink-0" />
                     <p>{feature}</p>
                   </li>
                 ))}
@@ -116,12 +115,10 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
         ))}
       </div>
 
-      <p className="mt-3 text-center text-base text-muted-foreground">
-        <Balancer>
-          Email <a className="font-medium text-primary hover:underline" href="mailto:support@saas-starter.com">support@saas-starter.com</a> for to contact our support team.
-          <br />
-          <strong>You can test the subscriptions and won&apos;t be charged.</strong>
-        </Balancer>
+      <p className="mt-3 text-balance text-center text-base text-muted-foreground">
+        Email <a className="font-medium text-primary hover:underline" href="mailto:support@saas-starter.com">support@saas-starter.com</a> for to contact our support team.
+        <br />
+        <strong>You can test the subscriptions and won&apos;t be charged.</strong>
       </p>
     </section>
   )

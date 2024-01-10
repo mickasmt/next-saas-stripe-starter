@@ -3,7 +3,6 @@ import Link from "next/link"
 import { buttonVariants } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
 import { cn, nFormatter } from "@/lib/utils"
-import Balancer from "react-wrap-balancer"
 import { Icons } from "@/components/shared/icons"
 import { Medal } from "lucide-react"
 
@@ -19,23 +18,21 @@ export default async function IndexPage() {
             style={{ animationDelay: "0.15s", animationFillMode: "forwards" }}
             target="_blank"
           >
-            Introducing on <Icons.twitter className="ml-2 h-4 w-4" />
+            Introducing on <Icons.twitter className="ml-2 size-4" />
           </Link>
 
           <h1
-            className="animate-fade-up text-4xl font-extrabold tracking-tight opacity-0 sm:text-5xl md:text-6xl lg:text-7xl"
+            className="animate-fade-up text-balance font-urban text-4xl font-extrabold tracking-tight opacity-0 sm:text-5xl md:text-6xl lg:text-7xl"
             style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
           >
-            <Balancer>
-              Kick off with a bang with{" "}
-              <span className="relative bg-gradient-to-r from-indigo-500 to-purple-500/80 bg-clip-text font-extrabold text-transparent">
-                SaaS Starter
-              </span>
-            </Balancer>
+            Kick off with a bang with{" "}
+            <span className="text-gradient_indigo-purple font-extrabold">
+              SaaS Starter
+            </span>
           </h1>
 
           <p
-            className="max-w-[42rem] animate-fade-up leading-normal text-muted-foreground opacity-0 sm:text-xl sm:leading-8"
+            className="max-w-[42rem] animate-fade-up text-balance leading-normal text-muted-foreground opacity-0 sm:text-xl sm:leading-8"
             style={{ animationDelay: "0.35s", animationFillMode: "forwards" }}
           >
             <Balancer>

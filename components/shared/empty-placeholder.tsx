@@ -3,7 +3,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Icons } from "@/components/shared/icons"
 
-interface EmptyPlaceholderProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface EmptyPlaceholderProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function EmptyPlaceholder({
   className,
@@ -42,14 +42,14 @@ EmptyPlaceholder.Icon = function EmptyPlaceHolderIcon({
   }
 
   return (
-    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
-      <Icon className={cn("h-10 w-10", className)} {...props} />
+    <div className="flex size-20 items-center justify-center rounded-full bg-muted">
+      <Icon className={cn("size-10", className)} {...props} />
     </div>
   )
 }
 
 interface EmptyPlacholderTitleProps
-  extends React.HTMLAttributes<HTMLHeadingElement> {}
+  extends React.HTMLAttributes<HTMLHeadingElement> { }
 
 EmptyPlaceholder.Title = function EmptyPlaceholderTitle({
   className,
@@ -61,7 +61,7 @@ EmptyPlaceholder.Title = function EmptyPlaceholderTitle({
 }
 
 interface EmptyPlaceholderDescriptionProps
-  extends React.HTMLAttributes<HTMLParagraphElement> {}
+  extends React.HTMLAttributes<HTMLParagraphElement> { }
 
 EmptyPlaceholder.Description = function EmptyPlaceholderDescription({
   className,

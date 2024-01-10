@@ -4,7 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@/components/analytics";
 import { ModalProvider } from "@/components/modal-provider";
-import { Providers } from "@/components/providers";
+import { ThemeProvider } from "@/components/providers";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
@@ -73,13 +73,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
           `${GeistSans.variable} ${GeistMono.variable}`
         )}
       >
-        <Providers attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
           <Analytics />
           <Toaster />
           <ModalProvider />
           <TailwindIndicator />
-        </Providers>
+        </ThemeProvider>
       </body>
     </html>
   )

@@ -19,7 +19,7 @@ const rightHeader = () => (
       <DocsSearch />
     </div>
     <div className="flex lg:hidden">
-      <Icons.search className="h-6 w-6 text-muted-foreground" />
+      <Icons.search className="size-6 text-muted-foreground" />
     </div>
   </div>
 )
