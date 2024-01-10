@@ -8,7 +8,7 @@ import { Icons } from "@/components/shared/icons";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Switch } from '@/components/ui/switch';
 import { pricingData } from "@/config/subscriptions";
-import { useSigninModal } from "@/hooks/use-signin-modal";
+
 import { UserSubscriptionPlan } from "@/types";
 import Balancer from "react-wrap-balancer";
 
@@ -20,7 +20,6 @@ interface PricingCardsProps {
 export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
   const isYearlyDefault = (!subscriptionPlan?.interval || subscriptionPlan.interval === "year") ? true : false;
   const [isYearly, setIsYearly] = useState<boolean>(!!isYearlyDefault);
-  const signInModal = useSigninModal();
 
 
   const toggleBilling = () => {
@@ -109,7 +108,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
                   <BillingFormButton year={isYearly} offer={offer} subscriptionPlan={subscriptionPlan} />
                 )
               ) : (
-                <Button onClick={signInModal.onOpen}>Sign in</Button>
+                <Button>Sign in</Button>
               )}
 
             </div>

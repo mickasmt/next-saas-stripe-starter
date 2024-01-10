@@ -2,26 +2,24 @@
 
 import useScroll from "@/hooks/use-scroll";
 import { MainNavItem } from "@/types";
-import { User } from "next-auth";
 import { MainNav } from "./main-nav";
-import { UserAccountNav } from "./user-account-nav";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { useSigninModal } from "@/hooks/use-signin-modal";
-
+import { UserButton, useUser } from "@clerk/nextjs"
 
 interface NavBarProps {
-  user: Pick<User, "name" | "image" | "email"> | undefined
   items?: MainNavItem[]
   children?: React.ReactNode
   rightElements?: React.ReactNode
   scroll?: boolean
 }
 
-export function NavBar({ user, items, children, rightElements, scroll = false }: NavBarProps) {
+export function NavBar({ items, children, rightElements, scroll = false }: NavBarProps) {
+  const { user } = useUser();
   const scrolled = useScroll(50);
-  const signInModal = useSigninModal();
+
+console.log(user);
 
   return (
       <header
@@ -38,19 +36,17 @@ export function NavBar({ user, items, children, rightElements, scroll = false }:
 
             {!user ? (
               <Link
-                href="/login"
+                href="/sign-in"
                 className={cn(
                   buttonVariants({ variant: "outline", size: "sm" })
                 )}
               >
-                Login Page
+                Sign in
               </Link>
-            ) : null}
-
-            {user ? (
-              <UserAccountNav user={user} />
             ) : (
-              <Button className="px-3" variant="default" size="sm" onClick={signInModal.onOpen}>Sign In</Button>
+              <UserButton
+                afterSignOutUrl='/'
+              />
             )}
           </div>
         </div>

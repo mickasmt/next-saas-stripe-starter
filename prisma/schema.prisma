@@ -11,52 +11,15 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Account {
-  id                String   @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?  @db.Text
-  access_token      String?  @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?  @db.Text
-  session_state     String?
-  createdAt         DateTime @default(now()) @map(name: "created_at")
-  updatedAt         DateTime @default(now()) @map(name: "updated_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@index([userId])
-  @@map(name: "accounts")
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map(name: "sessions")
-}
-
 model User {
   id            String    @id @default(cuid())
+  userId        String    @unique
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-
-  accounts Account[]
-  sessions Session[]
-  lists    List[]
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
@@ -66,27 +29,17 @@ model User {
   @@map(name: "users")
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@map(name: "verification_tokens")
-}
-
 model List {
   id          String   @id @default(cuid())
-  name        String
+  userId      String
+  orgId       String?
+  title       String?
   description String?
   createdAt   DateTime @default(now()) @map(name: "created_at")
   updatedAt   DateTime @default(now()) @map(name: "updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  userId String
-  items  Item[]
-
+  items      Item[]
+  views      Int     @default(0)
   isPublic   Boolean @default(true) @map(name: "is_public")
   isArchived Boolean @default(false) @map(name: "is_archived")
 
@@ -95,11 +48,14 @@ model List {
 }
 
 model Item {
-  id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  type        OgType   @default(WEBSITE)
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @default(now()) @map(name: "updated_at")
 
+  order  Int
   listId String
   list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
 
@@ -111,4 +67,52 @@ model Item {
 
   @@index([listId])
   @@map(name: "items")
+}
+
+enum OgType {
+  WEBSITE
+  ARTICLE
+  BLOG
+  BOOK
+  MUSIC_SONG
+  MUSIC_ALBUM
+  MUSIC_PLAYLIST
+  MUSIC_RADIO_STATION
+  VIDEO_MOVIE
+  VIDEO_EPISODE
+  VIDEO_TV_SHOW
+  VIDEO_OTHER
+  BUSINESS_BUSINESS
+  PLACE
+  PRODUCT
+  PRODUCT_GROUP
+  PRODUCT_ITEM
+  PROFILE
+  FITNESS_COURSE
+  GAME_ACHIEVEMENT
+}
+
+model AuditLog {
+  id         String      @id @default(uuid())
+  orgId      String
+  action     ACTION
+  entityId   String
+  entityType ENTITY_TYPE
+  userId     String
+  userImage  String      @db.Text
+  userName   String      @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ACTION {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum ENTITY_TYPE {
+  LIST
+  ITEM
 }

@@ -1,9 +1,7 @@
 "use server";
 
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { userNameSchema } from "@/lib/validations/user";
-import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 export type FormData = {
@@ -12,28 +10,27 @@ export type FormData = {
 
 export async function updateUserName(userId: string, data: FormData) {
   try {
-    const session = await getServerSession(authOptions)
+    /* @todo: get session here */
 
-    if (!session?.user || session?.user.id !== userId) {
-      throw new Error("Unauthorized");
-    }
+    // if (!session?.user || session?.user.id !== userId) {
+    //   throw new Error("Unauthorized");
+    // }
 
-    const { name } = userNameSchema.parse(data);
+    // const { name } = userNameSchema.parse(data);
 
-    // Update the user name.
-    await prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        name: name,
-      },
-    })
+    // // Update the user name.
+    // await prisma.user.update({
+    //   where: {
+    //     id: userId,
+    //   },
+    //   data: {
+    //     name: name,
+    //   },
+    // })
 
-    revalidatePath('/dashboard/settings');
+    // revalidatePath('/dashboard/settings');
     return { status: "success" };
   } catch (error) {
-    console.log(error)
     return { status: "error" }
   }
 }

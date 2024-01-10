@@ -1,11 +1,12 @@
-import { ClerkProvider } from '@clerk/nextjs'
+import { ClerkProvider } from "@clerk/nextjs"
+
 const PlatformLayout = ({
 	children
 } : {
 	children: React.ReactNode
 }) => {
 	return (
-		<ClerkProvider frontendApi={process.env.NEXT_PUBLIC_CLERK_FRONTEND_API}>
+		<ClerkProvider>
 			{children}
 		</ClerkProvider>
 	)
