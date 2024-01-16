@@ -2,7 +2,7 @@ import Link from "next/link"
 
 import { buttonVariants } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
-import { cn, nFormatter } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { Icons } from "@/components/shared/icons"
 import { Medal } from "lucide-react"
 
@@ -35,9 +35,7 @@ export default async function IndexPage() {
             className="max-w-[42rem] animate-fade-up text-balance leading-normal text-muted-foreground opacity-0 sm:text-xl sm:leading-8"
             style={{ animationDelay: "0.35s", animationFillMode: "forwards" }}
           >
-            <Balancer>
               With Snack, you can create, organize, and publish lists of links in a snap. Whether you&apos;re a content creator, a knowledge enthusiast, or just someone who loves sharing interesting finds, Snack has got you covered!
-            </Balancer>
           </p>
 
           <div

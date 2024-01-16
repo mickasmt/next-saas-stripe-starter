@@ -1,0 +1,20 @@
+{
+  "hasSrc": false,
+  "packages": [
+    "clerk",
+    "resend",
+    "shadcn-ui",
+    "trpc",
+    "prisma",
+    "stripe"
+  ],
+  "preferredPackageManager": "pnpm",
+  "t3": false,
+  "alias": "@",
+  "rootPath": "",
+  "auth": "next-auth",
+  "componentLib": "shadcn-ui",
+  "provider": "planetscale",
+  "orm": "prisma",
+  "driver": "mysql"
+}

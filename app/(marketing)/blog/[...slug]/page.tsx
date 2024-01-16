@@ -8,10 +8,11 @@ import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 
-import { env } from "@/env.mjs"
-import { absoluteUrl, cn, formatDate } from "@/lib/utils"
+import { env } from "@/lib/env.mjs"
+import { absoluteUrl, cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Icons } from "@/components/shared/icons"
+import { format } from "date-fns"
 
 interface PostPageProps {
   params: {
@@ -112,7 +113,7 @@ export default async function PostPage({ params }: PostPageProps) {
             dateTime={post.date}
             className="block text-sm text-muted-foreground"
           >
-            Published on {formatDate(post.date)}
+            Published on {format(new Date(post.date), "MMMM d, yyyy")}
           </time>
         )}
         <h1 className="mt-2 inline-block text-balance font-heading text-4xl leading-tight lg:text-5xl">

@@ -1,10 +1,11 @@
 import { SubscriptionPlan } from "types"
-import { env } from "@/env.mjs"
+import { env } from "@/lib/env.mjs"
 
 export const pricingData: SubscriptionPlan[] = [
   {
-    title: 'Starter',
-    description: 'For Beginners',
+    id: "free",
+    name: "Free",
+    description: "For Beginners",
     benefits: [
       'Up to 100 monthly posts',
       'Basic analytics and reporting',
@@ -26,7 +27,8 @@ export const pricingData: SubscriptionPlan[] = [
     },
   },
   {
-    title: 'Pro',
+    id: 'pro',
+    name: 'Pro',
     description: 'Unlock Advanced Features',
     benefits: [
       'Up to 500 monthly posts',
@@ -40,32 +42,12 @@ export const pricingData: SubscriptionPlan[] = [
       'Limited access to business resources.',
     ],
     prices: {
-      monthly: 15,
-      yearly: 144,
+      monthly: 6.99,
+      yearly: 59.88,
     },
     stripeIds: {
       monthly: env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PLAN_ID,
       yearly: env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PLAN_ID,
-    },
-  },
-  {
-    title: 'Business',
-    description: 'For Power Users',
-    benefits: [
-      'Unlimited posts',
-      'Real-time analytics and reporting',
-      'Access to all templates, including custom branding',
-      '24/7 business customer support',
-      'Personalized onboarding and account management.',
-    ],
-    limitations: [],
-    prices: {
-      monthly: 30,
-      yearly: 300,
-    },
-    stripeIds: {
-      monthly: env.NEXT_PUBLIC_STRIPE_BUSINESS_MONTHLY_PLAN_ID,
-      yearly: env.NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID,
     },
   },
 ];

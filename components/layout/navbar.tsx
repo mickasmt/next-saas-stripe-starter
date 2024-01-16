@@ -19,8 +19,6 @@ export function NavBar({ items, children, rightElements, scroll = false }: NavBa
   const { user } = useUser();
   const scrolled = useScroll(50);
 
-console.log(user);
-
   return (
       <header
         className={`sticky top-0 z-40 flex w-full justify-center bg-background/60 backdrop-blur-xl transition-all ${scroll ? scrolled

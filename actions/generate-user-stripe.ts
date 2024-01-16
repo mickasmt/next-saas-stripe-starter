@@ -1,7 +1,8 @@
 "use server";
 
+import { getUserAuth } from "@/lib/auth"
 import { stripe } from "@/lib/stripe";
-import { getUserSubscriptionPlan } from "@/lib/subscription";
+import { getUserSubscriptionPlan } from "@/lib/stripe/subscription";
 import { absoluteUrl } from "@/lib/utils";
 import { redirect } from "next/navigation";
 
@@ -15,49 +16,48 @@ const billingUrl = absoluteUrl("/pricing")
 
 export async function generateUserStripe(priceId: string): Promise<responseAction> {
   let redirectUrl: string = "";
-
+  console.log({priceId})
   try {
-    
-    /* @todo: get session object here */
+    const { session } = await getUserAuth()
 
-    // if (!session?.user || !session?.user.email) {
-    //   throw new Error("Unauthorized");
-    // }
+    if (!session?.user || !session?.user.email) {
+      throw new Error("Unauthorized");
+    }
 
-    // const subscriptionPlan = await getUserSubscriptionPlan(session.user.id)
+    const subscriptionPlan = await getUserSubscriptionPlan()
 
-    // if (subscriptionPlan.isPaid && subscriptionPlan.stripeCustomerId) {
-    //   // User on Paid Plan - Create a portal session to manage subscription.
-    //   const stripeSession = await stripe.billingPortal.sessions.create({
-    //     customer: subscriptionPlan.stripeCustomerId,
-    //     return_url: billingUrl,
-    //   })
+    if (subscriptionPlan.isPaid && subscriptionPlan.stripeCustomerId) {
+      // User on Paid Plan - Create a portal session to manage subscription.
+      const stripeSession = await stripe.billingPortal.sessions.create({
+        customer: subscriptionPlan.stripeCustomerId,
+        return_url: billingUrl,
+    })
 
-    //   redirectUrl = stripeSession.url as string
-    // } else {
-    //   // User on Free Plan - Create a checkout session to upgrade.
-    //   const stripeSession = await stripe.checkout.sessions.create({
-    //     success_url: billingUrl,
-    //     cancel_url: billingUrl,
-    //     payment_method_types: ["card"],
-    //     mode: "subscription",
-    //     billing_address_collection: "auto",
-    //     customer_email: session.user.email,
-    //     line_items: [
-    //       {
-    //         price: priceId,
-    //         quantity: 1,
-    //       },
-    //     ],
-    //     metadata: {
-    //       userId: session.user.id,
-    //     },
-    //   })
+      redirectUrl = stripeSession.url as string
+    } else {
+      // User on Free Plan - Create a checkout session to upgrade.
+      const stripeSession = await stripe.checkout.sessions.create({
+        success_url: billingUrl,
+        cancel_url: billingUrl,
+        payment_method_types: ["card"],
+        mode: "subscription",
+        billing_address_collection: "auto",
+        customer_email: session.user.email,
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          userId: session.user.id,
+        },
+      })
 
-    //   redirectUrl = stripeSession.url as string
-    // }
+      redirectUrl = stripeSession.url as string
+    }
   } catch (error) {
-    // throw new Error("Failed to generate user stripe session");
+    throw new Error("Failed to generate user stripe session");
   }
 
   // no revalidatePath because redirect

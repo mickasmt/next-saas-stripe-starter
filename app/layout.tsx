@@ -10,6 +10,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { ClerkProvider } from "@clerk/nextjs"
+import TrpcProvider from "@/lib/trpc/Provider";
+import { cookies } from "next/headers";
 
 interface RootLayoutProps {
   children: React.ReactNode
@@ -74,7 +76,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
+          <TrpcProvider cookies={cookies().toString()}>
+            {children}
+          </TrpcProvider>
           <Analytics />
           <Toaster />
           <ModalProvider />

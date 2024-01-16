@@ -7,17 +7,20 @@ import { SubscriptionPlan, UserSubscriptionPlan } from "@/types"
 import { useTransition } from 'react'
 
 interface BillingFormButtonProps {
-  offer: SubscriptionPlan;
+  plan: SubscriptionPlan;
   subscriptionPlan: UserSubscriptionPlan;
   year: boolean;
 }
 
-export function BillingFormButton({ year, offer, subscriptionPlan }: BillingFormButtonProps) {
+export function BillingFormButton({ year, plan, subscriptionPlan }: BillingFormButtonProps) {
   let [isPending, startTransition] = useTransition();
   const generateUserStripeSession = generateUserStripe.bind(
     null,
-    offer.stripeIds[year ? "yearly" : "monthly"]
+    plan.stripeIds[year ? "yearly" : "monthly"]
   );
+
+
+    // console.log({ subscriptionPlan, offer, year })
 
   const stripeSessionAction = () => startTransition(async () => await generateUserStripeSession());
 
@@ -34,7 +37,7 @@ export function BillingFormButton({ year, offer, subscriptionPlan }: BillingForm
         </>
       ) : (
         <>
-          {subscriptionPlan.stripePriceId === offer.stripeIds[year ? "yearly" : "monthly"]
+          {subscriptionPlan.stripePriceId === plan.stripeIds[year ? "yearly" : "monthly"]
             ? "Manage Subscription"
             : "Upgrade"}
         </>

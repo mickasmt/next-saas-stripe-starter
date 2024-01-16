@@ -3,7 +3,7 @@
 
 const { createContentlayerPlugin } = require("next-contentlayer");
 
-import("./env.mjs");
+import("./lib/env.mjs");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

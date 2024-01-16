@@ -6,7 +6,7 @@ import { Mdx } from "@/components/content/mdx-components"
 import "@/styles/mdx.css"
 import { Metadata } from "next"
 
-import { env } from "@/env.mjs"
+import { env } from "@/lib/env.mjs"
 import { siteConfig } from "@/config/site"
 import { absoluteUrl } from "@/lib/utils"
 

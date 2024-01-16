@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation"
 
-import { getUserSubscriptionPlan } from "@/lib/subscription"
+import { getUserSubscriptionPlan } from "@/lib/stripe/subscription"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { BillingInfo } from "@/components/billing-info"
 import { DashboardHeader } from "@/components/dashboard/header"
 import { Icons } from "@/components/shared/icons"
 import { DashboardShell } from "@/components/dashboard/shell"
+import { checkAuth, getUserAuth } from "@/lib/auth"
 
 export const metadata = {
   title: "Billing",
@@ -13,17 +14,8 @@ export const metadata = {
 }
 
 export default async function BillingPage() {
-
-  /* @todo: add session object  */
-
-  // const user = await getCurrentUser()
-
-  // if (!user) {
-  //   redirect(authOptions?.pages?.signIn || "/login")
-  // }
-
-  // const subscriptionPlan = await getUserSubscriptionPlan(user.id)
-
+  await checkAuth();
+  const subscriptionPlan = await getUserSubscriptionPlan();
   return (
     <DashboardShell>
       <DashboardHeader
@@ -48,9 +40,9 @@ export default async function BillingPage() {
             .
           </AlertDescription>
         </Alert>
-        {/* <BillingInfo
+        <BillingInfo
           subscriptionPlan={subscriptionPlan}
-        /> */}
+        />
       </div>
     </DashboardShell>
   )

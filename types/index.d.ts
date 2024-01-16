@@ -54,7 +54,8 @@ export type DashboardConfig = {
 }
 
 export type SubscriptionPlan = {
-  title: string;
+  id: string;
+  name: string;
   description: string;
   benefits: string[];
   limitations: string[];
@@ -70,8 +71,8 @@ export type SubscriptionPlan = {
 
 export type UserSubscriptionPlan = SubscriptionPlan &
   Pick<User, "stripeCustomerId" | "stripeSubscriptionId" | "stripePriceId"> & {
-    stripeCurrentPeriodEnd: number
+    stripeCurrentPeriodEnd: Date | null
     isPaid: boolean
     interval: "month" | "year" | null
-    isCanceled?: boolean
+    isCanceled: boolean
   }

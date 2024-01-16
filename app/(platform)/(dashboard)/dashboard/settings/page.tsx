@@ -1,31 +1,19 @@
-import { redirect } from "next/navigation"
-
-import { DashboardHeader } from "@/components/dashboard/header"
 import { DashboardShell } from "@/components/dashboard/shell"
-import { UserNameForm } from "@/components/forms/user-name-form"
-
-export const metadata = {
-  title: "Settings",
-  description: "Manage account and website settings.",
-}
+import UserSettings from "@/components/account/UserSettings";
+import { checkAuth, getUserAuth } from "@/lib/auth";
+import { DashboardHeader } from "@/components/dashboard/header"
 
 export default async function SettingsPage() {
-  /* @todo: add session object  */
-  // const user = await getCurrentUser()
-
-  // if (!user) {
-  //   redirect(authOptions?.pages?.signIn || "/login")
-  // }
+  await checkAuth();
+  const { session } = await getUserAuth();
 
   return (
     <DashboardShell>
       <DashboardHeader
         heading="Settings"
-        text="Manage account and website settings."
+        text="Settings for your account."
       />
-      <div className="grid gap-10">
-        {/* <UserNameForm user={{ id: user.id, name: user.name || "" }} /> */}
-      </div>
+      <UserSettings session={session} />
     </DashboardShell>
-  )
+  );
 }

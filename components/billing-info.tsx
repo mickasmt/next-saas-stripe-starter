@@ -14,6 +14,7 @@ import {
 import { cn, formatDate } from "@/lib/utils"
 import Link from "next/link"
 import { UserSubscriptionPlan } from "types"
+import { format } from "date-fns"
 
 interface BillingInfoProps extends React.HTMLAttributes<HTMLFormElement> {
   subscriptionPlan: UserSubscriptionPlan;
@@ -28,7 +29,7 @@ export function BillingInfo({
       <CardHeader>
         <CardTitle>Subscription Plan</CardTitle>
         <CardDescription>
-          You are currently on the <strong>{subscriptionPlan.title}</strong>{" "}
+          You are currently on the <strong>{subscriptionPlan.name}</strong>{" "}
           plan.
         </CardDescription>
       </CardHeader>
@@ -46,10 +47,12 @@ export function BillingInfo({
             {subscriptionPlan.isCanceled
               ? "Your plan will be canceled on "
               : "Your plan renews on "}
-            {formatDate(subscriptionPlan.stripeCurrentPeriodEnd)}.
+            {subscriptionPlan.stripeCurrentPeriodEnd &&format(new Date(subscriptionPlan.stripeCurrentPeriodEnd), "MMMM d, yyyy")}.
           </p>
         ) : null}
       </CardFooter>
     </Card>
   )
 }
+
+

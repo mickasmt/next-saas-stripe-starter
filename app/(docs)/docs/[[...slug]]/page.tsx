@@ -10,7 +10,7 @@ import { DashboardTableOfContents } from "@/components/shared/toc"
 import "@/styles/mdx.css"
 import { Metadata } from "next"
 
-import { env } from "@/env.mjs"
+import { env } from "@/lib/env.mjs"
 import { absoluteUrl } from "@/lib/utils"
 
 interface DocPageProps {
