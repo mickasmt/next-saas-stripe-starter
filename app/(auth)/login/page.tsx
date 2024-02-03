@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Icons } from "@/components/shared/icons"
 import { UserAuthForm } from "@/components/forms/user-auth-form"
+import { Suspense } from "react"
 
 export const metadata: Metadata = {
   title: "Login",
@@ -36,7 +37,9 @@ export default function LoginPage() {
             Enter your email to sign in to your account
           </p>
         </div>
-        <UserAuthForm />
+        <Suspense>
+          <UserAuthForm />
+        </Suspense>
         <p className="px-8 text-center text-sm text-muted-foreground">
           <Link
             href="/register"
