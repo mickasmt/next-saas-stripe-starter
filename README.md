@@ -57,7 +57,7 @@ pnpm dev
 > [!NOTE]  
 > I use [npm-check-updates](https://www.npmjs.com/package/npm-check-updates) package for update this project.
 >
-> Use this command for update your project: `ncu -i --format-group`
+> Use this command for update your project: `ncu -i --format group`
 
 > [!CAUTION]  
 > Errors while the build if you update the `resend` & `remark-gfm` packages.
@@ -68,7 +68,8 @@ pnpm dev
 - [x] ~Update OG image~  
 - [x] ~Add Server Actions on billing form (stripe)~
 - [x] ~Add Server Actions on user name form~
-- [ ] Add resend for success subscriptions  
+- [ ] Upgrade Auth.js to v5 (working on it)
+- [ ] Add resend for success subscriptions 
 - [ ] Update documentation
 - [ ] Switch subscription plan
 
