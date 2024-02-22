@@ -22,7 +22,7 @@ export function Modal({children, className, showModal, setShowModal}: ModalProps
   if (isMobile) {
     return (
       <Drawer.Root open={showModal} onClose={setShowModal}>
-        <Drawer.Overlay className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm" />
+        <Drawer.Overlay className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm" onClick={setShowModal} />
         <Drawer.Portal>
           <Drawer.Content
             className={cn(
