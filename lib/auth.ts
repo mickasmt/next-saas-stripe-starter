@@ -38,7 +38,7 @@ export const authOptions: NextAuthOptions = {
         const authSubject = userVerified ? `Sign-in link for ${siteConfig.name}` : "Activate your account";
 
         try {
-          const result = await resend.emails.send({
+          const { data, error } = await resend.emails.send({
             from: 'SaaS Starter App <onboarding@resend.dev>',
             to: process.env.NODE_ENV === "development" ? 'delivered@resend.dev' : identifier,
             subject: authSubject,
@@ -55,7 +55,11 @@ export const authOptions: NextAuthOptions = {
             },
           });
 
-          // console.log(result)
+          if (error || !data) {
+            throw new Error(error?.message)
+          }
+
+          // console.log(data)
         } catch (error) {
           throw new Error("Failed to send verification email.")
         }
