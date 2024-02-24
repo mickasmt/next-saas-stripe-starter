@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation"
 
-import { authOptions } from "@/lib/auth"
 import { getCurrentUser } from "@/lib/session"
 import { getUserSubscriptionPlan } from "@/lib/subscription"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -18,7 +17,7 @@ export default async function BillingPage() {
   const user = await getCurrentUser()
 
   if (!user) {
-    redirect(authOptions?.pages?.signIn || "/login")
+    redirect("/login")
   }
 
   const subscriptionPlan = await getUserSubscriptionPlan(user.id)

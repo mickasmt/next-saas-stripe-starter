@@ -1,10 +1,9 @@
 "use server";
 
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/auth";
 import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { absoluteUrl } from "@/lib/utils";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 export type responseAction = {
@@ -19,7 +18,7 @@ export async function generateUserStripe(priceId: string): Promise<responseActio
   let redirectUrl: string = "";
 
   try {
-    const session = await getServerSession(authOptions)
+    const session = await auth()
 
     if (!session?.user || !session?.user.email) {
       throw new Error("Unauthorized");

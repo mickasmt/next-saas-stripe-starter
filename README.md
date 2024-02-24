@@ -24,7 +24,7 @@
 
 ## Introduction
 
-Empower your next project with the stack of Next.js 14, Prisma, Planetscale, Auth.js, Resend, React Email, Shadcn/ui, and Stripe.
+Empower your next project with the stack of Next.js 14, Prisma, Planetscale, Auth.js v5, Resend, React Email, Shadcn/ui, and Stripe.
 <br/>
 All seamlessly integrated with the SaaS Starter to accelerate your development and saas journey.
 
@@ -61,6 +61,8 @@ pnpm dev
 
 > [!WARNING]  
 > You need update `.react-email` folder before use `pnpm run email`. Check the link [here](https://github.com/resend/react-email/issues/868#issuecomment-1828411325) if you have the error : `renderToReadableStream not found`
+>
+> After upgrade Auth.js to v5: `NEXTAUTH_URL` has removed from `.env.example`. 
 
 > [!CAUTION]
 > Errors while the build if you update `remark-gfm` package.
@@ -71,7 +73,7 @@ pnpm dev
 - [x] ~Update OG image~  
 - [x] ~Add Server Actions on billing form (stripe)~
 - [x] ~Add Server Actions on user name form~
-- [ ] Upgrade Auth.js to v5 (working on it)
+- [x] ~Upgrade Auth.js to v5~
 - [ ] Add resend for success subscriptions 
 - [ ] Update documentation
 - [ ] Switch subscription plan

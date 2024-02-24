@@ -51,7 +51,7 @@ export default async function IndexPage() {
             className="max-w-[42rem] animate-fade-up text-balance leading-normal text-muted-foreground opacity-0 sm:text-xl sm:leading-8"
             style={{ animationDelay: "0.35s", animationFillMode: "forwards" }}
           >
-            Build your next project using Next.js 14, Prisma, Planetscale, Auth.js, Resend, React Email, Shadcn/ui, Stripe.
+            Build your next project using Next.js 14, Prisma, Planetscale, Auth.js v5, Resend, React Email, Shadcn/ui, Stripe.
           </p>
 
           <div
