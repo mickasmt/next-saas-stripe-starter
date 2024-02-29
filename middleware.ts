@@ -54,5 +54,5 @@ export default middleware((req: NextRequest & { auth: Session | null }): Respons
 
 // Optionally, don't invoke Middleware on some paths
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }
