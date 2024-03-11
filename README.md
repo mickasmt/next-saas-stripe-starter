@@ -74,8 +74,8 @@ pnpm dev
 - [x] ~Add Server Actions on billing form (stripe)~
 - [x] ~Add Server Actions on user name form~
 - [x] ~Upgrade Auth.js to v5~
-- [ ] Add resend for success subscriptions 
-- [ ] Update documentation
+- [ ] Change database platform (planetscale removes its free plan on April)
+- [ ] Add resend for success subscriptions
 - [ ] Switch subscription plan
 
 ## Tech Stack + Features
