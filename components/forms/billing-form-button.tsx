@@ -12,6 +12,21 @@ interface BillingFormButtonProps {
   year: boolean;
 }
 
+const renderPlanButton = (subscriptionPlan, offer, year) => {
+
+  const id = offer.stripeIds[year ? "yearly" : "monthly"];
+  const stripeId = subscriptionPlan.stripePriceId;
+  const str = subscriptionPlan.stripePriceId === offer.stripeIds[year ? "yearly" : "monthly"]
+  ? "Manage Subscription"
+  : "Upgrade";
+
+  return (
+    <span>
+      {str}
+    </span>
+  );
+};
+
 export function BillingFormButton({ year, offer, subscriptionPlan }: BillingFormButtonProps) {
   let [isPending, startTransition] = useTransition();
   const generateUserStripeSession = generateUserStripe.bind(
@@ -32,13 +47,7 @@ export function BillingFormButton({ year, offer, subscriptionPlan }: BillingForm
         <>
           <Icons.spinner className="mr-2 size-4 animate-spin" /> Loading...
         </>
-      ) : (
-        <>
-          {subscriptionPlan.stripePriceId === offer.stripeIds[year ? "yearly" : "monthly"]
-            ? "Manage Subscription"
-            : "Upgrade"}
-        </>
-      )}
+      ) : renderPlanButton(subscriptionPlan, offer, year)}
     </Button>
   )
 }

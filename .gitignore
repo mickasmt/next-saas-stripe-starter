@@ -41,3 +41,5 @@ next-env.d.ts
 
 .vscode
 .contentlayer
+package-lock.json
+components/forms/billing-form-button.tsx
