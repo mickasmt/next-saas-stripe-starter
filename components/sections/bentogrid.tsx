@@ -26,7 +26,7 @@ export function BentoGrid() {
                       100%
                     </span>
                   </div>
-                  <h2 className="mt-6 text-center font-heading text-4xl font-semibold tracking-wide text-foreground/95">
+                  <h2 className="mt-6 text-center font-heading text-3xl md:text-4xl lg:text-[40px]">
                     Customizable
                   </h2>
                 </div>
