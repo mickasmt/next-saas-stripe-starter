@@ -1,58 +1,89 @@
-import * as React from "react"
+import * as React from "react";
+import Link from "next/link";
 
-import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
-import { Icons } from "@/components/shared/icons"
-import { ModeToggle } from "@/components/layout/mode-toggle"
+import { footerLinks, siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
+import { ModeToggle } from "@/components/layout/mode-toggle";
+
+import { NewsletterForm } from "../forms/newsletter-form";
+import { Icons } from "../shared/icons";
 
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
   return (
-    <footer className={cn(className)}>
-      <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
-        <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-          <Icons.logo />
-          <p className="text-center text-sm leading-loose md:text-left">
+    <footer className={cn("border-t", className)}>
+      <div className="container grid grid-cols-1 gap-6 py-14 sm:grid-cols-2 md:grid-cols-5">
+        {footerLinks.map((section) => (
+          <div key={section.title}>
+            <span className="text-sm font-medium text-foreground">
+              {section.title}
+            </span>
+            <ul className="mt-4 list-inside space-y-3">
+              {section.items?.map((link) => (
+                <li key={link.title}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground hover:text-primary"
+                  >
+                    {link.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        <div className="flex flex-col  items-end md:col-span-2">
+          <NewsletterForm />
+        </div>
+      </div>
+
+      <div className="border-t py-4">
+        <div className="container flex items-center justify-between">
+          {/* <span className="text-muted-foreground text-sm">
+            Copyright &copy; 2024. All rights reserved.
+          </span> */}
+          <p className="text-left text-sm text-muted-foreground">
             Built by{" "}
-            <a
+            <Link
               href={siteConfig.links.twitter}
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
             >
               mickasmt
-            </a>
+            </Link>
             . Hosted on{" "}
-            <a
+            <Link
               href="https://vercel.com"
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
             >
               Vercel
-            </a>
+            </Link>
             . Illustrations by{" "}
-            <a
+            <Link
               href="https://popsy.co"
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
             >
               Popsy
-            </a>
-            . The source code is available on{" "}
-            <a
+            </Link>
+          </p>
+
+          <div className="flex items-center gap-3">
+            <Link
               href={siteConfig.links.github}
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
             >
-              GitHub
-            </a>
-            .
-          </p>
+              <Icons.gitHub className="size-5" />
+            </Link>
+            <ModeToggle />
+          </div>
         </div>
-        <ModeToggle />
       </div>
     </footer>
-  )
+  );
 }

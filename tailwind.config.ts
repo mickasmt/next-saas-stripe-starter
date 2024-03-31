@@ -1,17 +1,18 @@
+import type { Config } from "tailwindcss"
 const { fontFamily } = require("tailwindcss/defaultTheme")
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+const config = {
+  darkMode: ["class"],
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./ui/**/*.{ts,tsx}",
     "./content/**/*.{md,mdx}",
-  ],
-  darkMode: ["class"],
+	],
   future: {
     hoverOnlyWhenSupported: true,
   },
+  prefix: "",
   theme: {
     container: {
       center: true,
@@ -57,8 +58,8 @@ module.exports = {
         },
       },
       borderRadius: {
-        lg: `var(--radius)`,
-        md: `calc(var(--radius) - 2px)`,
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
@@ -68,61 +69,61 @@ module.exports = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: 0 },
+          from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
+          to: { height: "0" },
         },
         // Fade up and down
         "fade-up": {
           "0%": {
-            opacity: 0,
+            opacity: "0",
             transform: "translateY(10px)",
           },
           "80%": {
-            opacity: 0.7,
+            opacity: "0.7",
           },
           "100%": {
-            opacity: 1,
+            opacity: "1",
             transform: "translateY(0px)",
           },
         },
         "fade-down": {
           "0%": {
-            opacity: 0,
+            opacity: "0",
             transform: "translateY(-10px)",
           },
           "80%": {
-            opacity: 0.6,
+            opacity: "0.6",
           },
           "100%": {
-            opacity: 1,
+            opacity: "1",
             transform: "translateY(0px)",
           },
         },
         // Fade in and out
         "fade-in": {
           "0%": {
-            opacity: 0,
+            opacity: "0",
           },
           "50%": {
-            opacity: 0.6,
+            opacity: "0.6",
           },
           "100%": {
-            opacity: 1,
+            opacity: "1",
           },
         },
         "fade-out": {
           "0%": {
-            opacity: 0,
+            opacity: "0",
           },
           "50%": {
-            opacity: 0.6,
+            opacity: "0.6",
           },
           "100%": {
-            opacity: 1,
+            opacity: "1",
           },
         },
       },
@@ -141,4 +142,6 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
-}
+} satisfies Config
+
+export default config
