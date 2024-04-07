@@ -23,7 +23,7 @@ export const metadata = {
     "Next.js",
     "React",
     "Prisma",
-    "PlanetScale",
+    "Neon",
     "Auth.js",
     "shadcn ui",
     "Resend",

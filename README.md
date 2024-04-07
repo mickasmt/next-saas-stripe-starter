@@ -24,7 +24,7 @@
 
 ## Introduction
 
-Empower your next project with the stack of Next.js 14, Prisma, Planetscale, Auth.js v5, Resend, React Email, Shadcn/ui, and Stripe.
+Empower your next project with the stack of Next.js 14, Prisma, Neon, Auth.js v5, Resend, React Email, Shadcn/ui, and Stripe.
 <br/>
 All seamlessly integrated with the SaaS Starter to accelerate your development and saas journey.
 
@@ -62,19 +62,19 @@ pnpm dev
 > [!WARNING]  
 > You need update `.react-email` folder before use `pnpm run email`. Check the link [here](https://github.com/resend/react-email/issues/868#issuecomment-1828411325) if you have the error : `renderToReadableStream not found`
 >
-> After upgrade Auth.js to v5: `NEXTAUTH_URL` has removed from `.env.example`. 
+> After upgrade Auth.js to v5: `NEXTAUTH_URL` has removed from `.env.example`.
 
 > [!CAUTION]
 > Errors while the build if you update `remark-gfm` package.
 
 ## Roadmap
 
-- [x] ~Fix Vaul drawer for mobile sign in~  
-- [x] ~Update OG image~  
+- [x] ~Fix Vaul drawer for mobile sign in~
+- [x] ~Update OG image~
 - [x] ~Add Server Actions on billing form (stripe)~
 - [x] ~Add Server Actions on user name form~
 - [x] ~Upgrade Auth.js to v5~
-- [ ] Change database platform (planetscale removes its free plan on April)
+- [x] ~Change database platform for Neon (planetscale removes its free plan on April 2024)~
 - [ ] Add resend for success subscriptions
 - [ ] Switch subscription plan
 
@@ -92,8 +92,8 @@ https://github.com/mickasmt/next-saas-stripe-starter/assets/62285783/828a4e0f-30
 ### Platforms
 
 - [Vercel](https://vercel.com/) – Easily preview & deploy changes with git
-- [PlanetScale](https://planetscale.com/) – A cutting-edge database platform for seamless, scalable data management
 - [Resend](https://resend.com/) – A powerful email framework for streamlined email development
+- [Neon](https://neon.tech/) – Serverless Postgres with autoscaling, branching, bottomless storage and generous free tier.
 
 ### UI
 
@@ -106,7 +106,7 @@ https://github.com/mickasmt/next-saas-stripe-starter/assets/62285783/828a4e0f-30
 
 ### Hooks and Utilities
 
-- `useIntersectionObserver` –  React hook to observe when an element enters or leaves the viewport
+- `useIntersectionObserver` – React hook to observe when an element enters or leaves the viewport
 - `useLocalStorage` – Persist data in the browser's local storage
 - `useScroll` – React hook to observe scroll position ([example](https://github.com/mickasmt/precedent/blob/main/components/layout/navbar.tsx#L12))
 - `nFormatter` – Format numbers with suffixes like `1.2k` or `1.2M`
@@ -135,4 +135,3 @@ This project was inspired by shadcn's [Taxonomy](https://github.com/shadcn-ui/ta
 - Shadcn ([@shadcn](https://twitter.com/shadcn))
 - Steven Tey ([@steventey](https://twitter.com/steventey))
 - Antonio Erdeljac ([@YTCodeAntonio](https://twitter.com/AntonioErdeljac))
-
