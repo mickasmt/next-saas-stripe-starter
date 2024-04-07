@@ -40,11 +40,11 @@ export function InfoLanding({ data, reverse = false }: InfoLandingProps) {
         </div>
         <div
           className={cn(
-            "rounded-xl bg-muted/20 p-4 ring-1 ring-inset ring-border lg:-m-4",
+            "overflow-hidden rounded-xl border lg:-m-4",
             reverse ? "order-1" : "order-2",
           )}
         >
-          <div className="relative aspect-video overflow-hidden rounded-lg border">
+          <div className="aspect-video">
             <Image
               className="size-full object-cover object-center"
               src={data.image}
