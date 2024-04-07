@@ -22,7 +22,7 @@ interface PricingCardsProps {
 
 export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
   const isYearlyDefault =
-    !subscriptionPlan || subscriptionPlan.interval === "year" ? true : false;
+    !subscriptionPlan?.stripeCustomerId || subscriptionPlan.interval === "year" ? true : false;
   const [isYearly, setIsYearly] = useState<boolean>(!!isYearlyDefault);
   const signInModal = useSigninModal();
 
