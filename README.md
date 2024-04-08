@@ -75,8 +75,9 @@ pnpm dev
 - [x] ~Add Server Actions on user name form~
 - [x] ~Upgrade Auth.js to v5~
 - [x] ~Change database platform for Neon (planetscale removes its free plan on April 2024)~
+- [x] ~Switch subscription plan (enable on stripe dashboard)~
+- [ ] Update documentation for installation & configuration
 - [ ] Add resend for success subscriptions
-- [ ] Switch subscription plan
 
 ## Tech Stack + Features
 
