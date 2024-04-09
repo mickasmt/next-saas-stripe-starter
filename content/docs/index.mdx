@@ -1,6 +1,6 @@
 ---
-title: Documentation
-description: Welcome to the Taxonomy documentation.
+title: Introduction
+description: Welcome to the Next SaaS Stripe Starter documentation.
 ---
 
 This is the documentation for the Taxonomy site.
@@ -13,42 +13,32 @@ This site is a work in progress. If you see dummy text on a page, it means I'm s
 
 </Callout>
 
-## Features
+```json {8} title="components.json" showLineNumbers "tailwind.config.js"
+{
+  "style": "default",
+  "rsc": true,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "app/globals.css",
+    "baseColor": "slate",
+    "cssVariables": false
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils"
+  }
+}
+```
 
-Select a feature below to learn more about it.
-
-<div className="grid sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
-
-<Card href="/docs/documentation">
-
-### Documentation
-
-This documentation site built using Contentlayer.
-
-</Card>
-
-<Card href="/docs/marketing" disabled>
-
-### Marketing
-
-The marketing site with landing pages.
-
-</Card>
-
-<Card href="/docs/app" disabled>
-
-### App
-
-The dashboard with auth and subscriptions.
-
-</Card>
-
-<Card href="/docs/blog" disabled>
-
-### Blog
-
-The blog built using Contentlayer and MDX.
-
-</Card>
-
-</div>
+```ts {5-6} title="tailwind.config.js"
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        warning: "hsl(var(--warning))",
+        "warning-foreground": "hsl(var(--warning-foreground))",
+      },
+    },
+  },
+};
+```
