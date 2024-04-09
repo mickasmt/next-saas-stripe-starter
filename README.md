@@ -51,7 +51,7 @@ cp .env.example .env.local
 3. Start the development server:
 
 ```sh
-pnpm dev
+pnpm run dev
 ```
 
 > [!NOTE]  
@@ -64,9 +64,6 @@ pnpm dev
 >
 > After upgrade Auth.js to v5: `NEXTAUTH_URL` has removed from `.env.example`.
 
-> [!CAUTION]
-> Errors while the build if you update `remark-gfm` package.
-
 ## Roadmap
 
 - [x] ~Fix Vaul drawer for mobile sign in~
@@ -76,7 +73,8 @@ pnpm dev
 - [x] ~Upgrade Auth.js to v5~
 - [x] ~Change database platform for Neon (planetscale removes its free plan on April 2024)~
 - [x] ~Switch subscription plan (enable on stripe dashboard)~
-- [ ] Update documentation for installation & configuration
+- [ ] Update documentation for installation & configuration (work on it)
+- [ ] Upgrade eslint to v9
 - [ ] Add resend for success subscriptions
 
 ## Tech Stack + Features
