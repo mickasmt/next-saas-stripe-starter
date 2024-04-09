@@ -1,8 +1,8 @@
-import { defineDocumentType, makeSource } from "contentlayer/source-files"
-import rehypeAutolinkHeadings from "rehype-autolink-headings"
-import rehypePrettyCode from "rehype-pretty-code"
-import rehypeSlug from "rehype-slug"
-import remarkGfm from "remark-gfm"
+import { defineDocumentType, makeSource } from "contentlayer/source-files";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypePrettyCode from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
+import remarkGfm from "remark-gfm";
 
 /** @type {import('contentlayer/source-files').ComputedFields} */
 const computedFields = {
@@ -14,7 +14,7 @@ const computedFields = {
     type: "string",
     resolve: (doc) => doc._raw.flattenedPath.split("/").slice(1).join("/"),
   },
-}
+};
 
 export const Doc = defineDocumentType(() => ({
   name: "Doc",
@@ -34,7 +34,7 @@ export const Doc = defineDocumentType(() => ({
     },
   },
   computedFields,
-}))
+}));
 
 export const Guide = defineDocumentType(() => ({
   name: "Guide",
@@ -62,7 +62,7 @@ export const Guide = defineDocumentType(() => ({
     },
   },
   computedFields,
-}))
+}));
 
 export const Post = defineDocumentType(() => ({
   name: "Post",
@@ -99,7 +99,7 @@ export const Post = defineDocumentType(() => ({
     },
   },
   computedFields,
-}))
+}));
 
 export const Author = defineDocumentType(() => ({
   name: "Author",
@@ -123,7 +123,7 @@ export const Author = defineDocumentType(() => ({
     },
   },
   computedFields,
-}))
+}));
 
 export const Page = defineDocumentType(() => ({
   name: "Page",
@@ -139,7 +139,7 @@ export const Page = defineDocumentType(() => ({
     },
   },
   computedFields,
-}))
+}));
 
 export default makeSource({
   contentDirPath: "./content",
@@ -152,28 +152,12 @@ export default makeSource({
         rehypePrettyCode,
         {
           theme: "github-dark",
+          keepBackground: false,
           onVisitLine(node) {
-            // Prevent lines from collapsing in `display: grid` mode, and allow empty
-            // lines to be copy/pasted
+            // Prevent lines from collapsing in `display: grid` mode, and allow empty lines to be copy/pasted
             if (node.children.length === 0) {
-              node.children = [{ type: "text", value: " " }]
+              node.children = [{ type: "text", value: " " }];
             }
-          },
-          onVisitHighlightedLine(node) {
-            // node.properties.className.push("line--highlighted")
-
-            // FIX: I changed remark-gmf 4.0.0 to 3.0.1 (return a lot errors in mdx?)
-            // And solve error on onVisitHighlightedLine with code from : https://stackoverflow.com/questions/76549262/onvisithighlightedline-cannot-push-classname-using-rehype-pretty-code
-            const nodeClass = node.properties.className;
-
-            if (nodeClass && nodeClass.length > 0) {
-                node.properties.className.push("line--highlighted");
-            }else{
-                node.properties.className = ["line--highlighted"];
-            }
-          },
-          onVisitHighlightedWord(node) {
-            node.properties.className = ["word--highlighted"]
           },
         },
       ],
@@ -188,4 +172,4 @@ export default makeSource({
       ],
     ],
   },
-})
+});
