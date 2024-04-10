@@ -1,5 +1,6 @@
 import * as React from "react";
 import NextImage, { ImageProps } from "next/image";
+import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 
 import { cn } from "@/lib/utils";
@@ -141,7 +142,7 @@ const components = {
   code: ({ className, ...props }) => (
     <code
       className={cn(
-        "relative px-[0.3rem] py-[0.2rem] font-mono text-sm",
+        "relative rounded-sm bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm",
         className,
       )}
       {...props}
@@ -150,6 +151,36 @@ const components = {
   Image: (props: ImageProps) => <NextImage {...props} />,
   Callout,
   Card: MdxCard,
+  Step: ({ className, ...props }: React.ComponentProps<"h3">) => (
+    <h3
+      className={cn(
+        "mt-8 scroll-m-20 font-heading text-xl font-semibold tracking-tight",
+        className,
+      )}
+      {...props}
+    />
+  ),
+  Steps: ({ ...props }) => (
+    <div
+      className="[&>h3]:step steps mb-12 ml-4 border-l pl-8 [counter-reset:step]"
+      {...props}
+    />
+  ),
+  Link: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
+    <Link
+      className={cn("font-medium underline underline-offset-4", className)}
+      {...props}
+    />
+  ),
+  LinkedCard: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
+    <Link
+      className={cn(
+        "flex w-full flex-col items-center rounded-xl border bg-card p-6 text-card-foreground shadow transition-colors hover:bg-muted/50 sm:p-10",
+        className,
+      )}
+      {...props}
+    />
+  ),
 };
 
 interface MdxProps {
