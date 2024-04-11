@@ -10,136 +10,45 @@ description: How to install the project.
 Start by creating a new Next.js project using `create-next-app`:
 
 ```bash
-npx create-next-app@latest my-app --typescript --tailwind --eslint
+npx create-next-app my-saas-project --example "https://github.com/mickasmt/next-saas-stripe-starter"
 ```
 
-### Run the CLI
+### Install dependencies
 
-Run the `shadcn-ui` init command to setup your project:
+Enter in the folder and install dependencies for your project:
 
 ```bash
-npx shadcn-ui@latest init
+cd my-saas-project
+pnpm install
 ```
 
-### Configure components.json
+### Create a `.env` file
 
-You will be asked a few questions to configure `components.json`:
+Copy/paste the `.env.example` in the `.env` file:
 
-```md showLineNumbers
-Which style would you like to use? › Default
-Which color would you like to use as base color? › Slate
-Do you want to use CSS variables for colors? › no / yes
+```md title=".env"
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+NEXTAUTH_SECRET=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GITHUB_OAUTH_TOKEN=
+
+DATABASE_URL='postgres://[user]:[password]@[neon_hostname]/[dbname]?sslmode=require'
+
+RESEND_API_KEY=
+
+STRIPE_API_KEY=
+STRIPE_WEBHOOK_SECRET=
+
+NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PLAN_ID=
+NEXT_PUBLIC_STRIPE_PRO_YEARLY_PLAN_ID=
+NEXT_PUBLIC_STRIPE_BUSINESS_MONTHLY_PLAN_ID=
+NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID=
 ```
 
-### Fonts
+### Configuration part
 
-I use [Inter](https://rsms.me/inter/) as the default font. Inter is not required. You can replace it with any other font.
-
-Here's how I configure Inter for Next.js:
-
-**1. Import the font in the root layout:**
-
-```js showLineNumbers title=app/layout.tsx {2,5-8,16-17}
-import "@/styles/globals.css"
-import { Inter as FontSans } from "next/font/google"
-
-import { cn } from "@/lib/utils"
-
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
-
-export default function RootLayout({ children }: RootLayoutProps) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        ...
-      </body>
-    </html>
-  )
-}
-```
-
-**2. Configure `theme.extend.fontFamily` in `tailwind.config.js`**
-
-```js showLineNumbers title=tailwind.config.js {9-11}
-const { fontFamily } = require("tailwindcss/defaultTheme");
-
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: ["class"],
-  content: ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-      },
-    },
-  },
-};
-```
-
-### App structure
-
-Here's how I structure my Next.js apps. You can use this as a reference:
-
-```md {6-10,14-15}
-.
-├── app
-│ ├── layout.tsx
-│ └── page.tsx
-├── components
-│ ├── ui
-│ │ ├── alert-dialog.tsx
-│ │ ├── button.tsx
-│ │ ├── dropdown-menu.tsx
-│ │ └── ...
-│ ├── main-nav.tsx
-│ ├── page-header.tsx
-│ └── ...
-├── lib
-│ └── utils.ts
-├── styles
-│ └── globals.css
-├── next.config.js
-├── package.json
-├── postcss.config.js
-├── tailwind.config.js
-└── tsconfig.json
-```
-
-- I place the UI components in the `components/ui` folder.
-- The rest of the components such as `<PageHeader />` and `<MainNav />` are placed in the `components` folder.
-- The `lib` folder contains all the utility functions. I have a `utils.ts` where I define the `cn` helper.
-- The `styles` folder contains the global CSS.
-
-### That's it
-
-You can now start adding components to your project.
-
-```bash
-npx shadcn-ui@latest add button
-```
-
-The command above will add the `Button` component to your project. You can then import it like this:
-
-```tsx {1,6} showLineNumbers
-import { Button } from "@/components/ui/button";
-
-export default function Home() {
-  return (
-    <div>
-      <Button>Click me</Button>
-    </div>
-  );
-}
-```
+Let's check the configuration part for update all environment variables before use `pnpm run dev`.
 
 </Steps>
