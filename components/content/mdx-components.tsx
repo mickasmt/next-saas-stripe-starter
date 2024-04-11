@@ -136,7 +136,7 @@ const components = {
     __rawString__,
     ...props
   }: React.HTMLAttributes<HTMLPreElement> & { __rawString__?: string }) => (
-    <div className="group relative mb-4 mt-6 w-full overflow-hidden">
+    <div className="group relative w-full overflow-hidden">
       <pre
         className={cn(
           "max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-900 py-4 dark:bg-zinc-900",
