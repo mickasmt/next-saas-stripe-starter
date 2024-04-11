@@ -46,7 +46,7 @@ export function DocsSidebarNavItems({
             key={item.title + item.href}
             href={item.href}
             className={cn(
-              "flex w-full items-center rounded-md p-2 text-muted-foreground hover:underline",
+              "flex w-full items-center rounded-md px-2 py-1.5 text-muted-foreground hover:underline",
               {
                 "font-medium text-purple-600/95 dark:text-purple-400":
                   pathname === item.href,
@@ -60,7 +60,7 @@ export function DocsSidebarNavItems({
         ) : (
           <span
             key={item.title + item.href}
-            className="flex w-full cursor-not-allowed items-center rounded-md p-2 opacity-60"
+            className="flex w-full cursor-not-allowed items-center rounded-md px-2 py-1.5 opacity-60"
           >
             {item.title}
           </span>

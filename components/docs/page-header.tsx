@@ -31,7 +31,6 @@ export function DocsPageHeader({
           <p className="text-balance text-lg text-muted-foreground">{text}</p>
         )}
       </div>
-      <hr className="my-4" />
     </>
   );
 }

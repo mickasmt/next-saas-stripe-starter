@@ -24,7 +24,7 @@ code[data-theme*=" "] span {
 }
 
 [data-line] {
-  @apply px-5 min-h-[1rem] py-0.5 w-full inline-block;
+  @apply px-4 min-h-[1rem] py-0.5 w-full inline-block;
 }
 
 [data-line-numbers]>[data-line]::before {

@@ -6,6 +6,7 @@ import { useMDXComponent } from "next-contentlayer/hooks";
 import { cn } from "@/lib/utils";
 import { MdxCard } from "@/components/content/mdx-card";
 import { Callout } from "@/components/shared/callout";
+import { CopyButton } from "@/components/shared/copy-button";
 
 const components = {
   h1: ({ className, ...props }) => (
@@ -130,14 +131,29 @@ const components = {
       {...props}
     />
   ),
-  pre: ({ className, ...props }) => (
-    <pre
-      className={cn(
-        "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-900 py-4 dark:bg-zinc-900",
-        className,
+  pre: ({
+    className,
+    __rawString__,
+    ...props
+  }: React.HTMLAttributes<HTMLPreElement> & { __rawString__?: string }) => (
+    <div className="group relative mb-4 mt-6 w-full overflow-hidden">
+      <pre
+        className={cn(
+          "max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-900 py-4 dark:bg-zinc-900",
+          className,
+        )}
+        {...props}
+      />
+      {__rawString__ && (
+        <CopyButton
+          value={__rawString__}
+          className={cn(
+            "absolute right-4 top-4 z-20",
+            "duration-250 opacity-0 transition-all group-hover:opacity-100",
+          )}
+        />
       )}
-      {...props}
-    />
+    </div>
   ),
   code: ({ className, ...props }) => (
     <code
