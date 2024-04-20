@@ -29,20 +29,8 @@ export const docsConfig: DocsConfig = {
       title: "Configuration",
       items: [
         {
-          title: "Introduction",
-          href: "/docs/configuration",
-        },
-        {
           title: "Database",
           href: "/docs/configuration/database",
-        },
-        {
-          title: "Authentification",
-          href: "/docs/configuration/authentification",
-        },
-        {
-          title: "Email",
-          href: "/docs/configuration/email",
         },
         {
           title: "Subscriptions",
@@ -55,6 +43,14 @@ export const docsConfig: DocsConfig = {
         {
           title: "Markdown files",
           href: "/docs/configuration/markdown-files",
+        },
+        {
+          title: "Authentification",
+          href: "/docs/configuration/authentification",
+        },
+        {
+          title: "Email",
+          href: "/docs/configuration/email",
         },
         {
           title: "Components",

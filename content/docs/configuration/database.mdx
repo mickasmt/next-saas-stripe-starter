@@ -1,21 +1,41 @@
 ---
 title: Database
-description: Advanced code blocks with highlighting, file names and more.
+description: How to config your Neon database.
 ---
 
-The code blocks on the documentation site and the blog are powered by [rehype-pretty-code](https://github.com/atomiks/rehype-pretty-code). The syntax highlighting is done using [shiki](https://github.com/shikijs/shiki).
+The project was start with PlanetScale like database. But the free tier has been recently removed.
 
-It has the following features:
+Currently this project use **Neon** on the free plan. Check their [pricing page](https://neon.tech/pricing) for more informations.
 
-1. Beautiful code blocks with syntax highlighting.
-2. Support for VS Code themes.
-3. Works with hundreds of languages.
-4. Line and word highlighting.
-5. Support for line numbers.
-6. Show code block titles using meta strings.
+## Steps
 
-<Callout>
+<Steps>
 
-Thanks to Shiki, highlighting is done at build time. No JavaScript is sent to the client for runtime highlighting.
+### Create Neon account
 
+If don't have an account on Neon, just follow their steps [here](https://neon.tech/docs/get-started-with-neon/signing-up) for create one.
+
+### Copy database url
+
+After create a project on Neon, you can copy the database url. Select `Prisma` from the list then the `env` tab.
+
+<Callout icon="⚠️" type="warning">
+  <b>Don't forget</b> to reveal the information hidden behind the stars using
+  the eye icon. It's not very visible in dark mode.
 </Callout>
+
+Paste in your `.env` file.
+
+```js
+DATABASE_URL = "postgres://alex:AbC123dEf@ep-cool-darkness-123456.us-east-2.aws.neon.tech/dbname";
+```
+
+### Push migrations
+
+You can push the migrations on your database with the cli.
+
+```bash
+npx prisma db push
+```
+
+</Steps>
