@@ -60,6 +60,7 @@ export async function HeroLanding() {
         >
           <Link
             href="/pricing"
+            prefetch={true}
             className={cn(
               buttonVariants({ size: "lg", rounded: "full" }),
               "gap-2",
