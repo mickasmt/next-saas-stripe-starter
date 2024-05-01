@@ -1,8 +1,8 @@
-"use client"
+import Link from "next/link";
+import * as React from "react";
 
-import * as React from "react"
-
-import { buttonVariants } from "@/components/ui/button"
+import { CustomerPortalButton } from "@/components/forms/customer-portal-button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,46 +10,51 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { cn, formatDate } from "@/lib/utils"
-import Link from "next/link"
-import { UserSubscriptionPlan } from "types"
+} from "@/components/ui/card";
+import { cn, formatDate } from "@/lib/utils";
+import { UserSubscriptionPlan } from "types";
 
 interface BillingInfoProps extends React.HTMLAttributes<HTMLFormElement> {
-  subscriptionPlan: UserSubscriptionPlan;
+  userSubscriptionPlan: UserSubscriptionPlan;
 }
 
-export function BillingInfo({
-  subscriptionPlan
-}: BillingInfoProps) {
+export function BillingInfo({ userSubscriptionPlan }: BillingInfoProps) {
+  const {
+    title,
+    description,
+    stripeCustomerId,
+    isPaid,
+    isCanceled,
+    stripeCurrentPeriodEnd,
+  } = userSubscriptionPlan;
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Subscription Plan</CardTitle>
         <CardDescription>
-          You are currently on the <strong>{subscriptionPlan.title}</strong>{" "}
-          plan.
+          You are currently on the <strong>{title}</strong> plan.
         </CardDescription>
       </CardHeader>
-      <CardContent>{subscriptionPlan.description}</CardContent>
+      <CardContent>{description}</CardContent>
       <CardFooter className="flex flex-col items-start space-y-2 md:flex-row md:justify-between md:space-x-0">
-        <Link
-          href="/pricing"
-          className={cn(buttonVariants())}
-        >
-          {subscriptionPlan.isPaid ? "Manage Subscription" : "Upgrade now"}
-        </Link>
+        {isPaid && stripeCustomerId ? (
+          <CustomerPortalButton userStripeId={stripeCustomerId} />
+        ) : (
+          <Link href="/pricing" className={cn(buttonVariants())}>
+            Choose a plan
+          </Link>
+        )}
 
-        {subscriptionPlan.isPaid ? (
+        {isPaid ? (
           <p className="rounded-full text-xs font-medium">
-            {subscriptionPlan.isCanceled
+            {isCanceled
               ? "Your plan will be canceled on "
               : "Your plan renews on "}
-            {formatDate(subscriptionPlan.stripeCurrentPeriodEnd)}.
+            {formatDate(stripeCurrentPeriodEnd)}.
           </p>
         ) : null}
       </CardFooter>
     </Card>
-  )
+  );
 }
