@@ -64,8 +64,6 @@ pnpm run dev
 >
 > After upgrade Auth.js to v5: `NEXTAUTH_URL` has removed from `.env.example`.
 
-> [!CAUTION]
-> Errors while the build if you update `remark-gfm` package.
 
 ## Roadmap
 
