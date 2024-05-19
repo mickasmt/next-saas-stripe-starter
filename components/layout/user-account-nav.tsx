@@ -24,7 +24,7 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
       <DropdownMenuTrigger>
         <UserAvatar
           user={{ name: user?.name || null, image: user?.image || null }}
-          className="size-8 border"
+          className="size-8 animate-fade-in border transition-colors ease-out"
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

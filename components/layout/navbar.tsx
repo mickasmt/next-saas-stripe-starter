@@ -1,20 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import { MainNavItem } from "@/types";
-import { User } from "next-auth";
+import { useSession } from "next-auth/react";
 
-import { cn } from "@/lib/utils";
 import useScroll from "@/hooks/use-scroll";
 import { useSigninModal } from "@/hooks/use-signin-modal";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 import { Icons } from "../shared/icons";
 import { MainNav } from "./main-nav";
 import { UserAccountNav } from "./user-account-nav";
 
 interface NavBarProps {
-  user: Pick<User, "name" | "image" | "email"> | undefined;
   items?: MainNavItem[];
   children?: React.ReactNode;
   rightElements?: React.ReactNode;
@@ -22,7 +19,6 @@ interface NavBarProps {
 }
 
 export function NavBar({
-  user,
   items,
   children,
   rightElements,
@@ -30,6 +26,7 @@ export function NavBar({
 }: NavBarProps) {
   const scrolled = useScroll(50);
   const signInModal = useSigninModal();
+  const { data: session, status } = useSession();
 
   return (
     <header
@@ -58,11 +55,11 @@ export function NavBar({
             </Link>
           ) : null} */}
 
-          {user ? (
-            <UserAccountNav user={user} />
-          ) : (
+          {session ? (
+            <UserAccountNav user={session.user} />
+          ) : status === "unauthenticated" ? (
             <Button
-              className="gap-2 px-4"
+              className="animate-fade-in gap-2 px-4 transition-colors ease-out"
               variant="default"
               size="sm"
               rounded="full"
@@ -71,7 +68,7 @@ export function NavBar({
               <span>Sign In</span>
               <Icons.arrowRight className="size-4" />
             </Button>
-          )}
+          ) : null}
         </div>
       </div>
     </header>
