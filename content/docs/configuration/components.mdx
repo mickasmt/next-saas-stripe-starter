@@ -2,11 +2,8 @@
 title: Components
 description: Use React components in Markdown using MDX.
 ---
-<Callout icon="⚠️" type="warning" style="mt-0">
-  Components documentation is under construction.
-</Callout>
 
-{/* The following components are available out of the box for use in Markdown.
+The following components are available out of the box for use in Markdown.
 
 If you'd like to build and add your own custom components, see the [Custom Components](#custom-components) section below.
 
@@ -14,30 +11,34 @@ If you'd like to build and add your own custom components, see the [Custom Compo
 
 ### 1. Callout
 
-```mdx
-<Callout type=" default | warning | danger ">
-
-This is a default callout. You can embed **Markdown** inside a `callout`.
-
+```jsx
+<Callout type="default | warning | danger | note | info | success">
+  This is a default callout. You can embed **Markdown** inside a `callout`.
 </Callout>
 ```
 
 <Callout>
-
-This is a default callout. You can embed **Markdown** inside a `callout`.
-
+  This is a default callout. You can embed **Markdown** inside a `callout`.
 </Callout>
 
 <Callout type="warning">
-
-This is a warning callout. It uses the props `type="warning"`.
-
+  This is a warning callout. It uses the props `type="warning"`.
 </Callout>
 
 <Callout type="danger">
+  This is a danger callout. It uses the props `type="danger"`.
+</Callout>
 
-This is a danger callout. It uses the props `type="danger"`.
+<Callout type="note">
+  This is a warning callout. It uses the props `type="note"`.
+</Callout>
 
+<Callout type="info">
+  This is a danger callout. It uses the props `type="info"`.
+</Callout>
+
+<Callout type="success">
+  This is a warning callout. It uses the props `type="success"`.
 </Callout>
 
 ### 2. Card
@@ -142,9 +143,8 @@ This will overwrite the `<hr />` tag or `---` in Mardown with the HTML output ab
 
 Tailwind CSS classes can be used inside MDX for styling.
 
-```mdx
+```jsx
 <p className="text-red-600">This text will be red.</p>
 ```
 
 Make sure you have configured the path to your content in your `tailwind.config.js` file:
-*/}
