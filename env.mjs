@@ -6,7 +6,7 @@ export const env = createEnv({
     // This is optional because it's only used in development.
     // See https://next-auth.js.org/deployment.
     NEXTAUTH_URL: z.string().url().optional(),
-    NEXTAUTH_SECRET: z.string().min(1),
+    AUTH_SECRET: z.string().min(1),
     GOOGLE_CLIENT_ID: z.string().min(1),
     GOOGLE_CLIENT_SECRET: z.string().min(1),
     GITHUB_OAUTH_TOKEN: z.string().min(1),
@@ -24,7 +24,7 @@ export const env = createEnv({
   },
   runtimeEnv: {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    AUTH_SECRET: process.env.AUTH_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     GITHUB_OAUTH_TOKEN: process.env.GITHUB_OAUTH_TOKEN,
