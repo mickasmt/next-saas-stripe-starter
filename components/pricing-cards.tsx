@@ -14,6 +14,7 @@ import { HeaderSection } from "@/components/shared/header-section";
 import { Icons } from "@/components/shared/icons";
 
 import { SubscriptionPlan } from "../types/index";
+import MaxWidthWrapper from "./shared/max-width-wrapper";
 
 interface PricingCardsProps {
   userId?: string;
@@ -22,7 +23,9 @@ interface PricingCardsProps {
 
 export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
   const isYearlyDefault =
-    !subscriptionPlan?.stripeCustomerId || subscriptionPlan.interval === "year" ? true : false;
+    !subscriptionPlan?.stripeCustomerId || subscriptionPlan.interval === "year"
+      ? true
+      : false;
   const [isYearly, setIsYearly] = useState<boolean>(!!isYearlyDefault);
   const signInModal = useSigninModal();
 
@@ -135,55 +138,57 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
   };
 
   return (
-    <section className="container flex flex-col items-center text-center">
-      <HeaderSection label="Pricing" title="Start at full speed !" />
+    <MaxWidthWrapper>
+      <section className="flex flex-col items-center text-center">
+        <HeaderSection label="Pricing" title="Start at full speed !" />
 
-      <div className="mb-4 mt-10 flex items-center gap-5">
-        <ToggleGroup
-          type="single"
-          size="sm"
-          defaultValue={isYearly ? "yearly" : "monthly"}
-          onValueChange={toggleBilling}
-          aria-label="toggle-year"
-          className="h-9 overflow-hidden rounded-full border bg-background p-1 *:h-7 *:text-muted-foreground"
-        >
-          <ToggleGroupItem
-            value="yearly"
-            className="rounded-full px-5 data-[state=on]:!bg-primary data-[state=on]:!text-primary-foreground"
-            aria-label="Toggle yearly billing"
+        <div className="mb-4 mt-10 flex items-center gap-5">
+          <ToggleGroup
+            type="single"
+            size="sm"
+            defaultValue={isYearly ? "yearly" : "monthly"}
+            onValueChange={toggleBilling}
+            aria-label="toggle-year"
+            className="h-9 overflow-hidden rounded-full border bg-background p-1 *:h-7 *:text-muted-foreground"
           >
-            Yearly (-20%)
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="monthly"
-            className="rounded-full px-5 data-[state=on]:!bg-primary data-[state=on]:!text-primary-foreground"
-            aria-label="Toggle monthly billing"
+            <ToggleGroupItem
+              value="yearly"
+              className="rounded-full px-5 data-[state=on]:!bg-primary data-[state=on]:!text-primary-foreground"
+              aria-label="Toggle yearly billing"
+            >
+              Yearly (-20%)
+            </ToggleGroupItem>
+            <ToggleGroupItem
+              value="monthly"
+              className="rounded-full px-5 data-[state=on]:!bg-primary data-[state=on]:!text-primary-foreground"
+              aria-label="Toggle monthly billing"
+            >
+              Monthly
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+
+        <div className="grid gap-5 bg-inherit py-5 md:grid-cols-3 lg:grid-cols-3">
+          {pricingData.map((offer) => (
+            <PricingCard offer={offer} key={offer.title} />
+          ))}
+        </div>
+
+        <p className="mt-3 text-balance text-center text-base text-muted-foreground">
+          Email{" "}
+          <a
+            className="font-medium text-primary hover:underline"
+            href="mailto:support@saas-starter.com"
           >
-            Monthly
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </div>
-
-      <div className="mx-auto grid max-w-6xl gap-5 bg-inherit py-5 md:grid-cols-3 lg:grid-cols-3">
-        {pricingData.map((offer) => (
-          <PricingCard offer={offer} key={offer.title} />
-        ))}
-      </div>
-
-      <p className="mt-3 text-balance text-center text-base text-muted-foreground">
-        Email{" "}
-        <a
-          className="font-medium text-primary hover:underline"
-          href="mailto:support@saas-starter.com"
-        >
-          support@saas-starter.com
-        </a>{" "}
-        for to contact our support team.
-        <br />
-        <strong>
-          You can test the subscriptions and won&apos;t be charged.
-        </strong>
-      </p>
-    </section>
+            support@saas-starter.com
+          </a>{" "}
+          for to contact our support team.
+          <br />
+          <strong>
+            You can test the subscriptions and won&apos;t be charged.
+          </strong>
+        </p>
+      </section>
+    </MaxWidthWrapper>
   );
 }
