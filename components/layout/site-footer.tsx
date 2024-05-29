@@ -11,7 +11,7 @@ import { Icons } from "../shared/icons";
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
   return (
     <footer className={cn("border-t", className)}>
-      <div className="container grid grid-cols-1 gap-6 py-14 sm:grid-cols-2 md:grid-cols-5">
+      <div className="container grid max-w-6xl grid-cols-1 gap-6 py-14 sm:grid-cols-2 md:grid-cols-5">
         {footerLinks.map((section) => (
           <div key={section.title}>
             <span className="text-sm font-medium text-foreground">
@@ -37,7 +37,7 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
       </div>
 
       <div className="border-t py-4">
-        <div className="container flex items-center justify-between">
+        <div className="container flex max-w-6xl items-center justify-between">
           {/* <span className="text-muted-foreground text-sm">
             Copyright &copy; 2024. All rights reserved.
           </span> */}

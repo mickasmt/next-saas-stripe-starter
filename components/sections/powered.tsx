@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
+
 const technos = [
   {
     title: "Next.js 14",
@@ -187,10 +189,10 @@ const technos = [
   },
 ];
 
-export function Powered() {
+export default function Powered() {
   return (
     <section className="py-14 text-muted-foreground">
-      <div className="container max-w-7xl">
+      <MaxWidthWrapper>
         <h2 className="text-center text-sm font-semibold uppercase">
           Powered by
         </h2>
@@ -208,7 +210,7 @@ export function Powered() {
             </Link>
           ))}
         </div>
-      </div>
+      </MaxWidthWrapper>
     </section>
   );
 }

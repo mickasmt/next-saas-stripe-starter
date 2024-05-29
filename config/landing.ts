@@ -133,4 +133,11 @@ export const testimonials = [
     review:
       "next-saas-stripe-starter has been an invaluable asset in my role as a marketing manager. With its seamless integration with Stripe, I've been able to launch targeted marketing campaigns with built-in payment functionality, allowing us to monetize our products and services more effectively.",
   },
+  {
+    name: "Jason Stan",
+    job: "Web Designer",
+    image: "https://randomuser.me/api/portraits/men/9.jpg",
+    review:
+      "Thanks to next-saas-stripe-starter, I've been able to create modern and attractive user interfaces in record time. The starter kit provides a solid foundation for building sleek and intuitive designs, allowing me to focus more on the creative aspects of my work.",
+  },
 ];

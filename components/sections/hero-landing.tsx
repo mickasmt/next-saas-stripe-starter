@@ -6,7 +6,7 @@ import { cn, nFormatter } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/shared/icons";
 
-export async function HeroLanding() {
+export default async function HeroLanding() {
   const { stargazers_count: stars } = await fetch(
     "https://api.github.com/repos/mickasmt/next-saas-stripe-starter",
     {

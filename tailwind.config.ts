@@ -1,5 +1,6 @@
-import type { Config } from "tailwindcss"
-const { fontFamily } = require("tailwindcss/defaultTheme")
+import type { Config } from "tailwindcss";
+
+const { fontFamily } = require("tailwindcss/defaultTheme");
 
 const config = {
   darkMode: ["class"],
@@ -8,7 +9,7 @@ const config = {
     "./components/**/*.{ts,tsx}",
     "./ui/**/*.{ts,tsx}",
     "./content/**/*.{md,mdx}",
-	],
+  ],
   future: {
     hoverOnlyWhenSupported: true,
   },
@@ -16,10 +17,7 @@ const config = {
   theme: {
     container: {
       center: true,
-      padding: "1rem",
-      screens: {
-        "2xl": "1400px",
-      },
+      padding: ".625rem",
     },
     extend: {
       colors: {
@@ -142,6 +140,6 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;
