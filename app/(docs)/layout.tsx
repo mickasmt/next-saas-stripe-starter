@@ -32,7 +32,7 @@ const rightHeader = () => (
 export default function DocsLayout({ children }: DocsLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
-      <NavBar items={docsConfig.mainNav} rightElements={rightHeader()}>
+      <NavBar items={docsConfig.mainNav} rightElements={rightHeader()} large={true}>
         <DocsSidebarNav items={docsConfig.sidebarNav} />
       </NavBar>
       <div className="container flex-1">{children}</div>
