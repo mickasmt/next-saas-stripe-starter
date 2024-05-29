@@ -3,6 +3,34 @@ title: Email
 description: How to manage emails in this project.
 ---
 
-<Callout type="warning" twClass="mt-0">
-  Email documentation is under construction.
+<Callout type="note" twClass="mt-0">
+  The email part is similar at the [resend](https://resend.com/) documentation.
+  You can find the official documentation
+  [here](https://authjs.dev/getting-started/installation#setup-environment) if
+  you want.
 </Callout>
+
+<Callout type="warning" twClass="mt-2.5">
+  The email part is still on construction. Currently i work on the new one for
+  magic-link with auth.js v5.
+</Callout>
+
+## Steps
+
+<Steps>
+
+### Create an account
+
+If don't have an account on Resend, just follow their steps after signup [here](https://resend.com/signup).
+
+### Create an API key
+
+After signin on Resend, he propurse you to create your first API key.
+
+Copy/paste in your `.env` file.
+
+```js
+RESEND_API_KEY = re_your_resend_api_key;
+```
+
+</Steps>
