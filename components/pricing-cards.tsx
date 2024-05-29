@@ -168,7 +168,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
           </ToggleGroup>
         </div>
 
-        <div className="grid gap-5 bg-inherit py-5 md:grid-cols-3 lg:grid-cols-3">
+        <div className="grid gap-5 bg-inherit py-5 lg:grid-cols-3">
           {pricingData.map((offer) => (
             <PricingCard offer={offer} key={offer.title} />
           ))}
