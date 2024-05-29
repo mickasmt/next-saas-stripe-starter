@@ -74,7 +74,9 @@ pnpm run dev
 - [x] ~Upgrade Auth.js to v5~
 - [x] ~Change database platform for Neon (planetscale removes its free plan on April 2024)~
 - [x] ~Switch subscription plan (enable on stripe dashboard)~
-- [ ] Update documentation for installation & configuration (work on it)
+- [x] ~Update documentation for installation & configuration~
+- [ ] Improve blog design
+- [ ] Improve dashboard design
 - [ ] Upgrade eslint to v9
 - [ ] Add resend for success subscriptions
 
