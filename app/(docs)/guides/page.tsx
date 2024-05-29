@@ -1,31 +1,32 @@
-import Link from "next/link"
-import { allGuides } from "contentlayer/generated"
-import { compareDesc } from "date-fns"
+import Link from "next/link";
+import { allGuides } from "contentlayer/generated";
+import { compareDesc } from "date-fns";
 
-import { formatDate } from "@/lib/utils"
-import { DocsPageHeader } from "@/components/docs/page-header"
+import { formatDate } from "@/lib/utils";
+import { DocsPageHeader } from "@/components/docs/page-header";
+import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 
 export const metadata = {
   title: "Guides",
   description:
     "This section includes end-to-end guides for developing Next.js 13 apps.",
-}
+};
 
 export default function GuidesPage() {
   const guides = allGuides
     .filter((guide) => guide.published)
     .sort((a, b) => {
-      return compareDesc(new Date(a.date), new Date(b.date))
-    })
+      return compareDesc(new Date(a.date), new Date(b.date));
+    });
 
   return (
-    <div className="py-6 lg:py-10">
+    <MaxWidthWrapper className="py-6 lg:py-10">
       <DocsPageHeader
         heading="Guides"
         text="This section includes end-to-end guides for developing Next.js 13 apps."
       />
       {guides?.length ? (
-        <div className="grid gap-4 md:grid-cols-2 md:gap-6">
+        <div className="mt-5 grid gap-4 md:grid-cols-2 md:gap-6">
           {guides.map((guide) => (
             <article
               key={guide._id}
@@ -60,6 +61,6 @@ export default function GuidesPage() {
       ) : (
         <p>No guides published.</p>
       )}
-    </div>
-  )
+    </MaxWidthWrapper>
+  );
 }

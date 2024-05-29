@@ -28,13 +28,14 @@ export function NavBar({
   children,
   rightElements,
   scroll = false,
-  large = false,
 }: NavBarProps) {
   const scrolled = useScroll(50);
   const signInModal = useSigninModal();
   const { data: session, status } = useSession();
+
   const selectedLayout = usePathname();
   const dashBoard = selectedLayout.startsWith("/dashboard");
+  const documentation = selectedLayout.startsWith("/docs");
 
   return (
     <header
@@ -44,7 +45,7 @@ export function NavBar({
     >
       <MaxWidthWrapper
         className="flex h-[60px] items-center justify-between py-4"
-        large={large}
+        large={!!documentation}
       >
         <MainNav items={items}>{children}</MainNav>
 
