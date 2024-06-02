@@ -4,24 +4,30 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { SidebarNavItem } from "types";
+import { docsConfig } from "@/config/docs";
 import { cn } from "@/lib/utils";
 
 export interface DocsSidebarNavProps {
-  items: SidebarNavItem[];
+  setOpen?: (boolean) => void;
 }
 
-export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
+export function DocsSidebarNav({ setOpen }: DocsSidebarNavProps) {
   const pathname = usePathname();
+  const items = docsConfig.sidebarNav;
 
-  return items.length ? (
+  return items.length > 0 ? (
     <div className="w-full">
       {items.map((item) => (
         <div key={item.href + item.title} className={cn("pb-8")}>
-          <h4 className="mb-1 rounded-md px-2 py-1 text-sm font-medium">
+          <h4 className="mb-1 rounded-md py-1 text-base font-medium md:px-2 md:text-sm">
             {item.title}
           </h4>
           {item.items ? (
-            <DocsSidebarNavItems items={item.items} pathname={pathname} />
+            <DocsSidebarNavItems
+              setOpen={setOpen}
+              items={item.items}
+              pathname={pathname}
+            />
           ) : null}
         </div>
       ))}
@@ -32,19 +38,24 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
 interface DocsSidebarNavItemsProps {
   items: SidebarNavItem[];
   pathname: string | null;
+  setOpen?: (boolean) => void;
 }
 
 export function DocsSidebarNavItems({
   items,
+  setOpen,
   pathname,
 }: DocsSidebarNavItemsProps) {
-  return items?.length ? (
-    <div className="grid grid-flow-row auto-rows-max text-sm">
+  return items?.length > 0 ? (
+    <div className="grid grid-flow-row auto-rows-max text-[15px] md:text-sm">
       {items.map((item, index) =>
         !item.disabled && item.href ? (
           <Link
             key={item.title + item.href}
             href={item.href}
+            onClick={() => {
+              if (setOpen) setOpen(false);
+            }}
             className={cn(
               "flex w-full items-center rounded-md px-2 py-1.5 text-muted-foreground hover:underline",
               {

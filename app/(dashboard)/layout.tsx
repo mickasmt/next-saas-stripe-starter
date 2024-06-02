@@ -1,8 +1,8 @@
-import { dashboardConfig } from "@/config/dashboard";
-import { DashboardNav } from "@/components/layout/nav";
+import { DashboardNav } from "@/components/layout/dashboard-sidenav";
 import { NavBar } from "@/components/layout/navbar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
+import { dashboardConfig } from "@/config/dashboard";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -11,7 +11,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col space-y-6">
-      <NavBar items={dashboardConfig.mainNav} scroll={false} />
+      <NavBar />
 
       <MaxWidthWrapper className="min-h-svh">
         <div className="grid flex-1 gap-12 md:grid-cols-[200px_1fr]">

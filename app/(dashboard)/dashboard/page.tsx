@@ -21,9 +21,7 @@ export default async function DashboardPage() {
 
   return (
     <DashboardShell>
-      <DashboardHeader heading="Panel" text="Create and manage content.">
-        <Button>Fake button</Button>
-      </DashboardHeader>
+      <DashboardHeader heading="Panel" text="Create and manage content." />
       <div>
         <EmptyPlaceholder>
           <EmptyPlaceholder.Icon name="post" />

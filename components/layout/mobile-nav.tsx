@@ -1,47 +1,124 @@
-import * as React from "react"
-import Link from "next/link"
+"use client";
 
-import { MainNavItem } from "types"
-import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
-import { useLockBody } from "@/hooks/use-lock-body"
-import { Icons } from "@/components/shared/icons"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useSelectedLayoutSegment } from "next/navigation";
+import { Menu, X } from "lucide-react";
+import { useSession } from "next-auth/react";
 
-interface MobileNavProps {
-  items: MainNavItem[]
-  children?: React.ReactNode
-}
+import { dashboardConfig } from "@/config/dashboard";
+import { docsConfig } from "@/config/docs";
+import { marketingConfig } from "@/config/marketing";
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
+import { DocsSidebarNav } from "@/components/docs/sidebar-nav";
+import { Icons } from "@/components/shared/icons";
 
-export function MobileNav({ items, children }: MobileNavProps) {
-  useLockBody()
+import { ModeToggle } from "./mode-toggle";
+
+export function NavMobile() {
+  const [open, setOpen] = useState(false);
+  const selectedLayout = useSelectedLayoutSegment();
+  const dashBoard = selectedLayout === "dashboard";
+  const documentation = selectedLayout === "docs";
+  const links = documentation
+    ? docsConfig.mainNav
+    : dashBoard
+      ? dashboardConfig.mainNav
+      : marketingConfig.mainNav;
+
+  // prevent body scroll when modal is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [open]);
+
+  const { data: session } = useSession();
 
   return (
-    <div
-      className={cn(
-        "fixed inset-0 top-16 z-50 grid h-[calc(100vh-4rem)] grid-flow-row auto-rows-max overflow-auto p-6 pb-32 shadow-md animate-in slide-in-from-bottom-80 md:hidden"
-      )}
-    >
-      <div className="relative z-20 grid gap-6 rounded-md bg-popover p-4 text-popover-foreground shadow-md">
-        <Link href="/" className="flex items-center space-x-2">
-          <Icons.logo />
-          <span className="font-bold">{siteConfig.name}</span>
-        </Link>
-        <nav className="grid grid-flow-row auto-rows-max text-sm">
-          {items.map((item, index) => (
-            <Link
-              key={index}
-              href={item.disabled ? "#" : item.href}
-              className={cn(
-                "flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline",
-                item.disabled && "cursor-not-allowed opacity-60"
-              )}
-            >
-              {item.title}
-            </Link>
+    <>
+      <button
+        onClick={() => setOpen(!open)}
+        className={cn(
+          "fixed right-2 top-2.5 z-50 rounded-full p-2 transition-colors duration-200 hover:bg-muted focus:outline-none active:bg-muted md:hidden",
+          open && "hover:bg-muted active:bg-muted",
+        )}
+      >
+        {open ? (
+          <X className="size-5 text-muted-foreground" />
+        ) : (
+          <Menu className="size-5 text-muted-foreground" />
+        )}
+      </button>
+
+      <nav
+        className={cn(
+          "fixed inset-0 z-20 hidden w-full overflow-auto bg-background px-5 py-16 lg:hidden",
+          open && "block",
+        )}
+      >
+        <ul className="grid divide-y divide-muted">
+          {links.map(({ title, href }) => (
+            <li key={href} className="py-3">
+              <Link
+                href={href}
+                onClick={() => setOpen(false)}
+                className="flex w-full font-medium capitalize"
+              >
+                {title}
+              </Link>
+            </li>
           ))}
-        </nav>
-        {children}
-      </div>
-    </div>
-  )
+
+          {session ? (
+            <li className="py-3">
+              <Link
+                href="/dashboard"
+                className="flex w-full font-medium capitalize"
+              >
+                Dashboard
+              </Link>
+            </li>
+          ) : (
+            <>
+              <li className="py-3">
+                <Link
+                  href="/login"
+                  className="flex w-full font-medium capitalize"
+                >
+                  Login
+                </Link>
+              </li>
+
+              <li className="py-3">
+                <Link
+                  href="/register"
+                  className="flex w-full font-medium capitalize"
+                >
+                  Sign up
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+
+        {documentation ? (
+          <div className="mt-8 block md:hidden">
+            <DocsSidebarNav setOpen={setOpen} />
+          </div>
+        ) : null}
+
+        <div className="mt-5 flex items-center justify-end space-x-4">
+          <Link href={siteConfig.links.github} target="_blank" rel="noreferrer">
+            <Icons.gitHub className="size-6" />
+            <span className="sr-only">GitHub</span>
+          </Link>
+          <ModeToggle />
+        </div>
+      </nav>
+    </>
+  );
 }

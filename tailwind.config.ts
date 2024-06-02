@@ -17,7 +17,7 @@ const config = {
   theme: {
     container: {
       center: true,
-      padding: ".625rem",
+      padding: ".8rem",
     },
     extend: {
       colors: {

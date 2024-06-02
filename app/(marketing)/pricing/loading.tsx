@@ -12,10 +12,10 @@ export default function Loading() {
             <Skeleton className="mb-3 mt-5 h-8 w-1/5 rounded-full" />
           </div>
 
-          <div className="grid w-full gap-5 bg-inherit py-5 md:grid-cols-3 lg:grid-cols-3">
-            <Skeleton className="h-[520px] w-full rounded-3xl" />
-            <Skeleton className="h-[520px] w-full rounded-3xl" />
-            <Skeleton className="h-[520px] w-full rounded-3xl" />
+          <div className="grid w-full gap-5 bg-inherit py-5 lg:grid-cols-3">
+            <Skeleton className="h-[520px] w-[428px] rounded-3xl max-lg:mx-auto lg:w-full" />
+            <Skeleton className="h-[520px] w-[428px] rounded-3xl max-lg:mx-auto lg:w-full" />
+            <Skeleton className="h-[520px] w-[428px] rounded-3xl max-lg:mx-auto lg:w-full" />
           </div>
 
           <div className="mt-3 flex w-full flex-col items-center gap-2">
