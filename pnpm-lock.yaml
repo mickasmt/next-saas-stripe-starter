@@ -141,8 +141,8 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0
       lucide-react:
-        specifier: ^0.379.0
-        version: 0.379.0(react@18.3.1)
+        specifier: ^0.381.0
+        version: 0.381.0(react@18.3.1)
       ms:
         specifier: ^2.1.3
         version: 2.1.3
@@ -212,13 +212,13 @@ importers:
     devDependencies:
       '@commitlint/cli':
         specifier: ^19.3.0
-        version: 19.3.0(@types/node@20.12.12)(typescript@5.4.5)
+        version: 19.3.0(@types/node@20.13.0)(typescript@5.4.5)
       '@commitlint/config-conventional':
         specifier: ^19.2.2
         version: 19.2.2
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.2.1
-        version: 4.2.1(prettier@3.2.5)
+        version: 4.2.1(prettier@3.3.0)
       '@tailwindcss/line-clamp':
         specifier: ^0.4.4
         version: 0.4.4(tailwindcss@3.4.3)
@@ -226,8 +226,8 @@ importers:
         specifier: ^0.5.13
         version: 0.5.13(tailwindcss@3.4.3)
       '@types/node':
-        specifier: ^20.12.12
-        version: 20.12.12
+        specifier: ^20.13.0
+        version: 20.13.0
       '@types/react':
         specifier: 18.3.3
         version: 18.3.3
@@ -262,14 +262,14 @@ importers:
         specifier: ^8.4.38
         version: 8.4.38
       prettier:
-        specifier: ^3.2.5
-        version: 3.2.5
+        specifier: ^3.3.0
+        version: 3.3.0
       prettier-plugin-tailwindcss:
-        specifier: ^0.5.14
-        version: 0.5.14(@ianvs/prettier-plugin-sort-imports@4.2.1(prettier@3.2.5))(prettier@3.2.5)
+        specifier: ^0.6.1
+        version: 0.6.1(@ianvs/prettier-plugin-sort-imports@4.2.1(prettier@3.3.0))(prettier@3.3.0)
       pretty-quick:
         specifier: ^4.0.0
-        version: 4.0.0(prettier@3.2.5)
+        version: 4.0.0(prettier@3.3.0)
       prisma:
         specifier: ^5.14.0
         version: 5.14.0
@@ -2263,8 +2263,8 @@ packages:
   '@types/ms@0.7.34':
     resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
 
-  '@types/node@20.12.12':
-    resolution: {integrity: sha512-eWLDGF/FOSPtAvEqeRAQ4C8LSA7M1I7i0ky1I8U7kD1J5ITyW3AsRhQrKVoWf5pFKZ2kILsEGJhsI9r93PYnOw==}
+  '@types/node@20.13.0':
+    resolution: {integrity: sha512-FM6AOb3khNkNIXPnHFDYaHerSv8uN22C91z098AnGccVu+Pcdhi+pNUFDi0iLmPIsVE0JBD0KVS7mzUYt4nRzQ==}
 
   '@types/prismjs@1.26.3':
     resolution: {integrity: sha512-A0D0aTXvjlqJ5ZILMz3rNfDBOx9hHxLZYv2by47Sm/pqW35zzjusrZTryatjN/Rf8Us2gZrJD+KeHbUSTux1Cw==}
@@ -3989,8 +3989,8 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
-  lucide-react@0.379.0:
-    resolution: {integrity: sha512-KcdeVPqmhRldldAAgptb8FjIunM2x2Zy26ZBh1RsEUcdLIvsEmbcw7KpzFYUy5BbpGeWhPu9Z9J5YXfStiXwhg==}
+  lucide-react@0.381.0:
+    resolution: {integrity: sha512-cft0ywFfHkGprX5pwKyS9jme/ksh9eYAHSZqFRKN0XGp70kia4uqZOTPB+i+O51cqiJlvGLqzMGWnMHaeJTs3g==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
 
@@ -4600,8 +4600,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-tailwindcss@0.5.14:
-    resolution: {integrity: sha512-Puaz+wPUAhFp8Lo9HuciYKM2Y2XExESjeT+9NQoVFXZsPPnc9VYss2SpxdQ6vbatmt8/4+SN0oe0I1cPDABg9Q==}
+  prettier-plugin-tailwindcss@0.6.1:
+    resolution: {integrity: sha512-AnbeYZu0WGj+QgKciUgdMnRxrqcxltleZPgdwfA5104BHM3siBLONN/HLW1yS2HvzSNkzpQ/JAj+LN0jcJO+0w==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
@@ -4652,8 +4652,8 @@ packages:
       prettier-plugin-svelte:
         optional: true
 
-  prettier@3.2.5:
-    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
+  prettier@3.3.0:
+    resolution: {integrity: sha512-J9odKxERhCQ10OC2yb93583f6UnYutOeiV5i0zEDS7UGTdUt0u+y8erxl3lBKvwo/JHyyoEdXjwp4dke9oyZ/g==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -5901,11 +5901,11 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.6
       to-fast-properties: 2.0.0
 
-  '@commitlint/cli@19.3.0(@types/node@20.12.12)(typescript@5.4.5)':
+  '@commitlint/cli@19.3.0(@types/node@20.13.0)(typescript@5.4.5)':
     dependencies:
       '@commitlint/format': 19.3.0
       '@commitlint/lint': 19.2.2
-      '@commitlint/load': 19.2.0(@types/node@20.12.12)(typescript@5.4.5)
+      '@commitlint/load': 19.2.0(@types/node@20.13.0)(typescript@5.4.5)
       '@commitlint/read': 19.2.1
       '@commitlint/types': 19.0.3
       execa: 8.0.1
@@ -5952,7 +5952,7 @@ snapshots:
       '@commitlint/rules': 19.0.3
       '@commitlint/types': 19.0.3
 
-  '@commitlint/load@19.2.0(@types/node@20.12.12)(typescript@5.4.5)':
+  '@commitlint/load@19.2.0(@types/node@20.13.0)(typescript@5.4.5)':
     dependencies:
       '@commitlint/config-validator': 19.0.3
       '@commitlint/execute-rule': 19.0.0
@@ -5960,7 +5960,7 @@ snapshots:
       '@commitlint/types': 19.0.3
       chalk: 5.3.0
       cosmiconfig: 9.0.0(typescript@5.4.5)
-      cosmiconfig-typescript-loader: 5.0.0(@types/node@20.12.12)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5)
+      cosmiconfig-typescript-loader: 5.0.0(@types/node@20.13.0)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -6288,14 +6288,14 @@ snapshots:
 
   '@humanwhocodes/object-schema@2.0.3': {}
 
-  '@ianvs/prettier-plugin-sort-imports@4.2.1(prettier@3.2.5)':
+  '@ianvs/prettier-plugin-sort-imports@4.2.1(prettier@3.3.0)':
     dependencies:
       '@babel/core': 7.24.0
       '@babel/generator': 7.23.6
       '@babel/parser': 7.24.0
       '@babel/traverse': 7.24.0
       '@babel/types': 7.24.0
-      prettier: 3.2.5
+      prettier: 3.3.0
       semver: 7.6.0
     transitivePeerDependencies:
       - supports-color
@@ -7661,7 +7661,7 @@ snapshots:
 
   '@types/conventional-commits-parser@5.0.0':
     dependencies:
-      '@types/node': 20.12.12
+      '@types/node': 20.13.0
 
   '@types/cookie@0.4.1': {}
 
@@ -7669,7 +7669,7 @@ snapshots:
 
   '@types/cors@2.8.17':
     dependencies:
-      '@types/node': 20.12.12
+      '@types/node': 20.13.0
 
   '@types/debug@4.1.12':
     dependencies:
@@ -7711,7 +7711,7 @@ snapshots:
 
   '@types/ms@0.7.34': {}
 
-  '@types/node@20.12.12':
+  '@types/node@20.13.0':
     dependencies:
       undici-types: 5.26.5
 
@@ -7738,7 +7738,7 @@ snapshots:
 
   '@types/webpack@5.28.5(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)':
     dependencies:
-      '@types/node': 20.12.12
+      '@types/node': 20.13.0
       tapable: 2.2.1
       webpack: 5.90.3(@swc/core@1.3.101(@swc/helpers@0.5.5))(esbuild@0.19.11)
     transitivePeerDependencies:
@@ -8379,9 +8379,9 @@ snapshots:
       object-assign: 4.1.1
       vary: 1.1.2
 
-  cosmiconfig-typescript-loader@5.0.0(@types/node@20.12.12)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5):
+  cosmiconfig-typescript-loader@5.0.0(@types/node@20.13.0)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5):
     dependencies:
-      '@types/node': 20.12.12
+      '@types/node': 20.13.0
       cosmiconfig: 9.0.0(typescript@5.4.5)
       jiti: 1.21.0
       typescript: 5.4.5
@@ -8564,7 +8564,7 @@ snapshots:
     dependencies:
       '@types/cookie': 0.4.1
       '@types/cors': 2.8.17
-      '@types/node': 20.12.12
+      '@types/node': 20.13.0
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.4.2
@@ -9675,7 +9675,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 20.12.12
+      '@types/node': 20.13.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -9819,7 +9819,7 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
-  lucide-react@0.379.0(react@18.3.1):
+  lucide-react@0.381.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
@@ -10734,17 +10734,17 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-tailwindcss@0.5.14(@ianvs/prettier-plugin-sort-imports@4.2.1(prettier@3.2.5))(prettier@3.2.5):
+  prettier-plugin-tailwindcss@0.6.1(@ianvs/prettier-plugin-sort-imports@4.2.1(prettier@3.3.0))(prettier@3.3.0):
     dependencies:
-      prettier: 3.2.5
+      prettier: 3.3.0
     optionalDependencies:
-      '@ianvs/prettier-plugin-sort-imports': 4.2.1(prettier@3.2.5)
+      '@ianvs/prettier-plugin-sort-imports': 4.2.1(prettier@3.3.0)
 
-  prettier@3.2.5: {}
+  prettier@3.3.0: {}
 
   pretty-format@3.8.0: {}
 
-  pretty-quick@4.0.0(prettier@3.2.5):
+  pretty-quick@4.0.0(prettier@3.3.0):
     dependencies:
       execa: 5.1.1
       find-up: 5.0.0
@@ -10752,7 +10752,7 @@ snapshots:
       mri: 1.2.0
       picocolors: 1.0.0
       picomatch: 3.0.1
-      prettier: 3.2.5
+      prettier: 3.3.0
       tslib: 2.6.2
 
   prism-react-renderer@2.1.0(react@18.3.1):
@@ -10789,7 +10789,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.12.12
+      '@types/node': 20.13.0
       long: 5.2.3
 
   punycode@2.3.1: {}
@@ -11454,7 +11454,7 @@ snapshots:
 
   stripe@15.8.0:
     dependencies:
-      '@types/node': 20.12.12
+      '@types/node': 20.13.0
       qs: 6.11.2
 
   style-to-object@0.4.4:
