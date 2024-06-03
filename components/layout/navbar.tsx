@@ -1,21 +1,22 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useContext } from "react";
 
+import { DocsSearch } from "@/components/docs/search";
+import { ModalContext } from "@/components/modals/providers";
+import { Icons } from "@/components/shared/icons";
+import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { dashboardConfig } from "@/config/dashboard";
 import { docsConfig } from "@/config/docs";
 import { marketingConfig } from "@/config/marketing";
 import { siteConfig } from "@/config/site";
+import { useScroll } from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
-import useScroll from "@/hooks/use-scroll";
-import { useSigninModal } from "@/hooks/use-signin-modal";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { DocsSearch } from "@/components/docs/search";
-import { Icons } from "@/components/shared/icons";
-import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 
 import { UserAccountNav } from "./user-account-nav";
 
@@ -26,8 +27,8 @@ interface NavBarProps {
 
 export function NavBar({ scroll = false }: NavBarProps) {
   const scrolled = useScroll(50);
-  const signInModal = useSigninModal();
   const { data: session, status } = useSession();
+  const { setShowSignInModal } = useContext(ModalContext);
 
   const selectedLayout = useSelectedLayoutSegment();
   const dashBoard = selectedLayout === "dashboard";
@@ -124,7 +125,7 @@ export function NavBar({ scroll = false }: NavBarProps) {
               variant="default"
               size="sm"
               rounded="full"
-              onClick={signInModal.onOpen}
+              onClick={() => setShowSignInModal(true)}
             >
               <span>Sign In</span>
               <Icons.arrowRight className="size-4" />

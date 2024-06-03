@@ -1,6 +1,6 @@
 {
   "name": "saas-starter",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "author": {
     "name": "mickasmt",
@@ -82,8 +82,7 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.1",
-    "zod": "^3.23.8",
-    "zustand": "^4.5.2"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",

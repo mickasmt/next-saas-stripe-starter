@@ -1,20 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Link from "next/link";
 import { UserSubscriptionPlan } from "@/types";
 
+import { SubscriptionPlan } from "@/types/index";
 import { pricingData } from "@/config/subscriptions";
 import { cn } from "@/lib/utils";
-import { useSigninModal } from "@/hooks/use-signin-modal";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { BillingFormButton } from "@/components/forms/billing-form-button";
+import { ModalContext } from "@/components/modals/providers";
 import { HeaderSection } from "@/components/shared/header-section";
 import { Icons } from "@/components/shared/icons";
-
-import { SubscriptionPlan } from "../types/index";
-import MaxWidthWrapper from "./shared/max-width-wrapper";
+import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 
 interface PricingCardsProps {
   userId?: string;
@@ -27,7 +26,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
       ? true
       : false;
   const [isYearly, setIsYearly] = useState<boolean>(!!isYearlyDefault);
-  const signInModal = useSigninModal();
+  const { setShowSignInModal } = useContext(ModalContext);
 
   const toggleBilling = () => {
     setIsYearly(!isYearly);
@@ -127,7 +126,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
                   : "outline"
               }
               rounded="full"
-              onClick={signInModal.onOpen}
+              onClick={() => setShowSignInModal(true)}
             >
               Sign in
             </Button>
