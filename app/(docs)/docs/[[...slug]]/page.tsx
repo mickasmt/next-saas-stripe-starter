@@ -1,18 +1,17 @@
-import { notFound } from "next/navigation";
 import { allDocs } from "contentlayer/generated";
+import { notFound } from "next/navigation";
 
-import { getTableOfContents } from "@/lib/toc";
 import { Mdx } from "@/components/content/mdx-components";
 import { DocsPageHeader } from "@/components/docs/page-header";
 import { DocsPager } from "@/components/docs/pager";
 import { DashboardTableOfContents } from "@/components/shared/toc";
+import { getTableOfContents } from "@/lib/toc";
 
 import "@/styles/mdx.css";
 
 import { Metadata } from "next";
 
-import { env } from "@/env.mjs";
-import { absoluteUrl } from "@/lib/utils";
+import { constructMetadata } from "@/lib/utils";
 
 interface DocPageProps {
   params: {
@@ -24,9 +23,7 @@ async function getDocFromParams(params) {
   const slug = params.slug?.join("/") || "";
   const doc = allDocs.find((doc) => doc.slugAsParams === slug);
 
-  if (!doc) {
-    null;
-  }
+  if (!doc) return null;
 
   return doc;
 }
@@ -36,41 +33,14 @@ export async function generateMetadata({
 }: DocPageProps): Promise<Metadata> {
   const doc = await getDocFromParams(params);
 
-  if (!doc) {
-    return {};
-  }
+  if (!doc) return {};
 
-  const url = env.NEXT_PUBLIC_APP_URL;
+  const { title, description } = doc;
 
-  const ogUrl = new URL(`${url}/api/og`);
-  ogUrl.searchParams.set("heading", doc.description ?? doc.title);
-  ogUrl.searchParams.set("type", "Documentation");
-  ogUrl.searchParams.set("mode", "dark");
-
-  return {
-    title: doc.title,
-    description: doc.description,
-    openGraph: {
-      title: doc.title,
-      description: doc.description,
-      type: "article",
-      url: absoluteUrl(doc.slug),
-      images: [
-        {
-          url: ogUrl.toString(),
-          width: 1200,
-          height: 630,
-          alt: doc.title,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: doc.title,
-      description: doc.description,
-      images: [ogUrl.toString()],
-    },
-  };
+  return constructMetadata({
+    title: `${title} – SaaS Starter`,
+    description: description,
+  });
 }
 
 export async function generateStaticParams(): Promise<

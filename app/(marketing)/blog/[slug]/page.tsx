@@ -1,98 +1,59 @@
-import { notFound } from "next/navigation"
-import { allAuthors, allPosts } from "contentlayer/generated"
+import { notFound } from "next/navigation";
+import { allAuthors, allPosts } from "contentlayer/generated";
 
-import { Mdx } from "@/components/content/mdx-components"
+import { Mdx } from "@/components/content/mdx-components";
 
-import "@/styles/mdx.css"
-import { Metadata } from "next"
-import Image from "next/image"
-import Link from "next/link"
+import "@/styles/mdx.css";
 
-import { env } from "@/env.mjs"
-import { absoluteUrl, cn, formatDate } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
-import { Icons } from "@/components/shared/icons"
+import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 
-interface PostPageProps {
-  params: {
-    slug: string[]
-  }
-}
+import { cn, constructMetadata, formatDate } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import { Icons } from "@/components/shared/icons";
 
-async function getPostFromParams(params) {
-  const slug = params?.slug?.join("/")
-  const post = allPosts.find((post) => post.slugAsParams === slug)
-
-  if (!post) {
-    null
-  }
-
-  return post
+export async function generateStaticParams() {
+  return allPosts.map((post) => ({
+    slug: post.slugAsParams,
+  }));
 }
 
 export async function generateMetadata({
   params,
-}: PostPageProps): Promise<Metadata> {
-  const post = await getPostFromParams(params)
-
+}: {
+  params: { slug: string };
+}): Promise<Metadata | undefined> {
+  const post = allPosts.find((post) => post.slugAsParams === params.slug);
   if (!post) {
-    return {}
+    return;
   }
 
-  const url = env.NEXT_PUBLIC_APP_URL
+  const { title, description, image } = post;
 
-  const ogUrl = new URL(`${url}/api/og`)
-  ogUrl.searchParams.set("heading", post.title)
-  ogUrl.searchParams.set("type", "Blog Post")
-  ogUrl.searchParams.set("mode", "dark")
-
-  return {
-    title: post.title,
-    description: post.description,
-    authors: post.authors.map((author) => ({
-      name: author,
-    })),
-    openGraph: {
-      title: post.title,
-      description: post.description,
-      type: "article",
-      url: absoluteUrl(post.slug),
-      images: [
-        {
-          url: ogUrl.toString(),
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.description,
-      images: [ogUrl.toString()],
-    },
-  }
+  return constructMetadata({
+    title: `${title} – SaaS Starter`,
+    description: description,
+    image,
+  });
 }
 
-export async function generateStaticParams(): Promise<
-  PostPageProps["params"][]
-> {
-  return allPosts.map((post) => ({
-    slug: post.slugAsParams.split("/"),
-  }))
-}
-
-export default async function PostPage({ params }: PostPageProps) {
-  const post = await getPostFromParams(params)
+export default async function PostPage({
+  params,
+}: {
+  params: {
+    slug: string;
+  };
+}) {
+  const post = allPosts.find((post) => post.slugAsParams === params.slug);
 
   if (!post) {
-    notFound()
+    notFound();
   }
 
   const authors = post.authors.map((author) =>
-    allAuthors.find(({ slug }) => slug === `/authors/${author}`)
-  )
+    allAuthors.find(({ slug }) => slug === `/authors/${author}`),
+  );
 
   return (
     <article className="container relative max-w-3xl py-6 lg:py-10">
@@ -100,7 +61,7 @@ export default async function PostPage({ params }: PostPageProps) {
         href="/blog"
         className={cn(
           buttonVariants({ variant: "ghost" }),
-          "absolute left-[-200px] top-14 hidden xl:inline-flex"
+          "absolute left-[-200px] top-14 hidden xl:inline-flex",
         )}
       >
         <Icons.chevronLeft className="mr-2 size-4" />
@@ -116,7 +77,7 @@ export default async function PostPage({ params }: PostPageProps) {
           </time>
         )}
         <h1 className="mt-2 inline-block text-balance font-heading text-4xl leading-tight lg:text-5xl">
-            {post.title}
+          {post.title}
         </h1>
         {authors?.length ? (
           <div className="mt-4 flex space-x-4">
@@ -141,7 +102,7 @@ export default async function PostPage({ params }: PostPageProps) {
                     </p>
                   </div>
                 </Link>
-              ) : null
+              ) : null,
             )}
           </div>
         ) : null}
@@ -165,5 +126,5 @@ export default async function PostPage({ params }: PostPageProps) {
         </Link>
       </div>
     </article>
-  )
+  );
 }
