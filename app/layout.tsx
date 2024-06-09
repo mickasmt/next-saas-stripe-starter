@@ -5,7 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 
 import { cn, constructMetadata } from "@/lib/utils";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@/components/analytics";
 import ModalProvider from "@/components/modals/providers";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           >
             <ModalProvider>{children}</ModalProvider>
             <Analytics />
-            <Toaster />
+            <Toaster richColors closeButton />
             <TailwindIndicator />
           </ThemeProvider>
         </SessionProvider>
