@@ -37,7 +37,16 @@ export function BillingInfo({ userSubscriptionPlan }: BillingInfoProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>{description}</CardContent>
-      <CardFooter className="flex flex-col items-start space-y-2 md:flex-row md:justify-between md:space-x-0">
+      <CardFooter className="flex flex-col items-center space-y-2 border-t bg-accent py-2 md:flex-row md:justify-between md:space-y-0">
+        {isPaid ? (
+          <p className="text-sm font-medium text-muted-foreground">
+            {isCanceled
+              ? "Your plan will be canceled on "
+              : "Your plan renews on "}
+            {formatDate(stripeCurrentPeriodEnd)}.
+          </p>
+        ) : null}
+
         {isPaid && stripeCustomerId ? (
           <CustomerPortalButton userStripeId={stripeCustomerId} />
         ) : (
@@ -45,15 +54,6 @@ export function BillingInfo({ userSubscriptionPlan }: BillingInfoProps) {
             Choose a plan
           </Link>
         )}
-
-        {isPaid ? (
-          <p className="rounded-full text-xs font-medium">
-            {isCanceled
-              ? "Your plan will be canceled on "
-              : "Your plan renews on "}
-            {formatDate(stripeCurrentPeriodEnd)}.
-          </p>
-        ) : null}
       </CardFooter>
     </Card>
   );

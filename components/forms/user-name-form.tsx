@@ -1,13 +1,14 @@
-"use client"
+"use client";
 
-import { useTransition } from "react";
-import { zodResolver } from "@hookform/resolvers/zod"
-import { User } from "@prisma/client"
-import { useForm } from "react-hook-form"
+import { useState, useTransition } from "react";
+import { updateUserName, type FormData } from "@/actions/update-user-name";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { User } from "@prisma/client";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-import { cn } from "@/lib/utils"
-import { userNameSchema } from "@/lib/validations/user"
-import { buttonVariants } from "@/components/ui/button"
+import { userNameSchema } from "@/lib/validations/user";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,21 +16,27 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { toast } from "@/components/ui/use-toast"
-import { Icons } from "@/components/shared/icons"
-
-import { updateUserName, type FormData } from "@/actions/update-user-name"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Icons } from "@/components/shared/icons";
 
 interface UserNameFormProps {
-  user: Pick<User, "id" | "name">
+  user: Pick<User, "id" | "name">;
 }
 
 export function UserNameForm({ user }: UserNameFormProps) {
+  const [updated, setUpdated] = useState(false);
   const [isPending, startTransition] = useTransition();
   const updateUserNameWithId = updateUserName.bind(null, user.id);
+
+  const checkUpdate = (value) => {
+    if (user.name !== value) {
+      setUpdated(true);
+    } else {
+      setUpdated(false);
+    }
+  };
 
   const {
     handleSubmit,
@@ -40,25 +47,21 @@ export function UserNameForm({ user }: UserNameFormProps) {
     defaultValues: {
       name: user?.name || "",
     },
-  })
+  });
 
-  const onSubmit = handleSubmit(data => {
+  const onSubmit = handleSubmit((data) => {
     startTransition(async () => {
       const { status } = await updateUserNameWithId(data);
 
       if (status !== "success") {
-        toast({
-          title: "Something went wrong.",
+        toast.error("Something went wrong.", {
           description: "Your name was not updated. Please try again.",
-          variant: "destructive",
-        })
+        });
       } else {
-        toast({
-          description: "Your name has been updated.",
-        })
+        setUpdated(false);
+        toast.success("Your name has been updated.");
       }
     });
-
   });
 
   return (
@@ -81,25 +84,29 @@ export function UserNameForm({ user }: UserNameFormProps) {
               className="w-full sm:w-[400px]"
               size={32}
               {...register("name")}
+              onChange={(e) => checkUpdate(e.target.value)}
             />
             {errors?.name && (
               <p className="px-1 text-xs text-red-600">{errors.name.message}</p>
             )}
           </div>
         </CardContent>
-        <CardFooter>
-          <button
+        <CardFooter className="flex justify-between border-t bg-accent py-2">
+          <p className="text-sm font-medium text-muted-foreground">
+            Max 32 characters
+          </p>
+          <Button
             type="submit"
-            className={cn(buttonVariants())}
-            disabled={isPending}
+            variant={updated ? "default" : "disable"}
+            disabled={isPending || !updated}
           >
             {isPending && (
               <Icons.spinner className="mr-2 size-4 animate-spin" />
             )}
-            <span>{isPending ? "Saving" : "Save"}</span>
-          </button>
+            <span>Save Changes</span>
+          </Button>
         </CardFooter>
       </Card>
     </form>
-  )
+  );
 }

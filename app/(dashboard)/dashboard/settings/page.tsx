@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 
+import { getCurrentUser } from "@/lib/session";
+import { constructMetadata } from "@/lib/utils";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { UserNameForm } from "@/components/forms/user-name-form";
-import { getCurrentUser } from "@/lib/session";
-import { constructMetadata } from "@/lib/utils";
 
 export const metadata = constructMetadata({
   title: "Settings – SaaS Starter",
