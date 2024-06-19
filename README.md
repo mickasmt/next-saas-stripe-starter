@@ -72,7 +72,7 @@ pnpm run dev
 - [x] ~Change database platform for Neon (planetscale removes its free plan on April 2024)~
 - [x] ~Switch subscription plan (enable on stripe dashboard)~
 - [x] ~Update documentation for installation & configuration~
-- [ ] Improve blog design
+- [x] ~Improve blog section~
 - [ ] Upgrade eslint to v9
 - [ ] Add resend for success subscriptions
 
