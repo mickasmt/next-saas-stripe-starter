@@ -67,9 +67,9 @@ export function UserNameForm({ user }: UserNameFormProps) {
   return (
     <form onSubmit={onSubmit}>
       <Card>
-        <CardHeader>
+        <CardHeader className="space-y-2">
           <CardTitle>Your Name</CardTitle>
-          <CardDescription>
+          <CardDescription className="text-[15px]">
             Please enter your full name or a display name you are comfortable
             with.
           </CardDescription>
