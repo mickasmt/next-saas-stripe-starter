@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { BillingInfo } from "@/components/billing-info";
+import { BillingInfo } from "@/components/pricing/billing-info";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { Icons } from "@/components/shared/icons";

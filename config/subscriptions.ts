@@ -1,20 +1,20 @@
-import { SubscriptionPlan } from "types"
-import { env } from "@/env.mjs"
+import { PlansRow, SubscriptionPlan } from "types";
+import { env } from "@/env.mjs";
 
 export const pricingData: SubscriptionPlan[] = [
   {
-    title: 'Starter',
-    description: 'For Beginners',
+    title: "Starter",
+    description: "For Beginners",
     benefits: [
-      'Up to 100 monthly posts',
-      'Basic analytics and reporting',
-      'Access to standard templates',
+      "Up to 100 monthly posts",
+      "Basic analytics and reporting",
+      "Access to standard templates",
     ],
     limitations: [
-      'No priority access to new features.',
-      'Limited customer support',
-      'No custom branding',
-      'Limited access to business resources.',
+      "No priority access to new features.",
+      "Limited customer support",
+      "No custom branding",
+      "Limited access to business resources.",
     ],
     prices: {
       monthly: 0,
@@ -26,18 +26,18 @@ export const pricingData: SubscriptionPlan[] = [
     },
   },
   {
-    title: 'Pro',
-    description: 'Unlock Advanced Features',
+    title: "Pro",
+    description: "Unlock Advanced Features",
     benefits: [
-      'Up to 500 monthly posts',
-      'Advanced analytics and reporting',
-      'Access to business templates',
-      'Priority customer support',
-      'Exclusive webinars and training.',
+      "Up to 500 monthly posts",
+      "Advanced analytics and reporting",
+      "Access to business templates",
+      "Priority customer support",
+      "Exclusive webinars and training.",
     ],
     limitations: [
-      'No custom branding',
-      'Limited access to business resources.',
+      "No custom branding",
+      "Limited access to business resources.",
     ],
     prices: {
       monthly: 15,
@@ -49,14 +49,14 @@ export const pricingData: SubscriptionPlan[] = [
     },
   },
   {
-    title: 'Business',
-    description: 'For Power Users',
+    title: "Business",
+    description: "For Power Users",
     benefits: [
-      'Unlimited posts',
-      'Real-time analytics and reporting',
-      'Access to all templates, including custom branding',
-      '24/7 business customer support',
-      'Personalized onboarding and account management.',
+      "Unlimited posts",
+      "Real-time analytics and reporting",
+      "Access to all templates, including custom branding",
+      "24/7 business customer support",
+      "Personalized onboarding and account management.",
     ],
     limitations: [],
     prices: {
@@ -68,4 +68,98 @@ export const pricingData: SubscriptionPlan[] = [
       yearly: env.NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID,
     },
   },
+];
+
+export const plansColumns = [
+  "starter",
+  "pro",
+  "business",
+  "enterprise",
+] as const;
+
+export const comparePlans: PlansRow[] = [
+  {
+    feature: "Access to Basic Analytics",
+    starter: true,
+    pro: true,
+    business: true,
+    enterprise: "Custom",
+    tooltip: "All plans include basic analytics for tracking performance.",
+  },
+  {
+    feature: "Custom Branding",
+    starter: null,
+    pro: "500/mo",
+    business: "1,500/mo",
+    enterprise: "Unlimited",
+    tooltip: "Custom branding is available from the Pro plan onwards.",
+  },
+  {
+    feature: "Priority Support",
+    starter: null,
+    pro: "Email",
+    business: "Email & Chat",
+    enterprise: "24/7 Support",
+    tooltip: "Higher plans provide more extensive support options.",
+  },
+  {
+    feature: "Advanced Reporting",
+    starter: null,
+    pro: null,
+    business: true,
+    enterprise: "Custom",
+    tooltip:
+      "Advanced reporting is available in Business and Enterprise plans.",
+  },
+  {
+    feature: "Dedicated Manager",
+    starter: null,
+    pro: null,
+    business: null,
+    enterprise: true,
+    tooltip: "Enterprise plan includes a dedicated account manager.",
+  },
+  {
+    feature: "API Access",
+    starter: "Limited",
+    pro: "Standard",
+    business: "Enhanced",
+    enterprise: "Full",
+    tooltip: "API access varies by plan level.",
+  },
+  {
+    feature: "Monthly Webinars",
+    starter: false,
+    pro: true,
+    business: true,
+    enterprise: "Custom",
+    tooltip: "Pro and higher plans include access to monthly webinars.",
+  },
+  {
+    feature: "Custom Integrations",
+    starter: false,
+    pro: false,
+    business: "Available",
+    enterprise: "Available",
+    tooltip:
+      "Custom integrations are available in Business and Enterprise plans.",
+  },
+  {
+    feature: "Roles and Permissions",
+    starter: null,
+    pro: "Basic",
+    business: "Advanced",
+    enterprise: "Advanced",
+    tooltip:
+      "User roles and permissions management improves with higher plans.",
+  },
+  {
+    feature: "Onboarding Assistance",
+    starter: false,
+    pro: "Self-service",
+    business: "Assisted",
+    enterprise: "Full Service",
+    tooltip: "Higher plans include more comprehensive onboarding assistance.",
+  },
+  // Add more rows as needed
 ];
