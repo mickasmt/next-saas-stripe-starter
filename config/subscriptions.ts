@@ -79,7 +79,7 @@ export const plansColumns = [
 
 export const comparePlans: PlansRow[] = [
   {
-    feature: "Access to Basic Analytics",
+    feature: "Access to Analytics",
     starter: true,
     pro: true,
     business: true,
@@ -100,7 +100,6 @@ export const comparePlans: PlansRow[] = [
     pro: "Email",
     business: "Email & Chat",
     enterprise: "24/7 Support",
-    tooltip: "Higher plans provide more extensive support options.",
   },
   {
     feature: "Advanced Reporting",
@@ -125,7 +124,6 @@ export const comparePlans: PlansRow[] = [
     pro: "Standard",
     business: "Enhanced",
     enterprise: "Full",
-    tooltip: "API access varies by plan level.",
   },
   {
     feature: "Monthly Webinars",
