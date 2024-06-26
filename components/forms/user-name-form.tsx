@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { updateUserName, type FormData } from "@/actions/update-user-name";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -26,16 +27,13 @@ interface UserNameFormProps {
 }
 
 export function UserNameForm({ user }: UserNameFormProps) {
+  const { update } = useSession();
   const [updated, setUpdated] = useState(false);
   const [isPending, startTransition] = useTransition();
   const updateUserNameWithId = updateUserName.bind(null, user.id);
 
   const checkUpdate = (value) => {
-    if (user.name !== value) {
-      setUpdated(true);
-    } else {
-      setUpdated(false);
-    }
+    setUpdated(user.name !== value);
   };
 
   const {
@@ -58,6 +56,7 @@ export function UserNameForm({ user }: UserNameFormProps) {
           description: "Your name was not updated. Please try again.",
         });
       } else {
+        await update();
         setUpdated(false);
         toast.success("Your name has been updated.");
       }

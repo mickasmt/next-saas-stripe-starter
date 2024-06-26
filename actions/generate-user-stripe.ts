@@ -19,12 +19,13 @@ export async function generateUserStripe(priceId: string): Promise<responseActio
 
   try {
     const session = await auth()
+    const user = session?.user;
 
-    if (!session?.user || !session?.user.email) {
+    if (!user || !user.email || !user.id) {
       throw new Error("Unauthorized");
     }
 
-    const subscriptionPlan = await getUserSubscriptionPlan(session.user.id)
+    const subscriptionPlan = await getUserSubscriptionPlan(user.id)
 
     if (subscriptionPlan.isPaid && subscriptionPlan.stripeCustomerId) {
       // User on Paid Plan - Create a portal session to manage subscription.
@@ -42,7 +43,7 @@ export async function generateUserStripe(priceId: string): Promise<responseActio
         payment_method_types: ["card"],
         mode: "subscription",
         billing_address_collection: "auto",
-        customer_email: session.user.email,
+        customer_email: user.email,
         line_items: [
           {
             price: priceId,
@@ -50,7 +51,7 @@ export async function generateUserStripe(priceId: string): Promise<responseActio
           },
         ],
         metadata: {
-          userId: session.user.id,
+          userId: user.id,
         },
       })
 

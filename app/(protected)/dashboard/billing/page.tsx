@@ -1,13 +1,13 @@
 import { redirect } from "next/navigation";
 
-import { BillingInfo } from "@/components/pricing/billing-info";
-import { DashboardHeader } from "@/components/dashboard/header";
-import { DashboardShell } from "@/components/dashboard/shell";
-import { Icons } from "@/components/shared/icons";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getCurrentUser } from "@/lib/session";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { constructMetadata } from "@/lib/utils";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { DashboardHeader } from "@/components/dashboard/header";
+import { DashboardShell } from "@/components/dashboard/shell";
+import { BillingInfo } from "@/components/pricing/billing-info";
+import { Icons } from "@/components/shared/icons";
 
 export const metadata = constructMetadata({
   title: "Billing – SaaS Starter",
@@ -17,11 +17,12 @@ export const metadata = constructMetadata({
 export default async function BillingPage() {
   const user = await getCurrentUser();
 
-  if (!user) {
+  let userSubscriptionPlan;
+  if (user && user.id && user.role === "USER") {
+    userSubscriptionPlan = await getUserSubscriptionPlan(user.id);
+  } else {
     redirect("/login");
   }
-
-  const userSubscriptionPlan = await getUserSubscriptionPlan(user.id);
 
   return (
     <DashboardShell>
@@ -33,7 +34,7 @@ export default async function BillingPage() {
         <Alert className="!pl-14">
           <Icons.warning />
           <AlertTitle>This is a demo app.</AlertTitle>
-          <AlertDescription>
+          <AlertDescription className="text-balance">
             SaaS Starter app is a demo app using a Stripe test environment. You
             can find a list of test card numbers on the{" "}
             <a

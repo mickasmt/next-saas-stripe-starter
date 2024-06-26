@@ -8,6 +8,8 @@ import { UserSubscriptionPlan } from "types";
 export async function getUserSubscriptionPlan(
   userId: string
 ): Promise<UserSubscriptionPlan> {
+  if(!userId) throw new Error("Missing parameters");
+
   const user = await prisma.user.findFirst({
     where: {
       id: userId,

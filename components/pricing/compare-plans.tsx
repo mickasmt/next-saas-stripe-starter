@@ -57,7 +57,10 @@ export function ComparePlans() {
                         <PopoverTrigger className="rounded p-1 hover:bg-muted">
                           <Info className="size-[18px] text-muted-foreground" />
                         </PopoverTrigger>
-                        <PopoverContent className="max-w-80 p-3 text-sm">
+                        <PopoverContent
+                          side="top"
+                          className="max-w-80 p-3 text-sm"
+                        >
                           {row.tooltip}
                         </PopoverContent>
                       </Popover>

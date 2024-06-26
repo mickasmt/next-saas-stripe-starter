@@ -14,7 +14,7 @@ export default async function PricingPage() {
   const user = await getCurrentUser();
   let subscriptionPlan;
 
-  if (user) {
+  if (user && user.id) {
     subscriptionPlan = await getUserSubscriptionPlan(user.id);
   }
 

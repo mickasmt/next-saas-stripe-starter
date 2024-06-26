@@ -10,6 +10,11 @@ datasource db {
   url          = env("DATABASE_URL")
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
 model Account {
   id                String   @id @default(cuid())
   userId            String
@@ -52,6 +57,7 @@ model User {
   image         String?
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  role          UserRole  @default(USER)
 
   accounts Account[]
   sessions Session[]

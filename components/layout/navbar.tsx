@@ -1,22 +1,23 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useContext } from "react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { useContext } from "react";
+import { useSession } from "next-auth/react";
 
-import { DocsSearch } from "@/components/docs/search";
-import { ModalContext } from "@/components/modals/providers";
-import { Icons } from "@/components/shared/icons";
-import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { adminConfig } from "@/config/admin";
 import { dashboardConfig } from "@/config/dashboard";
 import { docsConfig } from "@/config/docs";
 import { marketingConfig } from "@/config/marketing";
 import { siteConfig } from "@/config/site";
-import { useScroll } from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
+import { useScroll } from "@/hooks/use-scroll";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { DocsSearch } from "@/components/docs/search";
+import { ModalContext } from "@/components/modals/providers";
+import { Icons } from "@/components/shared/icons";
+import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 
 import { UserAccountNav } from "./user-account-nav";
 
@@ -31,13 +32,17 @@ export function NavBar({ scroll = false }: NavBarProps) {
   const { setShowSignInModal } = useContext(ModalContext);
 
   const selectedLayout = useSelectedLayoutSegment();
+  const admin = selectedLayout === "admin";
   const dashBoard = selectedLayout === "dashboard";
   const documentation = selectedLayout === "docs";
-  const links = documentation
-    ? docsConfig.mainNav
-    : dashBoard
-      ? dashboardConfig.mainNav
-      : marketingConfig.mainNav;
+
+  const configMap = {
+    docs: docsConfig.mainNav,
+    dashboard: dashboardConfig.mainNav,
+  };
+
+  const links =
+    (selectedLayout && configMap[selectedLayout]) || marketingConfig.mainNav;
 
   return (
     <header
@@ -59,7 +64,7 @@ export function NavBar({ scroll = false }: NavBarProps) {
 
           {links && links.length > 0 ? (
             <nav className="hidden gap-6 md:flex">
-              {links.map((item, index) => (
+              {(admin ? adminConfig.mainNav : links).map((item, index) => (
                 <Link
                   key={index}
                   href={item.disabled ? "#" : item.href}
@@ -104,10 +109,27 @@ export function NavBar({ scroll = false }: NavBarProps) {
 
           {session ? (
             <>
-              {dashBoard ? (
-                <UserAccountNav user={session.user} />
+              {dashBoard || admin ? (
+                <div className="flex items-center space-x-3">
+                  {dashBoard && session.user.role === "ADMIN" ? (
+                    <Link href="/admin" className="hidden md:block">
+                      <Button
+                        className="gap-2 px-4"
+                        variant="outline"
+                        size="sm"
+                        rounded="xl"
+                      >
+                        <span>Admin</span>
+                      </Button>
+                    </Link>
+                  ) : null}
+                  <UserAccountNav user={session.user} />
+                </div>
               ) : (
-                <Link href="/dashboard" className="hidden md:block">
+                <Link
+                  href={session.user.role === "ADMIN" ? "/admin" : "/dashboard"}
+                  className="hidden md:block"
+                >
                   <Button
                     className="gap-2 px-4"
                     variant="default"
@@ -132,7 +154,7 @@ export function NavBar({ scroll = false }: NavBarProps) {
             </Button>
           ) : (
             <div className="hidden lg:flex">
-              {dashBoard ? (
+              {dashBoard || admin ? (
                 <Skeleton className="size-9 rounded-full" />
               ) : (
                 <Skeleton className="h-9 w-24 rounded-full" />
