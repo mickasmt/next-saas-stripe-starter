@@ -117,14 +117,15 @@ export function UserRoleForm({ user }: UserNameFormProps) {
               )}
             />
           </CardContent>
-          <CardFooter className="flex justify-between border-t bg-accent py-2">
-            <p className="text-sm font-medium text-muted-foreground">
+          <CardFooter className="flex justify-between gap-x-4 border-t bg-accent py-2">
+            <p className="text-balance text-sm font-medium text-muted-foreground">
               Remove this card on real production.
             </p>
             <Button
               type="submit"
-              variant={updated ? "default" : "disable"}
+              className="shrink-0"
               disabled={isPending || !updated}
+              variant={updated ? "default" : "disable"}
             >
               {isPending && (
                 <Icons.spinner className="mr-2 size-4 animate-spin" />
