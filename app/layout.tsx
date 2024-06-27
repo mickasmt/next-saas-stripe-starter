@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 
-import { fontHeading, fontSans, fontUrban } from "@/assets/fonts";
+import { fontGeist, fontHeading, fontSans, fontUrban } from "@/assets/fonts";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 
@@ -26,6 +26,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontSans.variable,
           fontUrban.variable,
           fontHeading.variable,
+          fontGeist.variable,
         )}
       >
         <SessionProvider>

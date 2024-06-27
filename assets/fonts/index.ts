@@ -15,3 +15,8 @@ export const fontHeading = localFont({
   src: "./CalSans-SemiBold.woff2",
   variable: "--font-heading",
 })
+
+export const fontGeist = localFont({
+  src: "./GeistVF.woff2",
+  variable: "--font-geist",
+})
