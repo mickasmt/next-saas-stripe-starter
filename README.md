@@ -59,20 +59,7 @@ pnpm run dev
 >
 > Use this command for update your project: `ncu -i --format group`
 
-> [!WARNING]  
-> You need update `.react-email` folder before use `pnpm run email`. Check the link [here](https://github.com/resend/react-email/issues/868#issuecomment-1828411325) if you have the error : `renderToReadableStream not found`
-
 ## Roadmap
-
-- [x] ~Fix Vaul drawer for mobile sign in~
-- [x] ~Update OG image~
-- [x] ~Add Server Actions on billing form (stripe)~
-- [x] ~Add Server Actions on user name form~
-- [x] ~Upgrade Auth.js to v5~
-- [x] ~Change database platform for Neon (planetscale removes its free plan on April 2024)~
-- [x] ~Switch subscription plan (enable on stripe dashboard)~
-- [x] ~Update documentation for installation & configuration~
-- [x] ~Improve blog section~
 - [ ] Upgrade eslint to v9
 - [ ] Add resend for success subscriptions
 
