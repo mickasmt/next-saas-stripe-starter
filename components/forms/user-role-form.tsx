@@ -100,7 +100,7 @@ export function UserRoleForm({ user }: UserNameFormProps) {
                     defaultValue={user.role}
                   >
                     <FormControl>
-                      <SelectTrigger className="w-[400px]">
+                      <SelectTrigger className="w-full sm:w-[400px]">
                         <SelectValue placeholder="Select a role" />
                       </SelectTrigger>
                     </FormControl>
