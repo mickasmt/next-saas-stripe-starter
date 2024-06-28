@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   CreditCard,
@@ -9,8 +10,10 @@ import {
   Settings,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { Drawer } from "vaul";
 
 import { ExtendedUser } from "@/types/next-auth";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,8 +24,99 @@ import {
 import { UserAvatar } from "@/components/shared/user-avatar";
 
 export function UserAccountNav({ user }: { user: ExtendedUser }) {
+  const [open, setOpen] = useState(false);
+  const closeDrawer = () => {
+    setOpen(false);
+  };
+
+  const { isMobile } = useMediaQuery();
+
+  if (isMobile) {
+    return (
+      <Drawer.Root open={open} onClose={closeDrawer}>
+        <Drawer.Trigger onClick={() => setOpen(true)}>
+          <UserAvatar
+            user={{ name: user.name || null, image: user.image || null }}
+            className="size-9 border"
+          />
+        </Drawer.Trigger>
+        <Drawer.Portal>
+          <Drawer.Overlay
+            className="fixed inset-0 z-40 h-full bg-background/80 backdrop-blur-sm"
+            onClick={closeDrawer}
+          />
+          <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mt-24 overflow-hidden rounded-t-[10px] border bg-background px-4 text-sm">
+            <div className="sticky top-0 z-20 flex w-full items-center justify-center bg-inherit">
+              <div className="my-3 h-1.5 w-16 rounded-full bg-muted-foreground/20" />
+            </div>
+
+            <div className="flex items-center justify-start gap-2 p-2">
+              <div className="flex flex-col">
+                {user.name && <p className="font-medium">{user.name}</p>}
+                {user.email && (
+                  <p className="w-[200px] truncate text-muted-foreground">
+                    {user?.email}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <ul role="list" className="mb-14 mt-1 w-full text-muted-foreground">
+              {user.role === "ADMIN" ? (
+                <li className="rounded-lg text-foreground hover:bg-muted">
+                  <Link
+                    href="/admin"
+                    onClick={closeDrawer}
+                    className="flex w-full items-center gap-3 px-2.5 py-2"
+                  >
+                    <Lock className="size-4" />
+                    <p className="text-sm">Admin</p>
+                  </Link>
+                </li>
+              ) : (
+                <li className="rounded-lg text-foreground hover:bg-muted">
+                  <Link
+                    href="/dashboard/billing"
+                    onClick={closeDrawer}
+                    className="flex w-full items-center gap-3 px-2.5 py-2"
+                  >
+                    <CreditCard className="size-4" />
+                    <p className="text-sm">Billing</p>
+                  </Link>
+                </li>
+              )}
+
+              <li className="rounded-lg text-foreground hover:bg-muted">
+                <Link
+                  href="/dashboard"
+                  onClick={closeDrawer}
+                  className="flex w-full items-center gap-3 px-2.5 py-2"
+                >
+                  <LayoutDashboard className="size-4" />
+                  <p className="text-sm">Dashboard</p>
+                </Link>
+              </li>
+
+              <li className="rounded-lg text-foreground hover:bg-muted">
+                <Link
+                  href="/dashboard/settings"
+                  onClick={closeDrawer}
+                  className="flex w-full items-center gap-3 px-2.5 py-2"
+                >
+                  <Settings className="size-4" />
+                  <p className="text-sm">Settings</p>
+                </Link>
+              </li>
+            </ul>
+          </Drawer.Content>
+          <Drawer.Overlay />
+        </Drawer.Portal>
+      </Drawer.Root>
+    );
+  }
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
         <UserAvatar
           user={{ name: user.name || null, image: user.image || null }}
