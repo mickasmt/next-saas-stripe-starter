@@ -45,7 +45,7 @@ export function UserAccountNav({ user }: { user: ExtendedUser }) {
             className="fixed inset-0 z-40 h-full bg-background/80 backdrop-blur-sm"
             onClick={closeDrawer}
           />
-          <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mt-24 overflow-hidden rounded-t-[10px] border bg-background px-4 text-sm">
+          <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mt-24 overflow-hidden rounded-t-[10px] border bg-background px-3 text-sm">
             <div className="sticky top-0 z-20 flex w-full items-center justify-center bg-inherit">
               <div className="my-3 h-1.5 w-16 rounded-full bg-muted-foreground/20" />
             </div>
@@ -106,6 +106,21 @@ export function UserAccountNav({ user }: { user: ExtendedUser }) {
                   <Settings className="size-4" />
                   <p className="text-sm">Settings</p>
                 </Link>
+              </li>
+
+              <li
+                className="rounded-lg text-foreground hover:bg-muted"
+                onClick={(event) => {
+                  event.preventDefault();
+                  signOut({
+                    callbackUrl: `${window.location.origin}/`,
+                  });
+                }}
+              >
+                <div className="flex w-full items-center gap-3 px-2.5 py-2">
+                  <LogOut className="size-4" />
+                  <p className="text-sm">Log out </p>
+                </div>
               </li>
             </ul>
           </Drawer.Content>
