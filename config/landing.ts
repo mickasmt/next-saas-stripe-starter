@@ -5,7 +5,7 @@ export const infos: InfoLdg[] = [
     title: "Empower your projects",
     description:
       "Unlock the full potential of your projects with our open-source SaaS platform. Collaborate seamlessly, innovate effortlessly, and scale limitlessly.",
-    image: "/images/work-from-home.jpg",
+    image: "/_static/illustrations/work-from-home.jpg",
     list: [
       {
         title: "Collaborative",
@@ -29,7 +29,7 @@ export const infos: InfoLdg[] = [
     title: "Seamless Integration",
     description:
       "Integrate our open-source SaaS seamlessly into your existing workflows. Effortlessly connect with your favorite tools and services for a streamlined experience.",
-    image: "/images/work-from-home.jpg",
+    image: "/_static/illustrations/work-from-home.jpg",
     list: [
       {
         title: "Flexible",

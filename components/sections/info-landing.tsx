@@ -58,7 +58,6 @@ export default function InfoLanding({
             />
           </div>
         </div>
-        {/* </div> */}
       </MaxWidthWrapper>
     </div>
   );

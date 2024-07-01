@@ -10,7 +10,7 @@ export default function PreviewLanding() {
           <div className="relative aspect-video overflow-hidden rounded-xl border md:rounded-lg">
             <Image
               className="size-full object-cover object-center dark:opacity-85 dark:invert"
-              src="/images/blog/blog-post-3.jpg"
+              src="/_static/blog/blog-post-3.jpg"
               alt="preview landing"
               width={2000}
               height={1000}

@@ -18,12 +18,12 @@ export const BLOG_CATEGORIES: {
 export const BLOG_AUTHORS = {
   mickasmt: {
     name: "mickasmt",
-    image: "/images/avatars/mickasmt.png",
+    image: "/_static/avatars/mickasmt.png",
     twitter: "miickasmt",
   },
   shadcn: {
     name: "shadcn",
-    image: "/images/avatars/shadcn.jpeg",
+    image: "/_static/avatars/shadcn.jpeg",
     twitter: "shadcn",
   },
 };
