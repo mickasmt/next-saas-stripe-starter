@@ -1,4 +1,4 @@
-import { InfoLdg } from "types";
+import { FeatureLdg, InfoLdg, TestimonialType } from "types";
 
 export const infos: InfoLdg[] = [
   {
@@ -52,45 +52,52 @@ export const infos: InfoLdg[] = [
   },
 ];
 
-export const features = [
+export const features: FeatureLdg[] = [
   {
     title: "Feature 1",
     description:
       "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
     link: "/",
+    icon: "nextjs",
   },
   {
     title: "Feature 2",
     description:
       "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
     link: "/",
+    icon: "google",
   },
   {
     title: "Feature 3",
     description:
       "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
     link: "/",
+    icon: "gitHub",
   },
   {
     title: "Feature 4",
     description:
       "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
     link: "/",
+    icon: "laptop",
   },
   {
     title: "Feature 5",
     description:
       "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
+    link: "/",
+    icon: "user",
   },
   {
     title: "Feature 6",
     description:
       "Amet praesentium deserunt ex commodi tempore fuga voluptatem. Sit, sapiente.",
     link: "/",
+    icon: "copy",
   },
 ];
 
-export const testimonials = [
+export const testimonials: TestimonialType[] = [
   {
     name: "John Doe",
     job: "Full Stack Developer",
