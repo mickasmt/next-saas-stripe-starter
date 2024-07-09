@@ -1,7 +1,12 @@
+import "server-only";
+
+import { cache } from "react";
 import { auth } from "@/auth";
 
-export async function getCurrentUser() {
+export const getCurrentUser = cache(async () => {
   const session = await auth();
-
-  return session?.user;
-}
+  if (!session?.user) {
+    return undefined;
+  }
+  return session.user;
+});
