@@ -18,6 +18,14 @@ const defaultComputedFields: ComputedFields = {
     type: "string",
     resolve: (doc) => doc._raw.flattenedPath.split("/").slice(1).join("/"),
   },
+  images: {
+    type: "list",
+    resolve: (doc) => {
+      return (
+        doc.body.raw.match(/(?<=<Image[^>]*\bsrc=")[^"]+(?="[^>]*\/>)/g) || []
+      );
+    },
+  },
 };
 
 export const Doc = defineDocumentType(() => ({

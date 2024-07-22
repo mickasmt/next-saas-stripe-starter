@@ -1,21 +1,27 @@
-import { allPosts } from "contentlayer/generated";
 import { notFound } from "next/navigation";
+import { allPosts } from "contentlayer/generated";
 
 import { Mdx } from "@/components/content/mdx-components";
 
 import "@/styles/mdx.css";
 
 import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 
-import Author from "@/components/content/author";
-import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
-import { DashboardTableOfContents } from "@/components/shared/toc";
-import { buttonVariants } from "@/components/ui/button";
 import { BLOG_CATEGORIES } from "@/config/blog";
 import { getTableOfContents } from "@/lib/toc";
-import { cn, constructMetadata, formatDate } from "@/lib/utils";
+import {
+  cn,
+  constructMetadata,
+  formatDate,
+  getBlurDataURL,
+  placeholderBlurhash,
+} from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import Author from "@/components/content/author";
+import BlurImage from "@/components/shared/blur-image";
+import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
+import { DashboardTableOfContents } from "@/components/shared/toc";
 
 export async function generateStaticParams() {
   return allPosts.map((post) => ({
@@ -68,6 +74,16 @@ export default async function PostPage({
 
   const toc = await getTableOfContents(post.body.raw);
 
+  const [thumbnailBlurhash, images] = await Promise.all([
+    getBlurDataURL(post.image),
+    await Promise.all(
+      post.images.map(async (src: string) => ({
+        src,
+        blurDataURL: await getBlurDataURL(src),
+      })),
+    ),
+  ]);
+
   return (
     <>
       <MaxWidthWrapper className="pt-6 md:pt-10">
@@ -111,17 +127,20 @@ export default async function PostPage({
         <div className="absolute top-52 w-full border-t" />
 
         <MaxWidthWrapper className="grid grid-cols-4 gap-10 pt-8 max-md:px-0">
-          <div className="relative col-span-4 mb-10 flex flex-col space-y-8 bg-background sm:border md:rounded-xl lg:col-span-3">
-            <Image
+          <div className="relative col-span-4 mb-10 flex flex-col space-y-8 border-y bg-background md:rounded-xl md:border lg:col-span-3">
+            <BlurImage
+              alt={post.title}
+              blurDataURL={thumbnailBlurhash ?? placeholderBlurhash}
               className="aspect-[1200/630] border-b object-cover md:rounded-t-xl"
-              src={post.image}
               width={1200}
               height={630}
-              alt={post.title}
               priority
+              placeholder="blur"
+              src={post.image}
+              sizes="(max-width: 768px) 770px, 1000px"
             />
             <div className="px-[.8rem] pb-10 md:px-8">
-              <Mdx code={post.body.code} />
+              <Mdx code={post.body.code} images={images} />
             </div>
           </div>
 

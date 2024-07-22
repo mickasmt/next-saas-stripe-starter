@@ -2,7 +2,13 @@ import { Post } from "@/.contentlayer/generated";
 
 import { BlogCard } from "./blog-card";
 
-export function BlogPosts({ posts }: { posts: Post[] }) {
+export function BlogPosts({
+  posts,
+}: {
+  posts: (Post & {
+    blurDataURL: string;
+  })[];
+}) {
   return (
     <main className="space-y-8">
       <BlogCard data={posts[0]} horizontale priority />

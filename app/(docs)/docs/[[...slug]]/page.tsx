@@ -1,17 +1,17 @@
-import { allDocs } from "contentlayer/generated";
 import { notFound } from "next/navigation";
+import { allDocs } from "contentlayer/generated";
 
+import { getTableOfContents } from "@/lib/toc";
 import { Mdx } from "@/components/content/mdx-components";
 import { DocsPageHeader } from "@/components/docs/page-header";
 import { DocsPager } from "@/components/docs/pager";
 import { DashboardTableOfContents } from "@/components/shared/toc";
-import { getTableOfContents } from "@/lib/toc";
 
 import "@/styles/mdx.css";
 
 import { Metadata } from "next";
 
-import { constructMetadata } from "@/lib/utils";
+import { constructMetadata, getBlurDataURL } from "@/lib/utils";
 
 interface DocPageProps {
   params: {
@@ -60,12 +60,19 @@ export default async function DocPage({ params }: DocPageProps) {
 
   const toc = await getTableOfContents(doc.body.raw);
 
+  const images = await Promise.all(
+    doc.images.map(async (src: string) => ({
+      src,
+      blurDataURL: await getBlurDataURL(src),
+    })),
+  );
+
   return (
     <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
       <div className="mx-auto w-full min-w-0">
         <DocsPageHeader heading={doc.title} text={doc.description} />
         <div className="pb-4 pt-11">
-          <Mdx code={doc.body.code} />
+          <Mdx code={doc.body.code} images={images} />
         </div>
         <hr className="my-4 md:my-6" />
         <DocsPager doc={doc} />
