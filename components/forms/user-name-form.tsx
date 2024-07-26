@@ -10,16 +10,9 @@ import { toast } from "sonner";
 
 import { userNameSchema } from "@/lib/validations/user";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SectionColumns } from "@/components/dashboard/section-columns";
 import { Icons } from "@/components/shared/icons";
 
 interface UserNameFormProps {
@@ -65,47 +58,46 @@ export function UserNameForm({ user }: UserNameFormProps) {
 
   return (
     <form onSubmit={onSubmit}>
-      <Card>
-        <CardHeader className="space-y-2">
-          <CardTitle>Your Name</CardTitle>
-          <CardDescription className="text-[15px]">
-            Please enter your full name or a display name you are comfortable
-            with.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="name">
-              Name
-            </Label>
-            <Input
-              id="name"
-              className="w-full sm:w-[400px]"
-              size={32}
-              {...register("name")}
-              onChange={(e) => checkUpdate(e.target.value)}
-            />
-            {errors?.name && (
-              <p className="px-1 text-xs text-red-600">{errors.name.message}</p>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-between border-t bg-accent py-2">
-          <p className="text-sm font-medium text-muted-foreground">
-            Max 32 characters
-          </p>
+      <SectionColumns
+        title="Your Name"
+        description="Please enter a display name you are comfortable with."
+      >
+        <div className="flex w-full items-center gap-2">
+          <Label className="sr-only" htmlFor="name">
+            Name
+          </Label>
+          <Input
+            id="name"
+            className="flex-1"
+            size={32}
+            {...register("name")}
+            onChange={(e) => checkUpdate(e.target.value)}
+          />
           <Button
             type="submit"
             variant={updated ? "default" : "disable"}
             disabled={isPending || !updated}
+            className="w-[67px] shrink-0 px-0 sm:w-[130px]"
           >
-            {isPending && (
-              <Icons.spinner className="mr-2 size-4 animate-spin" />
+            {isPending ? (
+              <Icons.spinner className="size-4 animate-spin" />
+            ) : (
+              <p>
+                Save
+                <span className="hidden sm:inline-flex">&nbsp;Changes</span>
+              </p>
             )}
-            <span>Save Changes</span>
           </Button>
-        </CardFooter>
-      </Card>
+        </div>
+        <div className="flex flex-col justify-between p-1">
+          {errors?.name && (
+            <p className="pb-0.5 text-[13px] text-red-600">
+              {errors.name.message}
+            </p>
+          )}
+          <p className="text-[13px] text-muted-foreground">Max 32 characters</p>
+        </div>
+      </SectionColumns>
     </form>
   );
 }

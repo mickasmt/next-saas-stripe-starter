@@ -6,7 +6,6 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 
-import { dashboardConfig } from "@/config/dashboard";
 import { docsConfig } from "@/config/docs";
 import { marketingConfig } from "@/config/marketing";
 import { siteConfig } from "@/config/site";
@@ -17,13 +16,13 @@ import { Icons } from "@/components/shared/icons";
 import { ModeToggle } from "./mode-toggle";
 
 export function NavMobile() {
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const selectedLayout = useSelectedLayoutSegment();
   const documentation = selectedLayout === "docs";
 
   const configMap = {
     docs: docsConfig.mainNav,
-    dashboard: dashboardConfig.mainNav,
   };
 
   const links =
@@ -37,8 +36,6 @@ export function NavMobile() {
       document.body.style.overflow = "auto";
     }
   }, [open]);
-
-  const { data: session } = useSession();
 
   return (
     <>
@@ -63,7 +60,7 @@ export function NavMobile() {
         )}
       >
         <ul className="grid divide-y divide-muted">
-          {links.map(({ title, href }) => (
+          {links && links.length > 0 && links.map(({ title, href }) => (
             <li key={href} className="py-3">
               <Link
                 href={href}

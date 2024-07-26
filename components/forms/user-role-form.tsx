@@ -12,14 +12,6 @@ import { z } from "zod";
 import { userRoleSchema } from "@/lib/validations/user";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormField,
@@ -34,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SectionColumns } from "@/components/dashboard/section-columns";
 import { Icons } from "@/components/shared/icons";
 
 interface UserNameFormProps {
@@ -75,19 +68,16 @@ export function UserRoleForm({ user }: UserNameFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Card>
-          <CardHeader className="space-y-2">
-            <CardTitle>Your Role</CardTitle>
-            <CardDescription className="text-[15px]">
-              Select the role what you want for test the app.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+        <SectionColumns
+          title="Your Role"
+          description="Select the role what you want for test the app."
+        >
+          <div className="flex w-full items-center gap-2">
             <FormField
               control={form.control}
               name="role"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="w-full space-y-0">
                   <FormLabel className="sr-only">Role</FormLabel>
                   <Select
                     // TODO:(FIX) Option value not update. Use useState for the moment
@@ -100,7 +90,7 @@ export function UserRoleForm({ user }: UserNameFormProps) {
                     defaultValue={user.role}
                   >
                     <FormControl>
-                      <SelectTrigger className="w-full sm:w-[400px]">
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a role" />
                       </SelectTrigger>
                     </FormControl>
@@ -116,24 +106,28 @@ export function UserRoleForm({ user }: UserNameFormProps) {
                 </FormItem>
               )}
             />
-          </CardContent>
-          <CardFooter className="flex justify-between gap-x-4 border-t bg-accent py-2">
-            <p className="text-balance text-sm font-medium text-muted-foreground">
-              Remove this card on real production.
-            </p>
             <Button
               type="submit"
-              className="shrink-0"
-              disabled={isPending || !updated}
               variant={updated ? "default" : "disable"}
+              disabled={isPending || !updated}
+              className="w-[67px] shrink-0 px-0 sm:w-[130px]"
             >
-              {isPending && (
-                <Icons.spinner className="mr-2 size-4 animate-spin" />
+              {isPending ? (
+                <Icons.spinner className="size-4 animate-spin" />
+              ) : (
+                <p>
+                  Save
+                  <span className="hidden sm:inline-flex">&nbsp;Changes</span>
+                </p>
               )}
-              <span>Save Changes</span>
             </Button>
-          </CardFooter>
-        </Card>
+          </div>
+          <div className="flex flex-col justify-between p-1">
+            <p className="text-[13px] text-muted-foreground">
+              Remove this field on real production
+            </p>
+          </div>
+        </SectionColumns>
       </form>
     </Form>
   );

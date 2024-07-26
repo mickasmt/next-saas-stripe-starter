@@ -1,4 +1,5 @@
 import { constructMetadata } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AreaChartStacked } from "@/components/charts/area-chart-stacked";
 import { BarChartMixed } from "@/components/charts/bar-chart-mixed";
 import { InteractiveBarChart } from "@/components/charts/interactive-bar-chart";
@@ -11,7 +12,7 @@ import { RadialTextChart } from "@/components/charts/radial-text-chart";
 import { DashboardHeader } from "@/components/dashboard/header";
 
 export const metadata = constructMetadata({
-  title: "Charts – Next Template",
+  title: "Charts – SaaS Starter",
   description: "List of charts by shadcn-ui",
 });
 

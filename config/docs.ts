@@ -53,6 +53,10 @@ export const docsConfig: DocsConfig = {
           href: "/docs/configuration/email",
         },
         {
+          title: "Layouts",
+          href: "/docs/configuration/layouts",
+        },
+        {
           title: "Markdown files",
           href: "/docs/configuration/markdown-files",
         },

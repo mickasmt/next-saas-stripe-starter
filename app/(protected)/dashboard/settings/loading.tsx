@@ -1,19 +1,18 @@
 import { DashboardHeader } from "@/components/dashboard/header";
-import { DashboardShell } from "@/components/dashboard/shell";
-import { CardSkeleton } from "@/components/shared/card-skeleton";
+import { SkeletonSection } from "@/components/shared/section-skeleton";
 
 export default function DashboardSettingsLoading() {
   return (
-    <DashboardShell>
+    <>
       <DashboardHeader
         heading="Settings"
         text="Manage account and website settings."
       />
-      <div className="grid gap-6">
-        <CardSkeleton />
-        <CardSkeleton />
-        <CardSkeleton />
+      <div className="divide-y divide-muted pb-10">
+        <SkeletonSection />
+        <SkeletonSection />
+        <SkeletonSection card />
       </div>
-    </DashboardShell>
+    </>
   );
 }
