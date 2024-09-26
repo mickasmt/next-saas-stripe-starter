@@ -1,26 +1,12 @@
-import { auth } from "@/auth";
+import { NextResponse } from 'next/server';
+import { getCurrentUser } from "@/lib/session";
 
-import { prisma } from "@/lib/db";
-
-export const DELETE = auth(async (req) => {
-  if (!req.auth) {
-    return new Response("Not authenticated", { status: 401 });
+export async function GET() {
+  const user = await getCurrentUser();
+  
+  if (!user) {
+    return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }
 
-  const currentUser = req.auth.user;
-  if (!currentUser) {
-    return new Response("Invalid user", { status: 401 });
-  }
-
-  try {
-    await prisma.user.delete({
-      where: {
-        id: currentUser.id,
-      },
-    });
-  } catch (error) {
-    return new Response("Internal server error", { status: 500 });
-  }
-
-  return new Response("User deleted successfully!", { status: 200 });
-});
+  return NextResponse.json(user);
+}

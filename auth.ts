@@ -1,67 +1,66 @@
-import authConfig from "@/auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { UserRole } from "@prisma/client";
-import NextAuth, { type DefaultSession } from "next-auth";
-
+import EmailProvider from "next-auth/providers/email";
+import { env } from "@/env.mjs";
 import { prisma } from "@/lib/db";
-import { getUserById } from "@/lib/user";
+import { Resend } from "resend";
 
-// More info: https://authjs.dev/getting-started/typescript#module-augmentation
-declare module "next-auth" {
-  interface Session {
-    user: {
-      role: UserRole;
-    } & DefaultSession["user"];
-  }
-}
+const resend = new Resend(env.RESEND_API_KEY as string);
 
-export const {
-  handlers: { GET, POST },
-  auth,
-} = NextAuth({
+export const authOptions = {
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+  },
   pages: {
     signIn: "/login",
-    // error: "/auth/error",
   },
+  providers: [
+    EmailProvider({
+      from: env.EMAIL_FROM,
+      sendVerificationRequest: async ({ identifier, url, provider }) => {
+        const result = await resend.emails.send({
+          from: env.EMAIL_FROM,
+          to: identifier,
+          subject: "Sign in to your account",
+          html: `<p>Click <a href="${url}">here</a> to sign in.</p>`,
+        });
+        const { data, error } = result;
+        if (error) {
+          throw new Error("Failed to send verification email");
+        }
+      },
+    }),
+  ],
   callbacks: {
-    async session({ token, session }) {
-      if (session.user) {
-        if (token.sub) {
-          session.user.id = token.sub;
-        }
-
-        if (token.email) {
-          session.user.email = token.email;
-        }
-
-        if (token.role) {
-          session.user.role = token.role;
-        }
-
+    async session({ token, session }: { token: any; session: any }) {
+      if (token) {
+        session.user.id = token.id;
         session.user.name = token.name;
-        session.user.image = token.picture;
+        session.user.email = token.email;
+        session.user.role = token.role;
       }
-
       return session;
     },
+    async jwt({ token, user }: { token: any; user: any }) {
+      const dbUser = await prisma.user.findFirst({
+        where: {
+          email: token.email,
+        },
+      });
 
-    async jwt({ token }) {
-      if (!token.sub) return token;
+      if (!dbUser) {
+        if (user) {
+          token.id = user.id;
+        }
+        return token;
+      }
 
-      const dbUser = await getUserById(token.sub);
-
-      if (!dbUser) return token;
-
-      token.name = dbUser.name;
-      token.email = dbUser.email;
-      token.picture = dbUser.image;
-      token.role = dbUser.role;
-
-      return token;
+      return {
+        id: dbUser.id,
+        name: dbUser.name,
+        email: dbUser.email,
+        role: dbUser.role,
+      };
     },
   },
-  ...authConfig,
-  // debug: process.env.NODE_ENV !== "production"
-});
+};
