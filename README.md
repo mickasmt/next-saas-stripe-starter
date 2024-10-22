@@ -54,7 +54,9 @@ pnpm install
 cp .env.example .env.local
 ```
 
-3. Start the development server:
+3. Configure environmental variables by following [documentation](https://next-saas-stripe-starter.vercel.app/docs).
+
+4. Start the development server:
 
 ```sh
 pnpm run dev
