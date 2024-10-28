@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { allGuides } from "contentlayer/generated";
+import { allGuides } from "content-collections";
 import { compareDesc } from "date-fns";
 
 import { formatDate } from "@/lib/utils";

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Post } from "contentlayer/generated";
+import { Post } from "content-collections";
 
 import { cn, formatDate, placeholderBlurhash } from "@/lib/utils";
 import BlurImage from "@/components/shared/blur-image";

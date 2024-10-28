@@ -1,4 +1,4 @@
-import { Post } from "@/.contentlayer/generated";
+import { Post } from "content-collections";
 
 import { BlogCard } from "./blog-card";
 
