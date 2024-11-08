@@ -53,6 +53,48 @@ pnpm install
 ```sh
 cp .env.example .env.local
 ```
+>
+>  #### Where to get each of these environment variables:
+>
+>  1. **AUTH_SECRET**
+>    - Generate a random string using `openssl rand -base64 32` in terminal
+>    - Or use any secure random string generator
+>
+>  2. **Google OAuth Credentials (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)**
+>    - Go to [Google Cloud Console](https://console.cloud.google.com/)
+>    - Create a new project
+>    - Enable Google OAuth API
+>    - Create OAuth 2.0 credentials
+>    - Set authorized redirect URI to `http://localhost:3000/api/auth/callback/google`
+>
+>  3. **GITHUB_OAUTH_TOKEN**
+>    - Go to [GitHub Settings > Developer Settings](https://github.com/settings/tokens)
+>    - Generate new Personal Access Token
+>    - Select required scopes
+>
+>  4. **DATABASE_URL**
+>    - Sign up at [Neon](https://neon.tech)
+>    - Create a new project
+>    - Get connection string from dashboard
+>    - Replace `[user]`, `[password]`, `[neon_hostname]`, and `[dbname]` with your values
+>
+>  5. **RESEND_API_KEY**
+>    - Sign up at [Resend](https://resend.com)
+>    - Get API key from dashboard
+>    - Update EMAIL_FROM with your verified domain (or use the default for testing)
+>
+>  6. **Stripe Variables**
+>    - Sign up for [Stripe](https://stripe.com)
+>    - Get API key from dashboard (STRIPE_API_KEY)
+>    - Set up webhook in Stripe dashboard to get STRIPE_WEBHOOK_SECRET
+>    - Create products/prices in Stripe dashboard to get plan IDs:
+>      - NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PLAN_ID
+>      - NEXT_PUBLIC_STRIPE_PRO_YEARLY_PLAN_ID
+>      - NEXT_PUBLIC_STRIPE_BUSINESS_MONTHLY_PLAN_ID
+>      - NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID
+>
+>  Remember to use test keys during development and switch to production keys when deploying.
+>
 
 3. Start the development server:
 

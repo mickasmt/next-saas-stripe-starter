@@ -15,6 +15,10 @@ export type responseAction = {
 const billingUrl = absoluteUrl("/pricing")
 
 export async function generateUserStripe(priceId: string): Promise<responseAction> {
+  if (!stripe) {
+    throw new Error("Stripe is not configured");
+  }
+
   let redirectUrl: string = "";
 
   try {

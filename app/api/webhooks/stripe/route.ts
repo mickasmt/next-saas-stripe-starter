@@ -6,6 +6,10 @@ import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
 
 export async function POST(req: Request) {
+  if (!stripe || !env.STRIPE_WEBHOOK_SECRET) {
+    return new Response("Stripe is not configured", { status: 400 });
+  }
+
   const body = await req.text();
   const signature = headers().get("Stripe-Signature") as string;
 
