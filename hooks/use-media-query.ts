@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 
+type Device = "mobile" | "sm" | "tablet" | "desktop";
+
+interface Dimension {
+  width: number;
+  height: number;
+}
+
 export function useMediaQuery() {
-  const [device, setDevice] = useState<"mobile" | "sm" | "tablet" | "desktop" | null>(
-    null,
-  );
-  const [dimensions, setDimensions] = useState<{
-    width: number;
-    height: number;
-  } | null>(null);
+  const [device, setDevice] = useState<Device | null>(null);
+  const [dimensions, setDimensions] = useState<Dimension | null>(null);
 
   useEffect(() => {
     const checkDevice = () => {
