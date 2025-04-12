@@ -26,7 +26,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontSans.variable,
           fontUrban.variable,
           fontHeading.variable,
-          fontGeist.variable,
+          fontGeist.variable
         )}
       >
         <SessionProvider>
