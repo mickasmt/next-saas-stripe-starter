@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import { fontGeist, fontHeading, fontSans, fontUrban } from "@/assets/fonts";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
-import { useRouter } from "next/router";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { cn, constructMetadata } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
@@ -18,15 +18,18 @@ interface RootLayoutProps {
 export const metadata = constructMetadata();
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  const router = useRouter();
-  const { locale, pathname, query, asPath } = router;
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const changeLanguage = (lang: string) => {
-    router.push({ pathname, query }, asPath, { locale: lang });
+    const currentParams = new URLSearchParams(searchParams as any);
+    currentParams.set("lang", lang);
+    const newPath = `${pathname}?${currentParams.toString()}`;
+    window.location.href = newPath; // Client-side navigation
   };
 
   return (
-    <html lang={locale || "en"} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head />
       <body
         className={cn(
@@ -47,7 +50,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
             {/* Language Selector */}
             <div className="language-switcher" style={{ position: "absolute", top: 10, right: 10 }}>
               <select
-                value={locale}
                 onChange={(e) => changeLanguage(e.target.value)}
                 className="p-2 bg-white border border-gray-300 rounded"
               >
