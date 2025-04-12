@@ -25,6 +25,10 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ["@prisma/client"],
   },
+  i18n: {
+    locales: ["en", "fr"], // Langues disponibles
+    defaultLocale: "en",   // Langue par défaut
+  },
 };
 
 module.exports = withContentlayer(nextConfig);
