@@ -1,9 +1,11 @@
+"use client"; // Add this at the top to mark it as a Client Component
+
 import "@/styles/globals.css";
 
 import { fontGeist, fontHeading, fontSans, fontUrban } from "@/assets/fonts";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { cn, constructMetadata } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
@@ -18,15 +20,7 @@ interface RootLayoutProps {
 export const metadata = constructMetadata();
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const changeLanguage = (lang: string) => {
-    const currentParams = new URLSearchParams(searchParams as any);
-    currentParams.set("lang", lang);
-    const newPath = `${pathname}?${currentParams.toString()}`;
-    window.location.href = newPath; // Client-side navigation
-  };
+  const pathname = usePathname(); // Hook that requires a Client Component
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -47,10 +41,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             enableSystem
             disableTransitionOnChange
           >
-            {/* Language Selector */}
             <div className="language-switcher" style={{ position: "absolute", top: 10, right: 10 }}>
               <select
-                onChange={(e) => changeLanguage(e.target.value)}
+                onChange={(e) => console.log(`Language selected: ${e.target.value}`)}
                 className="p-2 bg-white border border-gray-300 rounded"
               >
                 <option value="en">English</option>
