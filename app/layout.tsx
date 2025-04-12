@@ -70,6 +70,3 @@ export default function RootLayout({ children }: RootLayoutProps) {
     </html>
   );
 }
-    </html>
-  );
-}
