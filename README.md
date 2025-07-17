@@ -115,6 +115,18 @@ https://github.com/mickasmt/next-saas-stripe-starter/assets/62285783/828a4e0f-30
 
 - [Vercel Analytics](https://vercel.com/analytics) – Track unique visitors, pageviews, and more in a privacy-friendly way
 
+### Optional: Business Intelligence with Metabase
+
+[Metabase](https://www.metabase.com) is an open-source business intelligence platform. You can use it to ask questions about your data, or embed it in your app to let your customers explore data on their own.
+
+To run your own [free self-hosted Metabase](https://www.metabase.com/start/oss), use:
+
+```shell
+docker run -d --name metabase -p 3001:3000 metabase/metabase
+```
+
+Then open `http://localhost:3001` and [connect your PostgreSQL](https://www.metabase.com/docs/latest/databases/connections/postgresql) database using the credentials from your `POSTGRES_URL` environment variable.
+
 ## Author
 
 Created by [@miickasmt](https://twitter.com/miickasmt) in 2023, released under the [MIT license](https://github.com/shadcn/taxonomy/blob/main/LICENSE.md).
