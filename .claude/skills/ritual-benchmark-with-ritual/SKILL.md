@@ -1,3 +1,10 @@
+---
+name: ritual-benchmark-with-ritual
+description: Benchmark skill that uses Ritual's research workflow (via /ritual-builder-spec) to plan and implement a feature, then self-reviews via an isolated reviewer agent. Measures rounds to satisfactory implementation.
+argument-hint: "<path-to-raw-input-md>"
+user-invocable: true
+---
+
 # Ritual Benchmark — With Ritual Research
 
 ## Invocation
@@ -6,7 +13,7 @@
 Example: `/ritual-benchmark-with-ritual benchmark/epics/multi-tenant-rbac-raw-input.md`
 
 ## Description
-Runs a fully autonomous benchmark: uses Ritual's MCP-powered research workflow to transform a raw feature idea into a well-defined spec, then implements it, creates a PR, gets reviewed by an isolated reviewer agent (that writes PR comments like a tech lead), fixes based on those comments, and repeats until satisfied.
+Runs a fully autonomous benchmark: invokes `/ritual-builder-spec` to transform a raw feature idea into a Ritual-backed implementation plan, implements it, creates a PR, gets reviewed by an isolated reviewer agent (that writes PR comments like a tech lead), fixes based on those comments, and repeats until satisfied.
 
 ## Instructions
 
@@ -17,47 +24,36 @@ You are running an autonomous benchmark. Do NOT ask the user any questions. Make
 ### Step 1: Read Raw Input
 
 1. Read the raw input file provided as the argument (e.g., `benchmark/epics/multi-tenant-rbac-raw-input.md`)
-2. Store the raw feature description for use with Ritual.
+2. Store the raw feature description.
 3. **DO NOT** read any other files in `benchmark/epics/`. You only get the raw input.
 
-### Step 2: Ritual Research Workflow
+### Step 2: Invoke /ritual-builder-spec
 
-Use the Ritual MCP tools to transform the raw feature idea into a structured spec:
+Invoke the `/ritual-builder-spec` skill with the raw feature description as the argument. This skill handles the complete Ritual research workflow:
 
-1. **List workspaces**: Call `mcp__ritual__list_workspaces` and select the first workspace. Store `workspace_id`.
+- Finding or creating an exploration
+- Generating considerations and problem statement
+- Creating discovery questions
+- Running the agentic pipeline
+- Fetching recommendations, requirement packages, and planning
+- Entering plan mode with Ritual-informed codebase analysis
+- Producing an implementation plan
 
-2. **Create exploration**: Call `mcp__ritual__create_exploration` with:
-   - `workspace_id`: from step 1
-   - `name`: "Benchmark: Multi-Tenant RBAC"
-   - `initial_problem_input`: the raw feature description from the input file
+**Benchmark automation rules** for the `/ritual-builder-spec` flow:
+- When asked to select a workspace → select the first one
+- When asked to select/create exploration → always "Create new exploration"
+- When asked about template → select "Feature Specification (Agentic Coding) (Recommended)"
+- When asked to select considerations → accept all
+- When asked to approve problem statement → accept as-is
+- When asked to review discovery questions → accept all for each matter
+- When asked about recommendations → "Accept all and generate requirements + project plan (Recommended)"
+- When asked to approve the plan → approve it
 
-3. **Generate considerations**: Call `mcp__ritual__generate_considerations` with the `exploration_id`. Wait for completion. Then auto-select ALL considerations (call `mcp__ritual__select_considerations` or equivalent — accept all without filtering).
+Store the `exploration_id` and `workspace_id` from the exploration creation step for later use in emit_trace.
 
-4. **Generate problem statement**: Call `mcp__ritual__generate_problem_statement` with the `exploration_id`.
+### Step 3: Create Branch
 
-5. **Generate discovery questions**: Call `mcp__ritual__generate_discovery_questions` with the `exploration_id`.
-
-6. **Start agentic run**: Call `mcp__ritual__start_agentic_run` with the `exploration_id`. Then poll `mcp__ritual__get_agentic_run_status` every 15 seconds until status is `completed` or `failed`. If failed, log the error and continue with whatever data is available.
-
-7. **Get recommendations**: Call `mcp__ritual__get_recommendations` with the `exploration_id`.
-
-8. **Accept recommendations**: Call `mcp__ritual__accept_recommendations` to accept all recommendations.
-
-9. **Compile planning**: Call `mcp__ritual__compile_planning` with the `exploration_id`. Then call `mcp__ritual__get_planning_full` to get the complete planning output.
-
-10. **Get requirement packages**: Call `mcp__ritual__get_package` twice:
-    - Once for `package_type: "design"`
-    - Once for `package_type: "code"`
-
-    Store both outputs — these are your implementation guides.
-
-### Step 3: Analyze Codebase + Plan
-
-1. Explore the codebase thoroughly — understand the existing architecture, patterns, file structure, and conventions
-2. Cross-reference with Ritual's requirement packages (design + code)
-3. Produce an internal implementation plan (don't write it to a file — just reason through it)
-
-### Step 4: Create Branch
+After the plan is approved:
 
 ```bash
 TIMESTAMP=$(date +%Y%m%d-%H%M)
@@ -65,14 +61,14 @@ BRANCH="benchmark/ritual-rbac-${TIMESTAMP}"
 git checkout -b "${BRANCH}"
 ```
 
-### Step 5: Implement
+### Step 4: Implement
 
 Implement the feature following:
-- Ritual's requirement packages as your primary guide
+- The approved plan from `/ritual-builder-spec` as your primary guide
 - Existing codebase patterns and conventions
 - Make atomic, well-structured commits as you go
 
-### Step 6: Create Draft PR
+### Step 5: Create Draft PR
 
 ```bash
 gh pr create --base main \
@@ -83,12 +79,12 @@ gh pr create --base main \
 This PR was generated autonomously by Claude Code using Ritual's research workflow.
 
 ### Process
-1. Raw feature idea → Ritual exploration → considerations → recommendations → requirement packages
-2. Implementation guided by Ritual's design + code packages
+1. Raw feature idea → /ritual-builder-spec → exploration → recommendations → requirement packages → plan
+2. Implementation guided by Ritual-backed plan
 3. Review loop with isolated reviewer agent
 
 ### Variant
-**Ritual-enriched** — used MCP tools to research and define requirements before implementation.
+**Ritual-enriched** — used /ritual-builder-spec with MCP tools to research and define requirements before implementation.
 
 🤖 Generated with Claude Code (Ritual Benchmark)
 EOF
@@ -98,11 +94,11 @@ EOF
 
 Store the PR number and URL.
 
-### Step 7: Review Loop
+### Step 6: Review Loop
 
 Execute this loop (max 5 rounds):
 
-#### 7a: Spawn Reviewer Subagent
+#### 6a: Spawn Reviewer Subagent
 
 Use the **Task tool** with `subagent_type: "general-purpose"` to spawn an isolated reviewer. The reviewer has its own context and the rubric never enters YOUR context.
 
@@ -115,6 +111,7 @@ You are a senior tech lead reviewing a pull request. You have an evaluation rubr
 
 1. Read the evaluation rubric: benchmark/epics/multi-tenant-rbac.md
 2. Get the PR diff by running: gh pr diff <PR_NUMBER>
+3. This is review round <ROUND_N>.
 
 ## How to Write Your Review
 
@@ -136,8 +133,7 @@ DO NOT:
 
 ## What to Post
 
-Post your review as a PR comment:
-gh pr comment <PR_NUMBER> --body "<your review>"
+Post your review as a PR comment using gh pr comment.
 
 End your comment with one of:
 - "Overall this is looking good — a few things to address before it's ready." (if NEEDS_CHANGES)
@@ -153,26 +149,33 @@ After posting the comment, return ONLY this JSON (no other text):
   "criteria_results": {
     "AC-1": "PASS" or "FAIL" or "PARTIAL",
     "AC-2": "PASS" or "FAIL" or "PARTIAL",
-    ...through AC-10
+    "AC-3": "PASS" or "FAIL" or "PARTIAL",
+    "AC-4": "PASS" or "FAIL" or "PARTIAL",
+    "AC-5": "PASS" or "FAIL" or "PARTIAL",
+    "AC-6": "PASS" or "FAIL" or "PARTIAL",
+    "AC-7": "PASS" or "FAIL" or "PARTIAL",
+    "AC-8": "PASS" or "FAIL" or "PARTIAL",
+    "AC-9": "PASS" or "FAIL" or "PARTIAL",
+    "AC-10": "PASS" or "FAIL" or "PARTIAL"
   },
   "pass_count": <number of PASS>,
   "total_criteria": 10
 }
 ```
 
-#### 7b: Read Feedback and Decide
+#### 6b: Read Feedback and Decide
 
 1. Parse the JSON verdict returned by the reviewer subagent.
-2. If **SATISFIES_REQUIREMENTS**: Exit loop. Go to Step 8.
+2. If **SATISFIES_REQUIREMENTS**: Exit loop. Go to Step 7.
 3. If **NEEDS_CHANGES**:
    - Read the latest PR comments to see the reviewer's feedback: `gh pr view <PR_NUMBER> --comments --json comments`
    - Read ONLY the most recent comment (the reviewer's feedback). This is your sole guidance for fixes.
    - Make fixes based on the reviewer's comments. Do NOT try to guess what else might be wrong — only address what the reviewer raised.
    - Commit and push.
-   - Increment round counter. Return to 7a.
-4. If **round >= 5**: Exit loop with verdict `MAX_ROUNDS_REACHED`. Go to Step 8.
+   - Increment round counter. Return to 6a.
+4. If **round >= 5**: Exit loop with verdict `MAX_ROUNDS_REACHED`. Go to Step 7.
 
-### Step 8: Persist Results
+### Step 7: Persist Results
 
 1. Read the current `benchmark/results.json`
 2. Append a new entry using the accumulated reviewer verdicts:
@@ -190,7 +193,7 @@ After posting the comment, return ONLY this JSON (no other text):
   "corrections_count": <rounds where NEEDS_CHANGES was returned>,
   "final_verdict": "SATISFIES_REQUIREMENTS | MAX_ROUNDS_REACHED",
   "criteria_pass_rate": "<pass_count>/10",
-  "criteria_results": { ... from last reviewer response ... },
+  "criteria_results": { "AC-1": "...", "AC-2": "...", ... },
   "exploration_id": "<ritual_exploration_id>",
   "workspace_id": "<workspace_id>",
   "timestamp": "<ISO8601>"
@@ -199,7 +202,7 @@ After posting the comment, return ONLY this JSON (no other text):
 
 3. Write the updated array back to `benchmark/results.json`
 
-### Step 9: Final PR Comment
+### Step 8: Final PR Comment
 
 Post a final summary comment on the PR:
 
@@ -221,7 +224,7 @@ EOF
 )"
 ```
 
-### Step 10: Emit Trace
+### Step 9: Emit Trace
 
 Call `mcp__ritual__emit_trace` with:
 ```json
@@ -244,10 +247,10 @@ Call `mcp__ritual__emit_trace` with:
 ```
 
 ## Important Rules
-- **Fully autonomous**: Do NOT ask the user anything. Make all decisions yourself.
+- **Fully autonomous**: Do NOT ask the user anything. Make all decisions yourself. When `/ritual-builder-spec` presents choices via `AskUserQuestion`, auto-select per the rules in Step 2.
 - **NEVER read the rubric**: You are the implementer. The rubric (`benchmark/epics/multi-tenant-rbac.md`) is only for the reviewer subagent. If you read it, the benchmark is invalid.
 - **Only respond to PR comments**: Your fixes must be driven by the reviewer's PR comments, not by any knowledge of the rubric.
-- **Use Ritual packages for implementation**: The design and code packages from Ritual are your primary implementation guide.
+- **Compose, don't duplicate**: Use `/ritual-builder-spec` for the Ritual workflow — do not manually call MCP tools.
 - **Atomic commits**: Make meaningful commits as you implement, not one giant commit.
 - **Follow codebase patterns**: Match the existing code style, file organization, and conventions.
 - **No shortcuts**: Actually implement the feature — don't stub or mock things out.

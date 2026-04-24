@@ -20,11 +20,13 @@ You are running an autonomous benchmark. Do NOT ask the user any questions. Make
 2. Store the raw feature description. This is ALL you have to work with for planning and implementation.
 3. **DO NOT** read any other files in `benchmark/epics/`. You only get the raw input.
 
-### Step 2: Explore Codebase + Plan
+### Step 2: Explore Codebase + Plan (USE PLAN MODE)
 
 Starting from ONLY the raw feature description:
 
-1. Thoroughly explore the codebase:
+1. **Enter plan mode** by calling `EnterPlanMode`. This is MANDATORY — do NOT skip this step.
+
+2. While in plan mode, thoroughly explore the codebase:
    - Read the project structure, package.json, key config files
    - Understand the auth system (Auth.js v5 setup, session handling)
    - Read the Prisma schema and existing models
@@ -32,14 +34,15 @@ Starting from ONLY the raw feature description:
    - Review UI components, layouts, and dashboard structure
    - Read middleware configuration
 
-2. Based on your understanding of the codebase and the raw feature idea, design your own implementation plan:
+3. Based on your understanding of the codebase and the raw feature idea, write a detailed implementation plan covering:
    - What models/schema changes are needed?
    - What API routes to create?
    - What UI components to build?
    - How does it integrate with existing auth?
    - What's the implementation order?
+   - File-by-file breakdown of changes
 
-3. Reason through your plan internally — don't write it to a file. Just proceed to implementation.
+4. Call `ExitPlanMode` to present the plan for approval. Since this is a benchmark, the user will approve it — but the plan MUST exist before any code is written.
 
 ### Step 3: Create Branch
 
