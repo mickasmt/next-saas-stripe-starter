@@ -23,11 +23,24 @@ import ProjectSwitcher from "@/components/dashboard/project-switcher";
 import { UpgradeCard } from "@/components/dashboard/upgrade-card";
 import { Icons } from "@/components/shared/icons";
 
+type TeamItem = {
+  id: string;
+  name: string;
+  slug: string;
+  image: string | null;
+};
+
 interface DashboardSidebarProps {
   links: SidebarNavItem[];
+  teams?: TeamItem[];
+  activeTeamId?: string;
 }
 
-export function DashboardSidebar({ links }: DashboardSidebarProps) {
+export function DashboardSidebar({
+  links,
+  teams,
+  activeTeamId,
+}: DashboardSidebarProps) {
   const path = usePathname();
 
   // NOTE: Use this if you want save in local storage -- Credits: Hosna Qasmei
@@ -72,7 +85,12 @@ export function DashboardSidebar({ links }: DashboardSidebarProps) {
           >
             <div className="flex h-full max-h-screen flex-1 flex-col gap-2">
               <div className="flex h-14 items-center p-4 lg:h-[60px]">
-                {isSidebarExpanded ? <ProjectSwitcher /> : null}
+                {isSidebarExpanded ? (
+                  <ProjectSwitcher
+                    teams={teams}
+                    activeTeamId={activeTeamId}
+                  />
+                ) : null}
 
                 <Button
                   variant="ghost"
@@ -178,7 +196,11 @@ export function DashboardSidebar({ links }: DashboardSidebarProps) {
   );
 }
 
-export function MobileSheetSidebar({ links }: DashboardSidebarProps) {
+export function MobileSheetSidebar({
+  links,
+  teams,
+  activeTeamId,
+}: DashboardSidebarProps) {
   const path = usePathname();
   const [open, setOpen] = useState(false);
   const { isSm, isMobile } = useMediaQuery();
@@ -210,7 +232,11 @@ export function MobileSheetSidebar({ links }: DashboardSidebarProps) {
                   </span>
                 </Link>
 
-                <ProjectSwitcher large />
+                <ProjectSwitcher
+                  teams={teams}
+                  activeTeamId={activeTeamId}
+                  large
+                />
 
                 {links.map((section) => (
                   <section

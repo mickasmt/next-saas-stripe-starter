@@ -19,6 +19,7 @@ import {
   Loader2,
   LucideIcon,
   LucideProps,
+  Mail,
   MessagesSquare,
   Moon,
   MoreVertical,
@@ -27,9 +28,12 @@ import {
   Puzzle,
   Search,
   Settings,
+  Shield,
   SunMedium,
   Trash,
   User,
+  UserPlus,
+  Users,
   X,
 } from "lucide-react";
 
@@ -100,6 +104,7 @@ export const Icons = {
     </svg>
   ),
   help: HelpCircle,
+  mail: Mail,
   home: Home,
   laptop: Laptop,
   lineChart: LineChart,
@@ -112,6 +117,7 @@ export const Icons = {
   post: FileText,
   search: Search,
   settings: Settings,
+  shield: Shield,
   spinner: Loader2,
   sun: SunMedium,
   trash: Trash,
@@ -133,5 +139,7 @@ export const Icons = {
     </svg>
   ),
   user: User,
+  userPlus: UserPlus,
+  users: Users,
   warning: AlertTriangle,
 };

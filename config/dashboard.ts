@@ -37,6 +37,22 @@ export const sidebarLinks: SidebarNavItem[] = [
     ],
   },
   {
+    title: "TEAM",
+    items: [
+      {
+        href: "/dashboard/settings/team",
+        icon: "settings",
+        title: "Team Settings",
+        requiresTeamPermission: "settings:manage",
+      },
+      {
+        href: "/dashboard/settings/team",
+        icon: "users",
+        title: "Members",
+      },
+    ],
+  },
+  {
     title: "OPTIONS",
     items: [
       { href: "/dashboard/settings", icon: "settings", title: "Settings" },

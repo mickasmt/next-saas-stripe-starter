@@ -1,142 +1,176 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import { useSession } from "next-auth/react";
 
+import { switchTeam } from "@/actions/switch-team";
 import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { CreateTeamModal } from "@/components/modals/create-team-modal";
 
-type ProjectType = {
-  title: string;
+type TeamItem = {
+  id: string;
+  name: string;
   slug: string;
-  color: string;
+  image: string | null;
 };
 
-const projects: ProjectType[] = [
-  {
-    title: "Project 1",
-    slug: "project-number-one",
-    color: "bg-red-500",
-  },
-  {
-    title: "Project 2",
-    slug: "project-number-two",
-    color: "bg-blue-500",
-  },
+interface TeamSwitcherProps {
+  teams?: TeamItem[];
+  activeTeamId?: string;
+  large?: boolean;
+}
+
+const TEAM_COLORS = [
+  "bg-red-500",
+  "bg-blue-500",
+  "bg-green-500",
+  "bg-purple-500",
+  "bg-orange-500",
+  "bg-pink-500",
+  "bg-teal-500",
+  "bg-indigo-500",
 ];
-const selected: ProjectType = projects[1];
+
+function getTeamColor(index: number) {
+  return TEAM_COLORS[index % TEAM_COLORS.length];
+}
 
 export default function ProjectSwitcher({
+  teams = [],
+  activeTeamId,
   large = false,
-}: {
-  large?: boolean;
-}) {
-  const { data: session, status } = useSession();
+}: TeamSwitcherProps) {
+  const { update, status } = useSession();
+  const router = useRouter();
   const [openPopover, setOpenPopover] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
-  if (!projects || status === "loading") {
+  if (status === "loading") {
     return <ProjectSwitcherPlaceholder />;
   }
 
+  const activeTeam = teams.find((t) => t.id === activeTeamId);
+
+  async function handleSwitch(teamId: string) {
+    setOpenPopover(false);
+    if (teamId === activeTeamId) return;
+    await switchTeam(teamId);
+    await update();
+    router.refresh();
+  }
+
   return (
-    <div>
-      <Popover open={openPopover} onOpenChange={setOpenPopover}>
-        <PopoverTrigger>
-          <Button
-            className="h-8 px-2"
-            variant={openPopover ? "secondary" : "ghost"}
-            onClick={() => setOpenPopover(!openPopover)}
-          >
-            <div className="flex items-center space-x-3 pr-2">
-              <div
-                className={cn(
-                  "size-3 shrink-0 rounded-full",
-                  selected.color,
-                )}
-              />
-              <div className="flex items-center space-x-3">
-                <span
+    <>
+      <div>
+        <Popover open={openPopover} onOpenChange={setOpenPopover}>
+          <PopoverTrigger>
+            <Button
+              className="h-8 px-2"
+              variant={openPopover ? "secondary" : "ghost"}
+              onClick={() => setOpenPopover(!openPopover)}
+            >
+              <div className="flex items-center space-x-3 pr-2">
+                <div
                   className={cn(
-                    "inline-block truncate text-sm font-medium xl:max-w-[120px]",
-                    large ? "w-full" : "max-w-[80px]",
+                    "size-3 shrink-0 rounded-full",
+                    activeTeam
+                      ? getTeamColor(teams.indexOf(activeTeam))
+                      : "bg-gray-400",
                   )}
-                >
-                  {selected.slug}
-                </span>
+                />
+                <div className="flex items-center space-x-3">
+                  <span
+                    className={cn(
+                      "inline-block truncate text-sm font-medium xl:max-w-[120px]",
+                      large ? "w-full" : "max-w-[80px]",
+                    )}
+                  >
+                    {activeTeam?.name || "Select Team"}
+                  </span>
+                </div>
               </div>
-            </div>
-            <ChevronsUpDown
-              className="size-4 text-muted-foreground"
-              aria-hidden="true"
+              <ChevronsUpDown
+                className="size-4 text-muted-foreground"
+                aria-hidden="true"
+              />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start" className="max-w-60 p-2">
+            <TeamList
+              teams={teams}
+              activeTeamId={activeTeamId}
+              onSelect={handleSwitch}
+              onNewTeam={() => {
+                setOpenPopover(false);
+                setShowCreateModal(true);
+              }}
             />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="start" className="max-w-60 p-2">
-          <ProjectList
-            selected={selected}
-            projects={projects}
-            setOpenPopover={setOpenPopover}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+      <CreateTeamModal
+        open={showCreateModal}
+        onOpenChange={setShowCreateModal}
+      />
+    </>
   );
 }
 
-function ProjectList({
-  selected,
-  projects,
-  setOpenPopover,
+function TeamList({
+  teams,
+  activeTeamId,
+  onSelect,
+  onNewTeam,
 }: {
-  selected: ProjectType;
-  projects: ProjectType[];
-  setOpenPopover: (open: boolean) => void;
+  teams: TeamItem[];
+  activeTeamId?: string;
+  onSelect: (teamId: string) => void;
+  onNewTeam: () => void;
 }) {
   return (
     <div className="flex flex-col gap-1">
-      {projects.map(({ slug, color }) => (
-        <Link
-          key={slug}
+      {teams.map((team, index) => (
+        <button
+          key={team.id}
           className={cn(
-            buttonVariants({ variant: "ghost" }),
-            "relative flex h-9 items-center gap-3 p-3 text-muted-foreground hover:text-foreground",
+            "relative flex h-9 w-full items-center gap-3 rounded-md p-3 text-sm text-muted-foreground hover:bg-muted hover:text-foreground",
           )}
-          href="#"
-          onClick={() => setOpenPopover(false)}
+          onClick={() => onSelect(team.id)}
         >
-          <div className={cn("size-3 shrink-0 rounded-full", color)} />
+          <div
+            className={cn("size-3 shrink-0 rounded-full", getTeamColor(index))}
+          />
           <span
-            className={`flex-1 truncate text-sm ${
-              selected.slug === slug
+            className={`flex-1 truncate text-left text-sm ${
+              activeTeamId === team.id
                 ? "font-medium text-foreground"
                 : "font-normal"
             }`}
           >
-            {slug}
+            {team.name}
           </span>
-          {selected.slug === slug && (
+          {activeTeamId === team.id && (
             <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-foreground">
               <Check size={18} aria-hidden="true" />
             </span>
           )}
-        </Link>
+        </button>
       ))}
       <Button
         variant="outline"
         className="relative flex h-9 items-center justify-center gap-2 p-2"
-        onClick={() => {
-          setOpenPopover(false);
-        }}
+        onClick={onNewTeam}
       >
         <Plus size={18} className="absolute left-2.5 top-2" />
-        <span className="flex-1 truncate text-center">New Project</span>
+        <span className="flex-1 truncate text-center">New Team</span>
       </Button>
     </div>
   );

@@ -23,6 +23,7 @@ export type NavItem = {
   external?: boolean;
   authorizeOnly?: UserRole;
   icon?: keyof typeof Icons;
+  requiresTeamPermission?: string;
 };
 
 export type MainNavItem = NavItem;

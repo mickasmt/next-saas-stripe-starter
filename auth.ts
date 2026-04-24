@@ -1,9 +1,10 @@
 import authConfig from "@/auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { UserRole } from "@prisma/client";
+import { TeamRole, UserRole } from "@prisma/client";
 import NextAuth, { type DefaultSession } from "next-auth";
 
 import { prisma } from "@/lib/db";
+import { getTeamMembership } from "@/lib/team";
 import { getUserById } from "@/lib/user";
 
 // More info: https://authjs.dev/getting-started/typescript#module-augmentation
@@ -11,6 +12,9 @@ declare module "next-auth" {
   interface Session {
     user: {
       role: UserRole;
+      activeTeamId?: string;
+      activeTeamRole?: TeamRole;
+      activeTeamSlug?: string;
     } & DefaultSession["user"];
   }
 }
@@ -42,12 +46,15 @@ export const {
 
         session.user.name = token.name;
         session.user.image = token.picture;
+        session.user.activeTeamId = token.activeTeamId;
+        session.user.activeTeamRole = token.activeTeamRole;
+        session.user.activeTeamSlug = token.activeTeamSlug;
       }
 
       return session;
     },
 
-    async jwt({ token }) {
+    async jwt({ token, trigger }) {
       if (!token.sub) return token;
 
       const dbUser = await getUserById(token.sub);
@@ -58,6 +65,24 @@ export const {
       token.email = dbUser.email;
       token.picture = dbUser.image;
       token.role = dbUser.role;
+
+      // On session update (e.g., team switch), re-resolve the active team
+      if (trigger === "update" || token.activeTeamId) {
+        const teamId = token.activeTeamId;
+        if (teamId) {
+          const membership = await getTeamMembership(token.sub, teamId);
+          if (membership) {
+            token.activeTeamId = membership.teamId;
+            token.activeTeamRole = membership.role;
+            token.activeTeamSlug = membership.team.slug;
+          } else {
+            // User is no longer a member
+            token.activeTeamId = undefined;
+            token.activeTeamRole = undefined;
+            token.activeTeamSlug = undefined;
+          }
+        }
+      }
 
       return token;
     },
