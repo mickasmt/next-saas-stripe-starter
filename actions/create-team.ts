@@ -34,7 +34,7 @@ export async function createTeam(data: CreateTeamInput) {
     // Create team + owner membership in a transaction
     const team = await prisma.$transaction(async (tx) => {
       const team = await tx.team.create({
-        data: { name, slug },
+        data: { name, slug, ownerId: userId },
       });
 
       await tx.teamMember.create({

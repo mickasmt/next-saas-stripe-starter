@@ -92,6 +92,7 @@ export function InviteMemberDialog({ teamId }: InviteMemberDialogProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value={TeamRole.VIEWER}>Viewer</SelectItem>
                   <SelectItem value={TeamRole.MEMBER}>Member</SelectItem>
                   <SelectItem value={TeamRole.ADMIN}>Admin</SelectItem>
                 </SelectContent>

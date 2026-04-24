@@ -34,6 +34,10 @@ const ROLE_PERMISSIONS: Record<TeamRole, Permission[]> = {
     PERMISSIONS.CONTENT_VIEW,
     PERMISSIONS.ANALYTICS_VIEW,
   ],
+  [TeamRole.VIEWER]: [
+    PERMISSIONS.CONTENT_VIEW,
+    PERMISSIONS.ANALYTICS_VIEW,
+  ],
 };
 
 export function hasPermission(role: TeamRole, permission: Permission): boolean {
@@ -57,3 +61,7 @@ export function hasAllPermissions(
 export function getPermissionsForRole(role: TeamRole): Permission[] {
   return ROLE_PERMISSIONS[role] ?? [];
 }
+
+// Re-export the route-level guard wrapper for discoverability.
+// Defined in lib/guards.ts alongside requireTeamPermission and apiRequireTeamPermission.
+export { withPermission } from "@/lib/guards";

@@ -19,6 +19,7 @@ enum TeamRole {
   OWNER
   ADMIN
   MEMBER
+  VIEWER
 }
 
 enum InviteStatus {
@@ -74,6 +75,7 @@ model User {
 
   accounts    Account[]
   sessions    Session[]
+  ownedTeams  Team[]       @relation("ownedTeams")
   teamMembers TeamMember[]
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
@@ -98,13 +100,16 @@ model Team {
   name      String
   slug      String   @unique
   image     String?
+  ownerId   String
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
 
+  owner     User         @relation("ownedTeams", fields: [ownerId], references: [id])
   members   TeamMember[]
   invites   TeamInvite[]
   auditLogs AuditLog[]
 
+  @@index([ownerId])
   @@map(name: "teams")
 }
 

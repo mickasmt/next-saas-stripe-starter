@@ -153,7 +153,7 @@ export function MemberList({
                               Change Role
                             </DropdownMenuSubTrigger>
                             <DropdownMenuSubContent>
-                              {[TeamRole.ADMIN, TeamRole.MEMBER].map((role) => (
+                              {[TeamRole.ADMIN, TeamRole.MEMBER, TeamRole.VIEWER].map((role) => (
                                 <DropdownMenuItem
                                   key={role}
                                   disabled={member.role === role}

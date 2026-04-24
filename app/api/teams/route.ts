@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   const userId = session.user.id;
 
   const team = await prisma.$transaction(async (tx) => {
-    const team = await tx.team.create({ data: { name, slug } });
+    const team = await tx.team.create({ data: { name, slug, ownerId: userId } });
     await tx.teamMember.create({
       data: { teamId: team.id, userId, role: TeamRole.OWNER },
     });

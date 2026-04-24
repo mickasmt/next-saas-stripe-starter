@@ -16,6 +16,10 @@ const roleConfig: Record<TeamRole, { label: string; className: string }> = {
     label: "Member",
     className: "bg-gray-100 text-gray-800 hover:bg-gray-100",
   },
+  [TeamRole.VIEWER]: {
+    label: "Viewer",
+    className: "bg-green-100 text-green-800 hover:bg-green-100",
+  },
 };
 
 export function RoleBadge({ role }: { role: TeamRole }) {
