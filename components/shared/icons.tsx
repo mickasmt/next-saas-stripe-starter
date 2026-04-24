@@ -19,6 +19,7 @@ import {
   Loader2,
   LucideIcon,
   LucideProps,
+  Mail,
   MessagesSquare,
   Moon,
   MoreVertical,
@@ -30,6 +31,7 @@ import {
   SunMedium,
   Trash,
   User,
+  Users,
   X,
 } from "lucide-react";
 
@@ -104,6 +106,7 @@ export const Icons = {
   laptop: Laptop,
   lineChart: LineChart,
   logo: Puzzle,
+  mail: Mail,
   media: Image,
   messages: MessagesSquare,
   moon: Moon,
@@ -133,5 +136,6 @@ export const Icons = {
     </svg>
   ),
   user: User,
+  users: Users,
   warning: AlertTriangle,
 };

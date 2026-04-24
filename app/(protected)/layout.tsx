@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 
 import { sidebarLinks } from "@/config/dashboard";
-import { getCurrentUser } from "@/lib/session";
+import { getCurrentUser, getCurrentTeam } from "@/lib/session";
+import { prisma } from "@/lib/db";
 import { SearchCommand } from "@/components/dashboard/search-command";
 import {
   DashboardSidebar,
@@ -27,14 +28,37 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
     ),
   }));
 
+  // Fetch team data for sidebar
+  const teamData = await getCurrentTeam();
+  const teams = await prisma.teamMember.findMany({
+    where: { userId: user.id },
+    include: { team: true },
+    orderBy: { createdAt: "asc" },
+  });
+
+  const teamsForSwitcher = teams.map((m) => ({
+    id: m.team.id,
+    name: m.team.name,
+    slug: m.team.slug,
+    role: m.role,
+  }));
+
   return (
     <div className="relative flex min-h-screen w-full">
-      <DashboardSidebar links={filteredLinks} />
+      <DashboardSidebar
+        links={filteredLinks}
+        teams={teamsForSwitcher}
+        currentTeamId={teamData?.team.id ?? null}
+      />
 
       <div className="flex flex-1 flex-col">
         <header className="sticky top-0 z-50 flex h-14 bg-background px-4 lg:h-[60px] xl:px-8">
           <MaxWidthWrapper className="flex max-w-7xl items-center gap-x-3 px-0">
-            <MobileSheetSidebar links={filteredLinks} />
+            <MobileSheetSidebar
+              links={filteredLinks}
+              teams={teamsForSwitcher}
+              currentTeamId={teamData?.team.id ?? null}
+            />
 
             <div className="w-full flex-1">
               <SearchCommand links={filteredLinks} />
