@@ -8,13 +8,13 @@ import { toast } from "sonner";
 import * as z from "zod";
 
 import { createTeam } from "@/actions/team";
-import { createTeamSchema } from "@/lib/validations/team";
+import { createTeamNameOnlySchema } from "@/lib/validations/team";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/shared/icons";
 
-type FormData = z.infer<typeof createTeamSchema>;
+type FormData = z.infer<typeof createTeamNameOnlySchema>;
 
 export function CreateTeamForm() {
   const router = useRouter();
@@ -24,11 +24,14 @@ export function CreateTeamForm() {
     handleSubmit,
     register,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(createTeamSchema),
-    defaultValues: { name: "", slug: "" },
+    resolver: zodResolver(createTeamNameOnlySchema),
+    defaultValues: { name: "" },
   });
+
+  const slugValue = watch("slug");
 
   function generateSlug(name: string) {
     return name
@@ -69,20 +72,25 @@ export function CreateTeamForm() {
         )}
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="slug">Team Slug</Label>
-        <Input
-          id="slug"
-          placeholder="my-team"
-          {...register("slug")}
-        />
-        {errors.slug && (
-          <p className="text-sm text-red-600">{errors.slug.message}</p>
-        )}
-        <p className="text-xs text-muted-foreground">
-          Used in URLs. Only lowercase letters, numbers, and hyphens.
-        </p>
-      </div>
+      {slugValue && (
+        <div className="space-y-2">
+          <Label htmlFor="slug">
+            Team Slug{" "}
+            <span className="text-muted-foreground">(auto-generated)</span>
+          </Label>
+          <Input
+            id="slug"
+            placeholder="my-team"
+            {...register("slug")}
+          />
+          {errors.slug && (
+            <p className="text-sm text-red-600">{errors.slug.message}</p>
+          )}
+          <p className="text-xs text-muted-foreground">
+            Used in URLs. Only lowercase letters, numbers, and hyphens.
+          </p>
+        </div>
+      )}
 
       <Button type="submit" disabled={isPending}>
         {isPending ? (

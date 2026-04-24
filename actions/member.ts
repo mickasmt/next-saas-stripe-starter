@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
+import { logAuditEvent } from "@/lib/audit";
 import { authorize } from "@/lib/auth/engine";
 import { prisma } from "@/lib/db";
 import { roleUpdateSchema } from "@/lib/validations/team";
@@ -10,7 +11,7 @@ import { roleUpdateSchema } from "@/lib/validations/team";
 export async function updateMemberRole(
   teamId: string,
   memberId: string,
-  data: { role: "ADMIN" | "MEMBER" },
+  data: { role: "ADMIN" | "MEMBER" | "VIEWER" },
 ) {
   try {
     const session = await auth();
@@ -46,6 +47,14 @@ export async function updateMemberRole(
     await prisma.teamMember.update({
       where: { id: memberId },
       data: { role },
+    });
+
+    await logAuditEvent({
+      teamId,
+      userId: session.user.id,
+      action: "member.role_updated",
+      target: targetMember.userId,
+      metadata: { newRole: role, previousRole: targetMember.role },
     });
 
     revalidatePath("/dashboard/team/members");
@@ -102,6 +111,13 @@ export async function removeMember(teamId: string, memberId: string) {
       });
     });
 
+    await logAuditEvent({
+      teamId,
+      userId: session.user.id,
+      action: "member.removed",
+      target: targetMember.userId,
+    });
+
     revalidatePath("/dashboard/team/members");
     return { status: "success" };
   } catch (error) {
@@ -135,7 +151,7 @@ export async function leaveTeam(teamId: string) {
         return {
           status: "error",
           error:
-            "Cannot leave as the last owner. Transfer ownership or delete the team.",
+            "You are the only owner. Transfer ownership to another member or delete the team first.",
         };
       }
     }

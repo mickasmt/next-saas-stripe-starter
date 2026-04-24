@@ -1,13 +1,24 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { TeamRole } from "@prisma/client";
 import { MoreVertical } from "lucide-react";
 import { toast } from "sonner";
 
 import { removeMember, updateMemberRole } from "@/actions/member";
+import { transferOwnership } from "@/actions/team";
 import { hasPermission } from "@/lib/auth/permissions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,6 +53,7 @@ const ROLE_VARIANT: Record<TeamRole, "default" | "secondary" | "outline"> = {
   OWNER: "default",
   ADMIN: "secondary",
   MEMBER: "outline",
+  VIEWER: "outline",
 };
 
 export function TeamMembersList({
@@ -52,11 +64,17 @@ export function TeamMembersList({
 }: TeamMembersListProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [removingMember, setRemovingMember] = useState<Member | null>(null);
+  const [transferringTo, setTransferringTo] = useState<Member | null>(null);
 
   const canManage = hasPermission(currentUserRole, "team:members:manage");
   const canRemove = hasPermission(currentUserRole, "team:members:remove");
+  const isOwner = currentUserRole === "OWNER";
 
-  function handleRoleChange(memberId: string, role: "ADMIN" | "MEMBER") {
+  function handleRoleChange(
+    memberId: string,
+    role: "ADMIN" | "MEMBER" | "VIEWER",
+  ) {
     startTransition(async () => {
       const result = await updateMemberRole(teamId, memberId, { role });
       if (result.status === "error") {
@@ -68,105 +86,203 @@ export function TeamMembersList({
     });
   }
 
-  function handleRemove(memberId: string) {
+  function confirmRemove() {
+    if (!removingMember) return;
     startTransition(async () => {
-      const result = await removeMember(teamId, memberId);
+      const result = await removeMember(teamId, removingMember.id);
       if (result.status === "error") {
         toast.error(result.error);
       } else {
         toast.success("Member removed");
         router.refresh();
       }
+      setRemovingMember(null);
+    });
+  }
+
+  function confirmTransfer() {
+    if (!transferringTo) return;
+    startTransition(async () => {
+      const result = await transferOwnership(teamId, transferringTo.id);
+      if (result.status === "error") {
+        toast.error(result.error);
+      } else {
+        toast.success("Ownership transferred");
+        router.refresh();
+      }
+      setTransferringTo(null);
     });
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base">
-          Team Members ({members.length})
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {members.map((member) => (
-            <div
-              key={member.id}
-              className="flex items-center justify-between gap-4"
-            >
-              <div className="flex items-center gap-3">
-                <Avatar className="size-9">
-                  <AvatarImage src={member.user.image || ""} />
-                  <AvatarFallback>
-                    {member.user.name?.charAt(0)?.toUpperCase() || "?"}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-sm font-medium">
-                    {member.user.name || "Unknown"}
-                    {member.user.id === currentUserId && (
-                      <span className="ml-1 text-muted-foreground">(you)</span>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">
+            Team Members ({members.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {members.map((member) => (
+              <div
+                key={member.id}
+                className="flex items-center justify-between gap-4"
+              >
+                <div className="flex items-center gap-3">
+                  <Avatar className="size-9">
+                    <AvatarImage src={member.user.image || ""} />
+                    <AvatarFallback>
+                      {member.user.name?.charAt(0)?.toUpperCase() || "?"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-sm font-medium">
+                      {member.user.name || "Unknown"}
+                      {member.user.id === currentUserId && (
+                        <span className="ml-1 text-muted-foreground">
+                          (you)
+                        </span>
+                      )}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {member.user.email}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Badge variant={ROLE_VARIANT[member.role]}>
+                    {member.role}
+                  </Badge>
+
+                  {(canManage || canRemove || isOwner) &&
+                    member.user.id !== currentUserId &&
+                    member.role !== "OWNER" && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8"
+                            disabled={isPending}
+                          >
+                            <MoreVertical className="size-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          {canManage && (
+                            <>
+                              {member.role !== "ADMIN" && (
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleRoleChange(member.id, "ADMIN")
+                                  }
+                                >
+                                  Promote to Admin
+                                </DropdownMenuItem>
+                              )}
+                              {member.role !== "MEMBER" && (
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleRoleChange(member.id, "MEMBER")
+                                  }
+                                >
+                                  Set as Member
+                                </DropdownMenuItem>
+                              )}
+                              {member.role !== "VIEWER" && (
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleRoleChange(member.id, "VIEWER")
+                                  }
+                                >
+                                  Set as Viewer
+                                </DropdownMenuItem>
+                              )}
+                              <DropdownMenuSeparator />
+                            </>
+                          )}
+                          {isOwner && (
+                            <>
+                              <DropdownMenuItem
+                                onClick={() => setTransferringTo(member)}
+                              >
+                                Transfer Ownership
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                            </>
+                          )}
+                          {canRemove && (
+                            <DropdownMenuItem
+                              className="text-red-600"
+                              onClick={() => setRemovingMember(member)}
+                            >
+                              Remove from team
+                            </DropdownMenuItem>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     )}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {member.user.email}
-                  </p>
                 </div>
               </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-              <div className="flex items-center gap-2">
-                <Badge variant={ROLE_VARIANT[member.role]}>
-                  {member.role}
-                </Badge>
+      {/* Remove member confirmation */}
+      <AlertDialog
+        open={!!removingMember}
+        onOpenChange={(open) => !open && setRemovingMember(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Team Member</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to remove{" "}
+              <strong>
+                {removingMember?.user.name || removingMember?.user.email}
+              </strong>{" "}
+              from the team? They will lose access to all team resources.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmRemove}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Remove Member
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
-                {(canManage || canRemove) &&
-                  member.user.id !== currentUserId &&
-                  member.role !== "OWNER" && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="size-8"
-                          disabled={isPending}
-                        >
-                          <MoreVertical className="size-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        {canManage && (
-                          <>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleRoleChange(
-                                  member.id,
-                                  member.role === "ADMIN" ? "MEMBER" : "ADMIN",
-                                )
-                              }
-                            >
-                              {member.role === "ADMIN"
-                                ? "Demote to Member"
-                                : "Promote to Admin"}
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                          </>
-                        )}
-                        {canRemove && (
-                          <DropdownMenuItem
-                            className="text-red-600"
-                            onClick={() => handleRemove(member.id)}
-                          >
-                            Remove from team
-                          </DropdownMenuItem>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+      {/* Transfer ownership confirmation */}
+      <AlertDialog
+        open={!!transferringTo}
+        onOpenChange={(open) => !open && setTransferringTo(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Transfer Ownership</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to transfer ownership to{" "}
+              <strong>
+                {transferringTo?.user.name || transferringTo?.user.email}
+              </strong>
+              ? You will be demoted to Admin.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmTransfer}>
+              Transfer Ownership
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

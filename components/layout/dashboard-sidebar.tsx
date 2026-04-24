@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { TeamRole } from "@prisma/client";
 import { NavItem, SidebarNavItem } from "@/types";
 import { Menu, PanelLeftClose, PanelRightClose } from "lucide-react";
 
@@ -25,7 +26,7 @@ import { Icons } from "@/components/shared/icons";
 
 interface DashboardSidebarProps {
   links: SidebarNavItem[];
-  teams?: { id: string; name: string; slug: string; role: string }[];
+  teams?: { id: string; name: string; slug: string; role: TeamRole }[];
   currentTeamId?: string | null;
 }
 
@@ -80,7 +81,7 @@ export function DashboardSidebar({
               <div className="flex h-14 items-center p-4 lg:h-[60px]">
                 {isSidebarExpanded ? (
                   <TeamSwitcher
-                    teams={teams as any}
+                    teams={teams}
                     currentTeamId={currentTeamId ?? null}
                   />
                 ) : null}
@@ -226,7 +227,7 @@ export function MobileSheetSidebar({
                 </Link>
 
                 <TeamSwitcher
-                  teams={teams as any}
+                  teams={teams}
                   currentTeamId={currentTeamId ?? null}
                   large
                 />

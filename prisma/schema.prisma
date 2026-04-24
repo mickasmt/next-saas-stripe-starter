@@ -19,6 +19,7 @@ enum TeamRole {
   OWNER
   ADMIN
   MEMBER
+  VIEWER
 }
 
 enum InvitationStatus {
@@ -144,4 +145,18 @@ model Invitation {
   @@index([teamId])
   @@index([email])
   @@map(name: "invitations")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  teamId    String   @map(name: "team_id")
+  userId    String   @map(name: "user_id")
+  action    String
+  target    String?
+  metadata  Json?
+  createdAt DateTime @default(now()) @map(name: "created_at")
+
+  @@index([teamId])
+  @@index([userId])
+  @@map(name: "audit_logs")
 }

@@ -102,15 +102,22 @@ export function InviteMemberButton({ teamId }: InviteMemberButtonProps) {
             <Select
               defaultValue="MEMBER"
               onValueChange={(value) =>
-                setValue("role", value as "ADMIN" | "MEMBER")
+                setValue("role", value as "ADMIN" | "MEMBER" | "VIEWER")
               }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="MEMBER">Member</SelectItem>
-                <SelectItem value="ADMIN">Admin</SelectItem>
+                <SelectItem value="ADMIN">
+                  Admin — can manage members, invitations, and settings
+                </SelectItem>
+                <SelectItem value="MEMBER">
+                  Member — can read and write team content
+                </SelectItem>
+                <SelectItem value="VIEWER">
+                  Viewer — read-only access to team content
+                </SelectItem>
               </SelectContent>
             </Select>
             {errors.role && (

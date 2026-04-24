@@ -22,6 +22,7 @@ export const ROLE_PERMISSIONS: Record<TeamRole, TeamPermission[]> = {
     "team:members:remove",
   ],
   MEMBER: ["team:read", "team:write"],
+  VIEWER: ["team:read"],
 };
 
 export function hasPermission(

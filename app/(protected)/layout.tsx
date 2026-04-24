@@ -21,14 +21,17 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
 
   if (!user) redirect("/login");
 
-  const filteredLinks = sidebarLinks.map((section) => ({
-    ...section,
-    items: section.items.filter(
-      ({ authorizeOnly }) => !authorizeOnly || authorizeOnly === user.role,
-    ),
-  }));
-
   const { data: teams } = await getUserTeams();
+  const hasTeam = teams.length > 0;
+
+  const filteredLinks = sidebarLinks
+    .filter((section) => !section.requiresTeam || hasTeam)
+    .map((section) => ({
+      ...section,
+      items: section.items.filter(
+        ({ authorizeOnly }) => !authorizeOnly || authorizeOnly === user.role,
+      ),
+    }));
 
   return (
     <div className="relative flex min-h-screen w-full">

@@ -36,6 +36,7 @@ export type SidebarNavItem = {
   items: NavItem[];
   authorizeOnly?: UserRole;
   icon?: keyof typeof Icons;
+  requiresTeam?: boolean;
 };
 
 export type DocsConfig = {

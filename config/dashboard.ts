@@ -38,6 +38,7 @@ export const sidebarLinks: SidebarNavItem[] = [
   },
   {
     title: "TEAM",
+    requiresTeam: true,
     items: [
       { href: "/dashboard/team", icon: "shield", title: "Team Overview" },
       { href: "/dashboard/team/members", icon: "users", title: "Members" },

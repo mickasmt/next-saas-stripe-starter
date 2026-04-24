@@ -70,6 +70,7 @@ export default function TeamSwitcher({
     OWNER: "bg-amber-500",
     ADMIN: "bg-blue-500",
     MEMBER: "bg-green-500",
+    VIEWER: "bg-gray-400",
   };
 
   return (

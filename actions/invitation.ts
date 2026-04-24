@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { revalidatePath } from "next/cache";
 
 import { auth } from "@/auth";
+import { logAuditEvent } from "@/lib/audit";
 import { authorize } from "@/lib/auth/engine";
 import { prisma } from "@/lib/db";
 import { sendTeamInvitation } from "@/lib/email";
@@ -11,7 +12,7 @@ import { invitationSchema } from "@/lib/validations/team";
 
 export async function createInvitation(
   teamId: string,
-  data: { email: string; role: "ADMIN" | "MEMBER" },
+  data: { email: string; role: "ADMIN" | "MEMBER" | "VIEWER" },
 ) {
   try {
     const session = await auth();
@@ -29,6 +30,14 @@ export async function createInvitation(
     }
 
     const { email, role } = invitationSchema.parse(data);
+
+    // Defense in depth: never allow OWNER invitations
+    if ((role as string) === "OWNER") {
+      return {
+        status: "error",
+        error: "Cannot invite as OWNER. Use ownership transfer instead.",
+      };
+    }
 
     // Check for existing pending invitation
     const existing = await prisma.invitation.findFirst({
@@ -83,6 +92,14 @@ export async function createInvitation(
     } catch {
       // Email failure shouldn't block invitation creation
     }
+
+    await logAuditEvent({
+      teamId,
+      userId: session.user.id,
+      action: "invitation.created",
+      target: email,
+      metadata: { role },
+    });
 
     revalidatePath("/dashboard/team/invitations");
     return { status: "success", data: invitation };
@@ -170,6 +187,13 @@ export async function acceptInvitation(token: string) {
       }
     });
 
+    await logAuditEvent({
+      teamId: invitation.teamId,
+      userId,
+      action: "invitation.accepted",
+      target: invitation.email,
+    });
+
     revalidatePath("/dashboard");
     return { status: "success", data: invitation.team };
   } catch (error) {
@@ -198,10 +222,70 @@ export async function revokeInvitation(teamId: string, invitationId: string) {
       data: { status: "REVOKED" },
     });
 
+    await logAuditEvent({
+      teamId,
+      userId: session.user.id,
+      action: "invitation.revoked",
+      target: invitationId,
+    });
+
     revalidatePath("/dashboard/team/invitations");
     return { status: "success" };
   } catch (error) {
     return { status: "error", error: "Failed to revoke invitation" };
+  }
+}
+
+export async function resendInvitation(teamId: string, invitationId: string) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return { status: "error", error: "Unauthorized" };
+    }
+
+    const authResult = await authorize(
+      session.user.id,
+      teamId,
+      "team:members:invite",
+    );
+    if (!authResult.allowed) {
+      return { status: "error", error: authResult.reason };
+    }
+
+    const invitation = await prisma.invitation.findUnique({
+      where: { id: invitationId, teamId },
+      include: { team: true },
+    });
+
+    if (!invitation || invitation.status !== "PENDING") {
+      return { status: "error", error: "No pending invitation found" };
+    }
+
+    // Refresh expiry and generate new token
+    const newToken = crypto.randomBytes(32).toString("hex");
+    const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+    await prisma.invitation.update({
+      where: { id: invitationId },
+      data: { token: newToken, expiresAt: newExpiresAt },
+    });
+
+    try {
+      await sendTeamInvitation({
+        email: invitation.email,
+        teamName: invitation.team.name,
+        inviterName: session.user.name || "A team member",
+        role: invitation.role,
+        token: newToken,
+      });
+    } catch {
+      return { status: "error", error: "Failed to send email" };
+    }
+
+    revalidatePath("/dashboard/team/invitations");
+    return { status: "success" };
+  } catch (error) {
+    return { status: "error", error: "Failed to resend invitation" };
   }
 }
 

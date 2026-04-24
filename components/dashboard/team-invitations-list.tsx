@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { InvitationStatus, TeamRole } from "@prisma/client";
 import { toast } from "sonner";
 
-import { revokeInvitation } from "@/actions/invitation";
+import { resendInvitation, revokeInvitation } from "@/actions/invitation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -55,6 +55,18 @@ export function TeamInvitationsList({
     });
   }
 
+  function handleResend(invitationId: string) {
+    startTransition(async () => {
+      const result = await resendInvitation(teamId, invitationId);
+      if (result.status === "error") {
+        toast.error(result.error);
+      } else {
+        toast.success("Invitation resent");
+        router.refresh();
+      }
+    });
+  }
+
   if (!invitations.length) {
     return (
       <Card>
@@ -82,8 +94,9 @@ export function TeamInvitationsList({
               <div>
                 <p className="text-sm font-medium">{invitation.email}</p>
                 <p className="text-xs text-muted-foreground">
-                  Invited by {invitation.inviter.name || invitation.inviter.email}{" "}
-                  as {invitation.role.toLowerCase()}
+                  Invited by{" "}
+                  {invitation.inviter.name || invitation.inviter.email} as{" "}
+                  {invitation.role.toLowerCase()}
                 </p>
               </div>
 
@@ -93,14 +106,24 @@ export function TeamInvitationsList({
                 </Badge>
 
                 {canManage && invitation.status === "PENDING" && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={isPending}
-                    onClick={() => handleRevoke(invitation.id)}
-                  >
-                    Revoke
-                  </Button>
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={isPending}
+                      onClick={() => handleResend(invitation.id)}
+                    >
+                      Resend
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={isPending}
+                      onClick={() => handleRevoke(invitation.id)}
+                    >
+                      Revoke
+                    </Button>
+                  </>
                 )}
               </div>
             </div>
