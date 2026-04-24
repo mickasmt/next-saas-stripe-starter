@@ -145,13 +145,14 @@ model TeamInvite {
 }
 
 model AuditLog {
-  id        String   @id @default(cuid())
-  teamId    String
-  userId    String
-  action    String
-  targetId  String?
-  metadata  Json?
-  createdAt DateTime @default(now()) @map(name: "created_at")
+  id         String   @id @default(cuid())
+  teamId     String
+  userId     String
+  action     String
+  targetType String?
+  targetId   String?
+  metadata   Json?
+  createdAt  DateTime @default(now()) @map(name: "created_at")
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 

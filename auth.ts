@@ -66,21 +66,36 @@ export const {
       token.picture = dbUser.image;
       token.role = dbUser.role;
 
-      // Only re-resolve team on explicit session update (e.g., team switch)
-      if (trigger === "update" && token.activeTeamId) {
-        const membership = await getTeamMembership(
-          token.sub,
-          token.activeTeamId,
-        );
-        if (membership) {
-          token.activeTeamId = membership.teamId;
-          token.activeTeamRole = membership.role;
-          token.activeTeamSlug = membership.team.slug;
-        } else {
-          // User is no longer a member of this team
-          token.activeTeamId = undefined;
-          token.activeTeamRole = undefined;
-          token.activeTeamSlug = undefined;
+      // Resolve team context on session update OR first login (when no team in token yet)
+      if (trigger === "update" || !token.activeTeamId) {
+        // If we have an active team, re-verify membership
+        if (token.activeTeamId) {
+          const membership = await getTeamMembership(
+            token.sub,
+            token.activeTeamId,
+          );
+          if (membership) {
+            token.activeTeamRole = membership.role;
+            token.activeTeamSlug = membership.team.slug;
+          } else {
+            token.activeTeamId = undefined;
+            token.activeTeamRole = undefined;
+            token.activeTeamSlug = undefined;
+          }
+        }
+
+        // If still no active team, hydrate with the user's first team
+        if (!token.activeTeamId) {
+          const firstMembership = await prisma.teamMember.findFirst({
+            where: { userId: token.sub },
+            include: { team: { select: { slug: true } } },
+            orderBy: { createdAt: "asc" },
+          });
+          if (firstMembership) {
+            token.activeTeamId = firstMembership.teamId;
+            token.activeTeamRole = firstMembership.role;
+            token.activeTeamSlug = firstMembership.team.slug;
+          }
         }
       }
 

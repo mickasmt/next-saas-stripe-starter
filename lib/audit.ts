@@ -17,12 +17,14 @@ export async function logAudit({
   teamId,
   userId,
   action,
+  targetType,
   targetId,
   metadata,
 }: {
   teamId: string;
   userId: string;
   action: AuditAction;
+  targetType?: "user" | "invite" | "team";
   targetId?: string;
   metadata?: Record<string, unknown>;
 }) {
@@ -32,6 +34,7 @@ export async function logAudit({
         teamId,
         userId,
         action,
+        targetType,
         targetId,
         metadata: metadata ? JSON.parse(JSON.stringify(metadata)) : undefined,
       },
