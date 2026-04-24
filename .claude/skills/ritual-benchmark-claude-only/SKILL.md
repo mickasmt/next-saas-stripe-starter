@@ -1,30 +1,34 @@
+---
+name: ritual-benchmark-claude-only
+description: Autonomous benchmark — Claude implements a feature from a raw description, creates a PR, and iterates through dual review rounds (Product Owner + Tech Lead) with isolated reviewer agents. No Ritual MCP tools used.
+argument-hint: "<path-to-raw-input-md>"
+user-invocable: true
+---
+
 # Ritual Benchmark — Claude Only (No Ritual)
 
-## Invocation
-`/ritual-benchmark-claude-only <path-to-raw-input-md>`
+## CRITICAL RULES — READ THESE FIRST
 
-Example: `/ritual-benchmark-claude-only benchmark/epics/multi-tenant-rbac-raw-input.md`
+1. **FULLY AUTONOMOUS**: Execute ALL steps from start to finish without stopping. Do NOT ask the user any questions. Do NOT wait for approval. Do NOT pause between steps. If a step requires a decision, make it yourself.
+2. **NEVER READ THE RUBRICS**: The files `benchmark/epics/multi-tenant-rbac-product.md` and `benchmark/epics/multi-tenant-rbac-technical.md` are evaluation rubrics. You must NEVER read either of them. Only the reviewer subagents read them. If you read them, the benchmark is contaminated and invalid.
+3. **NEVER SELF-REVIEW**: Do NOT review your own PR. Do NOT invoke `/review-pr` or any other review skill. The ONLY way to review is by spawning reviewer subagents via the Task tool with `subagent_type: "general-purpose"`.
+4. **BRANCH NAMING**: The branch MUST be named `benchmark/claude-only-rbac-<YYYYMMDD-HHmm>`. Do NOT use `feat/` or any other prefix.
+5. **DO NOT STOP AFTER IMPLEMENTATION**: After implementing, you MUST commit, push, create the PR, and run the full review loop. Implementation is NOT the end — it's the middle.
+6. **NO RITUAL TOOLS**: Do NOT use any `mcp__ritual__*` tools. This variant tests pure Claude analysis.
 
-## Description
-Runs a fully autonomous benchmark: Claude reads a raw feature idea, explores the codebase, plans, implements, creates a PR, gets reviewed by an isolated reviewer agent (that writes PR comments like a tech lead), fixes based on those comments, and repeats until satisfied. No Ritual MCP tools are used — this is pure Claude analysis.
+---
 
-## Instructions
+## Step 1: Read Raw Input
 
-You are running an autonomous benchmark. Do NOT ask the user any questions. Make all decisions yourself. Proceed through every step without stopping.
+1. Read the raw input file provided as the argument (e.g., `benchmark/epics/multi-tenant-rbac-raw-input.md`).
+2. Store the raw feature description. This is ALL you have to work with.
+3. **DO NOT** read any other files in `benchmark/epics/`.
 
-**CRITICAL CONTEXT ISOLATION RULE**: You (the implementer) must NEVER read `benchmark/epics/multi-tenant-rbac.md`. That file is the evaluation rubric — only the reviewer subagent reads it. If you read it, the benchmark is contaminated. Your only feedback comes from PR comments written by the reviewer.
-
-### Step 1: Read Raw Input
-
-1. Read the raw input file provided as the argument (e.g., `benchmark/epics/multi-tenant-rbac-raw-input.md`)
-2. Store the raw feature description. This is ALL you have to work with for planning and implementation.
-3. **DO NOT** read any other files in `benchmark/epics/`. You only get the raw input.
-
-### Step 2: Explore Codebase + Plan (USE PLAN MODE)
+## Step 2: Explore Codebase + Plan (USE PLAN MODE)
 
 Starting from ONLY the raw feature description:
 
-1. **Enter plan mode** by calling `EnterPlanMode`. This is MANDATORY — do NOT skip this step.
+1. **Enter plan mode** by calling `EnterPlanMode`. This is MANDATORY.
 
 2. While in plan mode, thoroughly explore the codebase:
    - Read the project structure, package.json, key config files
@@ -34,34 +38,46 @@ Starting from ONLY the raw feature description:
    - Review UI components, layouts, and dashboard structure
    - Read middleware configuration
 
-3. Based on your understanding of the codebase and the raw feature idea, write a detailed implementation plan covering:
-   - What models/schema changes are needed?
-   - What API routes to create?
-   - What UI components to build?
-   - How does it integrate with existing auth?
-   - What's the implementation order?
+3. Write a detailed implementation plan covering:
+   - What models/schema changes are needed
+   - What API routes to create
+   - What UI components to build
+   - How it integrates with existing auth
+   - Implementation order
    - File-by-file breakdown of changes
 
-4. Call `ExitPlanMode` to present the plan for approval. Since this is a benchmark, the user will approve it — but the plan MUST exist before any code is written.
+4. Call `ExitPlanMode` to present the plan. The user will approve it.
 
-### Step 3: Create Branch
+## Step 3: Create Branch
+
+**IMMEDIATELY after plan approval**, create the branch. Use this EXACT naming:
 
 ```bash
 TIMESTAMP=$(date +%Y%m%d-%H%M)
-BRANCH="benchmark/claude-only-rbac-${TIMESTAMP}"
-git checkout -b "${BRANCH}"
+git checkout -b "benchmark/claude-only-rbac-${TIMESTAMP}"
 ```
 
-### Step 4: Implement
+## Step 4: Implement
 
-Implement the feature based entirely on:
-- The raw feature description
-- Your own analysis of the codebase
-- Your own design decisions
+Implement the feature based on your plan. As you implement:
 
-Make atomic, well-structured commits as you go.
+- **Commit frequently** — after each logical unit of work (e.g., schema changes, API routes, UI components), run:
+  ```bash
+  git add -A && git commit -m "descriptive message"
+  ```
+- Do NOT wait until everything is done to commit. Aim for 3-8 commits during implementation.
+- Follow existing codebase patterns and conventions.
+- Actually implement the feature — do not stub or mock.
 
-### Step 5: Create Draft PR
+## Step 5: Push + Create Draft PR
+
+**IMMEDIATELY after implementation** (do NOT stop here):
+
+```bash
+git push -u origin HEAD
+```
+
+Then create the PR:
 
 ```bash
 gh pr create --base main \
@@ -74,144 +90,160 @@ This PR was generated autonomously by Claude Code working from a raw feature des
 ### Process
 1. Raw feature idea → codebase exploration → self-designed plan → implementation
 2. No external research tools or requirement packages
-3. Review loop with isolated reviewer agent
+3. Dual review loop: Product Owner + Tech Lead (isolated reviewer agents)
 
 ### Variant
 **Claude-only** — no Ritual MCP tools, pure codebase analysis and implementation.
-
-🤖 Generated with Claude Code (Ritual Benchmark)
 EOF
 )" \
   --draft
 ```
 
-Store the PR number and URL.
+Store the PR number and URL. **DO NOT STOP HERE — continue to Step 6.**
 
-### Step 6: Review Loop
+## Step 6: Review Loop
 
-Execute this loop (max 5 rounds):
+**DO NOT skip this step. DO NOT self-review. DO NOT use /review-pr.**
 
-#### 6a: Spawn Reviewer Subagent
+Execute this loop. Max 5 rounds. Start at round = 1. Track PO and Tech verdicts separately.
 
-Use the **Task tool** with `subagent_type: "general-purpose"` to spawn an isolated reviewer. The reviewer has its own context and the rubric never enters YOUR context.
+### 6a: Spawn BOTH Reviewers in Parallel
 
-**Prompt for the reviewer subagent** (fill in `<PR_NUMBER>` and `<ROUND_N>`):
+Each round, spawn **TWO** reviewer subagents using the Task tool. Launch them in **parallel** (both in the same message).
+
+**Product Owner Reviewer** — Task tool with `subagent_type: "general-purpose"`:
 
 ```
-You are a senior tech lead reviewing a pull request. You have an evaluation rubric and the PR diff. Your job is to write a PR comment that reads like natural, constructive feedback a tech lead would give — NOT a checklist or spec dump.
+You are a Product Owner reviewing PR #<PR_NUMBER>. You evaluate whether this feature is shippable to real users. Round <ROUND_N>.
 
-## Your Inputs
+STEPS:
+1. Read the product rubric: benchmark/epics/multi-tenant-rbac-product.md
+2. Get the PR diff: run `gh pr diff <PR_NUMBER>`
 
-1. Read the evaluation rubric: benchmark/epics/multi-tenant-rbac.md
-2. Get the PR diff by running: gh pr diff <PR_NUMBER>
-
-## How to Write Your Review
-
-Internally, evaluate the diff against each acceptance criterion (AC-1 through AC-10) in the rubric. Track PASS/FAIL/PARTIAL for each.
-
-But your PR COMMENT must be written as a tech lead would write it:
-- Ask probing questions about gaps: "What happens if the last admin leaves? I don't see that case handled."
-- Point at specific concerns with file/line references: "In `lib/permissions.ts:42`, this check doesn't account for..."
-- Raise architectural concerns: "The role assignment logic seems tightly coupled to the invite flow — have you considered..."
-- Note what looks good: "The cascade delete setup looks solid."
-- Be specific enough to guide without giving the exact solution
-- Use a conversational, professional tone
+YOUR PR COMMENT must read like a PM giving feedback:
+- Focus on user experience, flows, and edge cases users will hit
+- Ask questions like: "What does a new user see if they haven't created a team yet?"
+- Flag missing UX: "There's no confirmation before deleting a team — that's a destructive action"
+- Point out product gaps: "I don't see a way to resend an invite"
+- Note what works well: "The invite acceptance flow handles the no-account case nicely"
+- Think about: onboarding, error states, mobile, backward compatibility, security friction
 
 DO NOT:
-- Post a table of acceptance criteria with PASS/FAIL statuses
-- Quote or reference the rubric directly
-- Mention "AC-1", "AC-2", etc. or "acceptance criteria" in the comment
-- Give the developer the exact code fix — describe the problem, not the solution
+- Post a table of criteria with PASS/FAIL
+- Reference the rubric, "PC-1", or "acceptance criteria"
+- Give exact code fixes — describe the user problem, not the technical solution
 
-## What to Post
+End with EXACTLY one of:
+- "A few product gaps to close before this is shippable." (if NEEDS_CHANGES)
+- "This feels ready to ship. Good job." (if SATISFIES_REQUIREMENTS)
 
-Post your review as a PR comment:
-gh pr comment <PR_NUMBER> --body "<your review>"
+Post: gh pr comment <PR_NUMBER> --body "<your review>"
 
-End your comment with one of:
+Return ONLY this JSON:
+{"reviewer":"product","verdict":"NEEDS_CHANGES or SATISFIES_REQUIREMENTS","round":<ROUND_N>,"criteria_results":{"PC-1":"PASS/FAIL/PARTIAL","PC-2":"PASS/FAIL/PARTIAL","PC-3":"PASS/FAIL/PARTIAL","PC-4":"PASS/FAIL/PARTIAL","PC-5":"PASS/FAIL/PARTIAL","PC-6":"PASS/FAIL/PARTIAL","PC-7":"PASS/FAIL/PARTIAL","PC-8":"PASS/FAIL/PARTIAL","PC-9":"PASS/FAIL/PARTIAL","PC-10":"PASS/FAIL/PARTIAL"},"pass_count":<N>,"total_criteria":10}
+```
+
+**Tech Lead Reviewer** — Task tool with `subagent_type: "general-purpose"`:
+
+```
+You are a senior Tech Lead reviewing PR #<PR_NUMBER>. You evaluate code quality, architecture, and technical correctness. Round <ROUND_N>.
+
+STEPS:
+1. Read the technical rubric: benchmark/epics/multi-tenant-rbac-technical.md
+2. Get the PR diff: run `gh pr diff <PR_NUMBER>`
+
+YOUR PR COMMENT must read like a tech lead's code review:
+- Point at specific concerns with file:line references
+- Ask about architectural decisions: "The permissions are hardcoded — have you considered making them configurable per team?"
+- Flag missing pieces: "I don't see a migration file"
+- Raise security concerns: "The teamId param doesn't match the session's active team — potential auth bypass"
+- Note what's solid: "The cascade delete setup looks correct"
+- Be specific enough to guide without giving the exact solution
+
+DO NOT:
+- Post a table of criteria with PASS/FAIL
+- Reference the rubric, "AC-1", or "acceptance criteria"
+- Give exact code fixes — describe the problem, not the solution
+
+End with EXACTLY one of:
 - "Overall this is looking good — a few things to address before it's ready." (if NEEDS_CHANGES)
 - "This looks solid and ready to go. Nice work." (if SATISFIES_REQUIREMENTS)
 
-## What to Return
+Post: gh pr comment <PR_NUMBER> --body "<your review>"
 
-After posting the comment, return ONLY this JSON (no other text):
-
-{
-  "verdict": "NEEDS_CHANGES" or "SATISFIES_REQUIREMENTS",
-  "round": <ROUND_N>,
-  "criteria_results": {
-    "AC-1": "PASS" or "FAIL" or "PARTIAL",
-    "AC-2": "PASS" or "FAIL" or "PARTIAL",
-    ...through AC-10
-  },
-  "pass_count": <number of PASS>,
-  "total_criteria": 10
-}
+Return ONLY this JSON:
+{"reviewer":"technical","verdict":"NEEDS_CHANGES or SATISFIES_REQUIREMENTS","round":<ROUND_N>,"criteria_results":{"AC-1":"PASS/FAIL/PARTIAL","AC-2":"PASS/FAIL/PARTIAL","AC-3":"PASS/FAIL/PARTIAL","AC-4":"PASS/FAIL/PARTIAL","AC-5":"PASS/FAIL/PARTIAL","AC-6":"PASS/FAIL/PARTIAL","AC-7":"PASS/FAIL/PARTIAL","AC-8":"PASS/FAIL/PARTIAL","AC-9":"PASS/FAIL/PARTIAL","AC-10":"PASS/FAIL/PARTIAL"},"pass_count":<N>,"total_criteria":10}
 ```
 
-#### 6b: Read Feedback and Decide
+### 6b: Process Both Verdicts
 
-1. Parse the JSON verdict returned by the reviewer subagent.
-2. If **SATISFIES_REQUIREMENTS**: Exit loop. Go to Step 7.
-3. If **NEEDS_CHANGES**:
-   - Read the latest PR comments to see the reviewer's feedback: `gh pr view <PR_NUMBER> --comments --json comments`
-   - Read ONLY the most recent comment (the reviewer's feedback). This is your sole guidance for fixes.
-   - Make fixes based on the reviewer's comments. Do NOT try to guess what else might be wrong — only address what the reviewer raised.
-   - Commit and push.
-   - Increment round counter. Return to 6a.
-4. If **round >= 5**: Exit loop with verdict `MAX_ROUNDS_REACHED`. Go to Step 7.
+1. Parse both JSON verdicts from the subagents.
+2. Track each reviewer's status separately:
+   - If a reviewer says SATISFIES_REQUIREMENTS, record the round they passed at. They still review in subsequent rounds but their "passed at" round is locked in.
+3. If **BOTH** say SATISFIES_REQUIREMENTS → exit loop, go to Step 7.
+4. If **either** says NEEDS_CHANGES AND round < 5:
+   - Read the latest PR comments (both reviewers posted): `gh pr view <PR_NUMBER> --comments --json comments | python3 -c "import sys,json; c=json.load(sys.stdin)['comments']; [print('---'); print(x['body']) for x in c[-2:]]"`
+   - Make fixes addressing feedback from BOTH reviewers. Do NOT guess at other issues.
+   - Commit and push:
+     ```bash
+     git add -A && git commit -m "fix: address round <N> feedback (PO + tech)" && git push
+     ```
+   - Increment round. Go back to 6a.
+5. If round >= 5 → set verdict to `MAX_ROUNDS_REACHED`, go to Step 7.
 
-### Step 7: Persist Results
+## Step 7: Persist Results
 
-1. Read the current `benchmark/results.json`
-2. Append a new entry using the accumulated reviewer verdicts:
+1. Read `benchmark/results.json`
+2. Append this entry (fill in actual values):
 
 ```json
 {
   "id": "run-<YYYYMMDD>-<HHmm>",
   "variant": "claude-only",
   "epic": "multi-tenant-rbac",
-  "branch": "<branch_name>",
-  "pr_number": <number>,
+  "branch": "<actual branch name>",
+  "pr_number": "<number>",
   "pr_url": "<url>",
-  "review_rounds": <N>,
-  "total_commits": <count from git log>,
-  "corrections_count": <rounds where NEEDS_CHANGES was returned>,
-  "final_verdict": "SATISFIES_REQUIREMENTS | MAX_ROUNDS_REACHED",
-  "criteria_pass_rate": "<pass_count>/10",
-  "criteria_results": { ... from last reviewer response ... },
-  "timestamp": "<ISO8601>"
+  "review_rounds": "<total rounds>",
+  "total_commits": "<count via: git rev-list --count main..HEAD>",
+  "corrections_count": "<number of rounds with at least one NEEDS_CHANGES>",
+  "final_verdict": "SATISFIES_REQUIREMENTS or MAX_ROUNDS_REACHED",
+  "product_review": {
+    "passed_at_round": "<round PO said SATISFIES or null>",
+    "final_pass_rate": "<pass_count>/10",
+    "criteria_results": { "PC-1": "...", "PC-2": "...", "...": "..." }
+  },
+  "technical_review": {
+    "passed_at_round": "<round tech said SATISFIES or null>",
+    "final_pass_rate": "<pass_count>/10",
+    "criteria_results": { "AC-1": "...", "AC-2": "...", "...": "..." }
+  },
+  "timestamp": "<current ISO8601>"
 }
 ```
 
 3. Write the updated array back to `benchmark/results.json`
 
-### Step 8: Final PR Comment
-
-Post a final summary comment on the PR:
+## Step 8: Final PR Comment
 
 ```bash
 gh pr comment <PR_NUMBER> --body "$(cat <<'EOF'
 ## Benchmark Complete — Claude-Only Variant
 
+| Metric | Product Owner | Tech Lead |
+|--------|-------------|-----------|
+| Passed at Round | <N or "not passed"> | <N or "not passed"> |
+| Criteria Pass Rate | <X>/10 | <X>/10 |
+
 | Metric | Value |
 |--------|-------|
-| Review Rounds | N |
-| Total Commits | N |
-| Corrections | N |
-| Final Verdict | ... |
-| Criteria Pass Rate | X/10 |
+| Total Rounds | <N> |
+| Total Commits | <N> |
+| Final Verdict | <verdict> |
 
 🤖 Claude-Only Benchmark — autonomous run complete
 EOF
 )"
 ```
 
-## Important Rules
-- **Fully autonomous**: Do NOT ask the user anything. Make all decisions yourself.
-- **NEVER read the rubric**: You are the implementer. The rubric (`benchmark/epics/multi-tenant-rbac.md`) is only for the reviewer subagent. If you read it, the benchmark is invalid.
-- **Only respond to PR comments**: Your fixes must be driven by the reviewer's PR comments, not by any knowledge of the rubric.
-- **No Ritual tools**: Do NOT use any `mcp__ritual__*` tools. This variant tests pure Claude analysis.
-- **Atomic commits**: Make meaningful commits as you implement, not one giant commit.
-- **Follow codebase patterns**: Match the existing code style, file organization, and conventions.
-- **No shortcuts**: Actually implement the feature — don't stub or mock things out.
+**The benchmark is now complete.** Inform the user with a brief summary.
