@@ -1,6 +1,6 @@
 ---
 name: benchmark-implement-ritual
-description: "Benchmark implementation phase (Ritual variant): uses /ritual-builder-spec to research and plan, verifies task coverage against Ritual requirements before implementing, then pushes and creates a draft PR."
+description: "Benchmark implementation phase (Ritual variant): uses /ritual-builder-spec to research and plan (with built-in requirements coverage check), then implements and creates a draft PR."
 argument-hint: "<epic-slug>  (e.g. multi-tenant-rbac)"
 user-invocable: true
 ---
@@ -13,7 +13,6 @@ user-invocable: true
 2. **NEVER READ RUBRICS**: Files named `<epic>-product.md` and `<epic>-technical.md` in `benchmark/epics/` are evaluation rubrics. NEVER read them. Only the review skill uses them.
 3. **NO SELF-REVIEW**: Do NOT review your own code. Do NOT invoke `/review-pr` or `/benchmark-review`. This skill ends after the PR is created.
 4. **COMPOSE, DON'T DUPLICATE**: Use `/ritual-builder-spec` for the research workflow. Do NOT manually call MCP tools.
-5. **MANDATORY GAP CHECK**: After creating your task list but BEFORE writing any code, you MUST run the gap analysis in Step 3. Do NOT skip it.
 
 ---
 
@@ -29,7 +28,7 @@ The argument is an **epic slug** (e.g., `multi-tenant-rbac`).
 
 Invoke `/ritual-builder-spec` with the raw feature description.
 
-This runs the full Ritual research workflow AND enters plan mode — producing a codebase-aware implementation plan informed by Ritual's requirement packages, recommendations, and project plan.
+This runs the full Ritual research workflow, enters plan mode, and produces a codebase-aware implementation plan with a **requirements coverage check** that verifies every Ritual requirement is covered by a plan task.
 
 **Auto-select rules** — when prompted via `AskUserQuestion`, respond automatically:
 
@@ -48,51 +47,7 @@ This runs the full Ritual research workflow AND enters plan mode — producing a
 
 Store the `exploration_id` and `workspace_id` from the exploration creation.
 
-## Step 3: Gap Analysis — Verify Tasks Against Ritual Requirements
-
-**THIS STEP IS MANDATORY. Do NOT skip it. Do NOT start coding until this is done.**
-
-After plan approval, you will have created your own task list (checklist of implementation tasks). Before writing any code, you must verify your tasks fully cover Ritual's requirements.
-
-### 3a: Fetch Ritual's requirement packages
-
-If not already in context, fetch them now:
-```
-mcp__ritual__get_requirement_package with package_type: "design"
-mcp__ritual__get_requirement_package with package_type: "code"
-```
-
-### 3b: Cross-reference your tasks against Ritual's requirements
-
-Go through EVERY requirement and EVERY acceptance criterion from each Ritual requirement area. For each one, check whether your current task list covers it.
-
-Output a gap analysis like this:
-
-```
-## Gap Analysis: Tasks vs Ritual Requirements
-
-### Requirement Area 1: <name>
-- REQ-1.1: "<requirement text>" → ✅ Covered by task: <task name>
-- REQ-1.2: "<requirement text>" → ✅ Covered by task: <task name>
-- REQ-1.3: "<requirement text>" → ❌ NOT COVERED — adding task
-- AC-1.1: "<acceptance criterion>" → ✅ Covered by task: <task name>
-- AC-1.2: "<acceptance criterion>" → ❌ NOT COVERED — adding task
-
-### Requirement Area 2: <name>
-...
-
-### Summary
-- Total Ritual items: <N>
-- Covered: <N>
-- Gaps found: <N>
-- Tasks added: <N>
-```
-
-### 3c: Add missing tasks
-
-For every ❌ item, add a new task to your task list covering that requirement. Then proceed to implementation.
-
-## Step 4: Create Branch
+## Step 3: Create Branch
 
 ```bash
 EPIC_SLUG="<epic-slug>"
@@ -100,9 +55,9 @@ TIMESTAMP=$(date +%Y%m%d-%H%M)
 git checkout -b "benchmark/ritual-${EPIC_SLUG}-${TIMESTAMP}"
 ```
 
-## Step 5: Implement
+## Step 4: Implement
 
-Implement the feature using your plan as the guide. As you complete each task, verify it satisfies the Ritual requirements mapped to it in the gap analysis.
+Implement the feature using the approved plan. The plan includes a Requirements Coverage section mapping every Ritual requirement to a plan task — use it to track completeness as you implement.
 
 - **Commit frequently** — after each logical unit of work:
   ```bash
@@ -112,15 +67,7 @@ Implement the feature using your plan as the guide. As you complete each task, v
 - Follow existing codebase patterns and conventions.
 - Actually implement — do not stub or mock.
 
-## Step 6: Pre-PR Completeness Check
-
-Before creating the PR, do one final scan:
-
-1. Review your task list — are all tasks completed?
-2. Review the gap analysis from Step 3 — are all Ritual requirements addressed?
-3. If anything is still missing, implement it now and commit.
-
-## Step 7: Push + Create Draft PR
+## Step 5: Push + Create Draft PR
 
 ```bash
 git push -u origin HEAD
@@ -137,11 +84,11 @@ This PR was generated autonomously by Claude Code using Ritual's research workfl
 
 ### Process
 1. Raw feature idea → /ritual-builder-spec → exploration → requirement packages
-2. Gap analysis: verified task list covers all Ritual requirements
-3. Implementation with coverage tracking
+2. Plan verified against Ritual requirements (coverage check)
+3. Implementation guided by Ritual-backed plan
 
 ### Variant
-**Ritual-enriched** — used /ritual-builder-spec with MCP tools to research, define requirements, and verify implementation coverage.
+**Ritual-enriched** — used /ritual-builder-spec with MCP tools to research, define requirements, and verify plan coverage.
 
 ### Next Step
 Run `/benchmark-review <PR_NUMBER> ritual <epic-slug>` to start the review loop.
@@ -150,7 +97,7 @@ EOF
   --draft
 ```
 
-## Step 8: Output Summary
+## Step 6: Output Summary
 
 Print:
 ```
@@ -160,7 +107,6 @@ Benchmark implementation complete (Ritual variant).
 - PR: <PR URL> (#<PR_NUMBER>)
 - Exploration: <exploration_id>
 - Workspace: <workspace_id>
-- Gap analysis: <N> Ritual items checked, <N> gaps found and addressed
 
 To start the review loop:
   /benchmark-review <PR_NUMBER> ritual <epic-slug>

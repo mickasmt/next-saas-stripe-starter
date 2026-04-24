@@ -387,6 +387,7 @@ Write the plan file as one integrated document. Ritual context and codebase find
 - **Testing Strategy** — unit, integration, E2E
 - **Risks & Mitigations** — surfaced by Ritual research and codebase realities
 - **Rollout / Deployment**
+- **Requirements Coverage** — gap analysis verifying the plan covers all Ritual requirements (see Phase 2.5)
 
 **When codebase patterns conflict with Ritual specs:** flag the conflict once in the relevant section and recommend a resolution. Don't patch silently and don't bury the tension.
 
@@ -416,6 +417,46 @@ Write the plan file as one integrated document. Ritual context and codebase find
 - **Ritual data not used**: [anything fetched but not relevant to this plan]
 - **Technical brief impact**: [how codebase reconnaissance shaped the exploration — e.g., "identified missing GSI that became a consideration", "surfaced cross-service dependency that generated 3 additional discovery questions"]
 ```
+
+---
+
+### Phase 2.5: Requirements Coverage Check
+
+Before presenting the plan, verify it covers all Ritual requirements. This ensures nothing from the research gets dropped during planning.
+
+**If requirement packages were fetched** (design spec and/or code spec are available):
+
+1. Go through every requirement and acceptance criterion from each Ritual requirement area
+2. For each one, identify which plan task or section covers it
+3. Append a **Requirements Coverage** section to the plan:
+
+```markdown
+## Requirements Coverage
+
+Cross-reference of Ritual requirements against plan tasks.
+
+### <Requirement Area 1 name>
+| # | Requirement | Covered by |
+|---|-------------|-----------|
+| REQ-1.1 | <requirement text> | ✅ Task 3: Build auth engine |
+| REQ-1.2 | <requirement text> | ✅ Task 5: Team server actions |
+| AC-1.1 | <acceptance criterion> | ✅ Task 3: authorize() function |
+| AC-1.2 | <acceptance criterion> | ❌ Gap — adding to plan |
+
+### <Requirement Area 2 name>
+...
+
+### Summary
+- Total Ritual items: <N>
+- Covered by plan: <N>
+- Gaps found: <N> → added as new tasks
+```
+
+4. **For every ❌ gap**: add a new task to the Phased Tasks section covering that requirement. Reference the Ritual requirement it addresses.
+
+5. Update the gap count to 0 — all gaps should be resolved before presenting the plan.
+
+**If no requirement packages are available** (user skipped generation or Ritual MCP unavailable): skip this phase — there's nothing to cross-reference against.
 
 ---
 
