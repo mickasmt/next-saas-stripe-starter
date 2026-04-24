@@ -101,8 +101,9 @@ model Team {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
 
-  members TeamMember[]
-  invites TeamInvite[]
+  members   TeamMember[]
+  invites   TeamInvite[]
+  auditLogs AuditLog[]
 
   @@map(name: "teams")
 }
@@ -141,4 +142,20 @@ model TeamInvite {
   @@index([token])
   @@index([email])
   @@map(name: "team_invites")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  teamId    String
+  userId    String
+  action    String
+  targetId  String?
+  metadata  Json?
+  createdAt DateTime @default(now()) @map(name: "created_at")
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+  @@index([userId])
+  @@map(name: "audit_logs")
 }

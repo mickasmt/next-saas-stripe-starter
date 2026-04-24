@@ -7,6 +7,7 @@ import { auth } from "@/auth";
 import { env } from "@/env.mjs";
 import { siteConfig } from "@/config/site";
 import { setActiveTeamId } from "@/lib/active-team";
+import { logAudit } from "@/lib/audit";
 import { prisma } from "@/lib/db";
 import { resend } from "@/lib/email";
 import { requireTeamPermission } from "@/lib/guards";
@@ -19,7 +20,7 @@ export async function createInvite(
   data: { email: string; role: TeamRole },
 ) {
   try {
-    const { user } = await requireTeamPermission(PERMISSIONS.MEMBERS_INVITE);
+    const { user } = await requireTeamPermission(PERMISSIONS.MEMBERS_INVITE, teamId);
 
     const { email, role } = inviteMemberSchema.parse(data);
 
@@ -93,6 +94,13 @@ export async function createInvite(
       console.error("Failed to send invite email");
     }
 
+    await logAudit({
+      teamId,
+      userId: user.id!,
+      action: "member.invited",
+      metadata: { email, role },
+    });
+
     revalidatePath("/dashboard/settings/team");
     return { status: "success" as const };
   } catch (error) {
@@ -156,6 +164,13 @@ export async function acceptInvite(token: string) {
       });
     });
 
+    await logAudit({
+      teamId: invite.teamId,
+      userId,
+      action: "member.joined",
+      metadata: { role: invite.role },
+    });
+
     await setActiveTeamId(invite.teamId);
     revalidatePath("/dashboard");
 
@@ -199,10 +214,17 @@ export async function declineInvite(token: string) {
 
 export async function revokeInvite(teamId: string, inviteId: string) {
   try {
-    await requireTeamPermission(PERMISSIONS.MEMBERS_INVITE);
+    const { user } = await requireTeamPermission(PERMISSIONS.MEMBERS_INVITE, teamId);
 
     await prisma.teamInvite.delete({
       where: { id: inviteId, teamId },
+    });
+
+    await logAudit({
+      teamId,
+      userId: user.id!,
+      action: "invite.revoked",
+      targetId: inviteId,
     });
 
     revalidatePath("/dashboard/settings/team");

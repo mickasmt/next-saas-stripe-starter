@@ -5,6 +5,7 @@ import { TeamRole } from "@prisma/client";
 
 import { auth } from "@/auth";
 import { setActiveTeamId } from "@/lib/active-team";
+import { logAudit } from "@/lib/audit";
 import { prisma } from "@/lib/db";
 import { createTeamSchema } from "@/lib/validations/team";
 
@@ -45,6 +46,13 @@ export async function createTeam(data: CreateTeamInput) {
       });
 
       return team;
+    });
+
+    await logAudit({
+      teamId: team.id,
+      userId,
+      action: "team.created",
+      metadata: { name, slug },
     });
 
     await setActiveTeamId(team.id);

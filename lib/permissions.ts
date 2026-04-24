@@ -9,6 +9,8 @@ export const PERMISSIONS = {
   CONTENT_CREATE: "content:create",
   CONTENT_EDIT: "content:edit",
   CONTENT_DELETE: "content:delete",
+  CONTENT_VIEW: "content:view",
+  ANALYTICS_VIEW: "analytics:view",
   SETTINGS_MANAGE: "settings:manage",
 } as const;
 
@@ -22,11 +24,15 @@ const ROLE_PERMISSIONS: Record<TeamRole, Permission[]> = {
     PERMISSIONS.CONTENT_CREATE,
     PERMISSIONS.CONTENT_EDIT,
     PERMISSIONS.CONTENT_DELETE,
+    PERMISSIONS.CONTENT_VIEW,
+    PERMISSIONS.ANALYTICS_VIEW,
     PERMISSIONS.SETTINGS_MANAGE,
   ],
   [TeamRole.MEMBER]: [
     PERMISSIONS.CONTENT_CREATE,
     PERMISSIONS.CONTENT_EDIT,
+    PERMISSIONS.CONTENT_VIEW,
+    PERMISSIONS.ANALYTICS_VIEW,
   ],
 };
 

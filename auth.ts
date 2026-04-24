@@ -66,21 +66,21 @@ export const {
       token.picture = dbUser.image;
       token.role = dbUser.role;
 
-      // On session update (e.g., team switch), re-resolve the active team
-      if (trigger === "update" || token.activeTeamId) {
-        const teamId = token.activeTeamId;
-        if (teamId) {
-          const membership = await getTeamMembership(token.sub, teamId);
-          if (membership) {
-            token.activeTeamId = membership.teamId;
-            token.activeTeamRole = membership.role;
-            token.activeTeamSlug = membership.team.slug;
-          } else {
-            // User is no longer a member
-            token.activeTeamId = undefined;
-            token.activeTeamRole = undefined;
-            token.activeTeamSlug = undefined;
-          }
+      // Only re-resolve team on explicit session update (e.g., team switch)
+      if (trigger === "update" && token.activeTeamId) {
+        const membership = await getTeamMembership(
+          token.sub,
+          token.activeTeamId,
+        );
+        if (membership) {
+          token.activeTeamId = membership.teamId;
+          token.activeTeamRole = membership.role;
+          token.activeTeamSlug = membership.team.slug;
+        } else {
+          // User is no longer a member of this team
+          token.activeTeamId = undefined;
+          token.activeTeamRole = undefined;
+          token.activeTeamSlug = undefined;
         }
       }
 

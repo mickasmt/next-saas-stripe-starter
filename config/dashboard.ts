@@ -49,6 +49,7 @@ export const sidebarLinks: SidebarNavItem[] = [
         href: "/dashboard/settings/team",
         icon: "users",
         title: "Members",
+        requiresTeamPermission: "content:view",
       },
     ],
   },

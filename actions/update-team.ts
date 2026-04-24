@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
+import { logAudit } from "@/lib/audit";
 import { prisma } from "@/lib/db";
 import { requireTeamPermission } from "@/lib/guards";
 import { PERMISSIONS } from "@/lib/permissions";
@@ -15,7 +16,7 @@ type UpdateTeamInput = {
 
 export async function updateTeam(teamId: string, data: UpdateTeamInput) {
   try {
-    await requireTeamPermission(PERMISSIONS.TEAM_MANAGE);
+    const { user } = await requireTeamPermission(PERMISSIONS.TEAM_MANAGE, teamId);
 
     const validated = updateTeamSchema.parse(data);
 
@@ -32,6 +33,13 @@ export async function updateTeam(teamId: string, data: UpdateTeamInput) {
     await prisma.team.update({
       where: { id: teamId },
       data: validated,
+    });
+
+    await logAudit({
+      teamId,
+      userId: user.id!,
+      action: "team.updated",
+      metadata: validated,
     });
 
     revalidatePath("/dashboard/settings/team");
