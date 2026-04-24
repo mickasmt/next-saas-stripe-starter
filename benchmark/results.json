@@ -1,1 +1,28 @@
-[]
+[
+  {
+    "id": "run-20260424-1917",
+    "variant": "claude-only",
+    "epic": "multi-tenant-rbac",
+    "branch": "feat/multi-tenant-teams-rbac",
+    "pr_number": 85,
+    "pr_url": "https://github.com/mickasmt/next-saas-stripe-starter/pull/85",
+    "review_rounds": 5,
+    "total_commits": 5,
+    "corrections_count": 4,
+    "final_verdict": "MAX_ROUNDS_REACHED",
+    "criteria_pass_rate": "8/10",
+    "criteria_results": {
+      "AC-1": "PARTIAL",
+      "AC-2": "PASS",
+      "AC-3": "PASS",
+      "AC-4": "PARTIAL",
+      "AC-5": "PASS",
+      "AC-6": "PASS",
+      "AC-7": "PASS",
+      "AC-8": "PASS",
+      "AC-9": "PASS",
+      "AC-10": "PASS"
+    },
+    "timestamp": "2026-04-24T19:17:39Z"
+  }
+]
