@@ -15,6 +15,19 @@ enum UserRole {
   USER
 }
 
+enum TeamRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
+
 model Account {
   id                String   @id @default(cuid())
   userId            String
@@ -59,8 +72,12 @@ model User {
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
   role          UserRole  @default(USER)
 
-  accounts Account[]
-  sessions Session[]
+  accounts    Account[]
+  sessions    Session[]
+  teams       TeamMember[]
+  currentTeamId String?   @map(name: "current_team_id")
+  currentTeam   Team?     @relation("UserCurrentTeam", fields: [currentTeamId], references: [id], onDelete: SetNull)
+  invitations   Invitation[] @relation("InvitedByUser")
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
@@ -77,4 +94,54 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map(name: "verification_tokens")
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  members     TeamMember[]
+  invitations Invitation[]
+  currentUsers User[] @relation("UserCurrentTeam")
+
+  @@map(name: "teams")
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  teamId    String   @map(name: "team_id")
+  userId    String   @map(name: "user_id")
+  role      TeamRole @default(MEMBER)
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map(name: "updated_at")
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+  @@index([userId])
+  @@map(name: "team_members")
+}
+
+model Invitation {
+  id        String           @id @default(cuid())
+  teamId    String           @map(name: "team_id")
+  email     String
+  role      TeamRole         @default(MEMBER)
+  token     String           @unique
+  status    InvitationStatus @default(PENDING)
+  invitedBy String           @map(name: "invited_by")
+  expiresAt DateTime         @map(name: "expires_at")
+  createdAt DateTime         @default(now()) @map(name: "created_at")
+  updatedAt DateTime         @default(now()) @updatedAt @map(name: "updated_at")
+
+  team    Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  inviter User @relation("InvitedByUser", fields: [invitedBy], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+  @@index([email])
+  @@map(name: "invitations")
 }

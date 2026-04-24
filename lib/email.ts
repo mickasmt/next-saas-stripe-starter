@@ -1,4 +1,5 @@
 import { MagicLinkEmail } from "@/emails/magic-link-email";
+import { TeamInvitationEmail } from "@/emails/team-invitation";
 import { EmailConfig } from "next-auth/providers/email";
 import { Resend } from "resend";
 
@@ -49,3 +50,40 @@ export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
       throw new Error("Failed to send verification email.");
     }
   };
+
+export async function sendTeamInvitation({
+  email,
+  teamName,
+  inviterName,
+  role,
+  token,
+}: {
+  email: string;
+  teamName: string;
+  inviterName: string;
+  role: string;
+  token: string;
+}) {
+  const acceptUrl = `${env.NEXT_PUBLIC_APP_URL}/invitation/${token}`;
+
+  const { data, error } = await resend.emails.send({
+    from: env.EMAIL_FROM,
+    to:
+      process.env.NODE_ENV === "development" ? "delivered@resend.dev" : email,
+    subject: `You've been invited to join ${teamName} on ${siteConfig.name}`,
+    react: TeamInvitationEmail({
+      teamName,
+      inviterName,
+      role,
+      acceptUrl,
+      siteName: siteConfig.name,
+    }),
+    headers: {
+      "X-Entity-Ref-ID": new Date().getTime() + "",
+    },
+  });
+
+  if (error || !data) {
+    throw new Error(error?.message || "Failed to send invitation email.");
+  }
+}
