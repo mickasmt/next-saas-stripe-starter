@@ -98,6 +98,8 @@ export async function createInvite(
       teamId,
       userId: user.id!,
       action: "member.invited",
+      targetType: "invite",
+      targetId: invite.id,
       metadata: { email, role },
     });
 
@@ -168,6 +170,8 @@ export async function acceptInvite(token: string) {
       teamId: invite.teamId,
       userId,
       action: "member.joined",
+      targetType: "user",
+      targetId: userId,
       metadata: { role: invite.role },
     });
 
@@ -224,6 +228,7 @@ export async function revokeInvite(teamId: string, inviteId: string) {
       teamId,
       userId: user.id!,
       action: "invite.revoked",
+      targetType: "invite",
       targetId: inviteId,
     });
 

@@ -52,6 +52,8 @@ export async function createTeam(data: CreateTeamInput) {
       teamId: team.id,
       userId,
       action: "team.created",
+      targetType: "team",
+      targetId: team.id,
       metadata: { name, slug },
     });
 

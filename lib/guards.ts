@@ -1,5 +1,7 @@
 import "server-only";
 
+import { NextRequest } from "next/server";
+
 import { auth } from "@/auth";
 import { hasPermission, type Permission } from "@/lib/permissions";
 
@@ -86,5 +88,26 @@ export async function apiRequireTeamPermission(
       teamId: session.user.activeTeamId,
       teamRole: session.user.activeTeamRole,
     },
+  };
+}
+
+type RouteContext = { params: Record<string, string> };
+type RouteHandler = (
+  req: NextRequest,
+  ctx: RouteContext,
+) => Promise<Response>;
+
+/**
+ * Higher-order wrapper for API route handlers that require a team permission.
+ * Usage: `export const POST = withPermission("members:invite")(handler)`
+ */
+export function withPermission(permission: Permission) {
+  return (handler: RouteHandler): RouteHandler => {
+    return async (req: NextRequest, ctx: RouteContext) => {
+      const teamId = ctx.params?.teamId;
+      const { error } = await apiRequireTeamPermission(permission, teamId);
+      if (error) return error;
+      return handler(req, ctx);
+    };
   };
 }

@@ -4,6 +4,7 @@ import { TeamRole, UserRole } from "@prisma/client";
 import NextAuth, { type DefaultSession } from "next-auth";
 
 import { prisma } from "@/lib/db";
+import { getPermissionsForRole } from "@/lib/permissions";
 import { getTeamMembership } from "@/lib/team";
 import { getUserById } from "@/lib/user";
 
@@ -15,6 +16,7 @@ declare module "next-auth" {
       activeTeamId?: string;
       activeTeamRole?: TeamRole;
       activeTeamSlug?: string;
+      teamPermissions?: string[];
     } & DefaultSession["user"];
   }
 }
@@ -49,6 +51,7 @@ export const {
         session.user.activeTeamId = token.activeTeamId;
         session.user.activeTeamRole = token.activeTeamRole;
         session.user.activeTeamSlug = token.activeTeamSlug;
+        session.user.teamPermissions = token.teamPermissions;
       }
 
       return session;
@@ -77,10 +80,12 @@ export const {
           if (membership) {
             token.activeTeamRole = membership.role;
             token.activeTeamSlug = membership.team.slug;
+            token.teamPermissions = getPermissionsForRole(membership.role);
           } else {
             token.activeTeamId = undefined;
             token.activeTeamRole = undefined;
             token.activeTeamSlug = undefined;
+            token.teamPermissions = [];
           }
         }
 
@@ -95,6 +100,9 @@ export const {
             token.activeTeamId = firstMembership.teamId;
             token.activeTeamRole = firstMembership.role;
             token.activeTeamSlug = firstMembership.team.slug;
+            token.teamPermissions = getPermissionsForRole(
+              firstMembership.role,
+            );
           }
         }
       }

@@ -16,6 +16,8 @@ export async function deleteTeam(teamId: string) {
       teamId,
       userId: user.id!,
       action: "team.deleted",
+      targetType: "team",
+      targetId: teamId,
     });
 
     await prisma.team.delete({ where: { id: teamId } });

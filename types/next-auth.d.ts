@@ -7,6 +7,7 @@ export type ExtendedUser = User & {
   activeTeamId?: string;
   activeTeamRole?: TeamRole;
   activeTeamSlug?: string;
+  teamPermissions?: string[];
 };
 
 declare module "next-auth/jwt" {
@@ -15,6 +16,7 @@ declare module "next-auth/jwt" {
     activeTeamId?: string;
     activeTeamRole?: TeamRole;
     activeTeamSlug?: string;
+    teamPermissions?: string[];
   }
 }
 

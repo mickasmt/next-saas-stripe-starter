@@ -42,6 +42,7 @@ export async function removeMember(teamId: string, memberId: string) {
       teamId,
       userId: user.id!,
       action: "member.removed",
+      targetType: "user",
       targetId: member.userId,
     });
 
@@ -94,6 +95,7 @@ export async function changeMemberRole(
       teamId,
       userId: user.id!,
       action: "member.role_changed",
+      targetType: "user",
       targetId: member.userId,
       metadata: { fromRole: member.role, toRole: role },
     });
@@ -144,6 +146,8 @@ export async function leaveTeam(teamId: string) {
       teamId,
       userId: session.user.id,
       action: "member.left",
+      targetType: "user",
+      targetId: session.user.id,
     });
 
     await clearActiveTeamId();

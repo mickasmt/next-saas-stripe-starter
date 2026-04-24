@@ -9,9 +9,11 @@ import { getTeamInvites, getTeamMembers } from "@/lib/team";
 import { constructMetadata } from "@/lib/utils";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Icons } from "@/components/shared/icons";
 import { InviteMemberDialog } from "@/components/team/invite-member-dialog";
 import { MemberList } from "@/components/team/member-list";
 import { PendingInvites } from "@/components/team/pending-invites";
+import { CreateTeamButton } from "./create-team-button";
 import { TeamDangerZone } from "./team-danger-zone";
 import { TeamInfoForm } from "./team-info-form";
 
@@ -33,8 +35,15 @@ export default async function TeamSettingsPage() {
           text="Create or join a team to manage settings."
         />
         <Card>
-          <CardContent className="py-8 text-center text-muted-foreground">
-            No active team. Create a team using the team switcher in the sidebar.
+          <CardContent className="flex flex-col items-center gap-4 py-12">
+            <Icons.users className="size-12 text-muted-foreground" />
+            <div className="text-center">
+              <p className="text-lg font-medium">No team yet</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Create a team to start collaborating with others.
+              </p>
+            </div>
+            <CreateTeamButton />
           </CardContent>
         </Card>
       </>

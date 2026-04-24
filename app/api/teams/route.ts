@@ -57,6 +57,8 @@ export async function POST(req: Request) {
     teamId: team.id,
     userId,
     action: "team.created",
+    targetType: "team",
+    targetId: team.id,
     metadata: { name, slug },
   });
 

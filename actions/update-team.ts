@@ -39,6 +39,8 @@ export async function updateTeam(teamId: string, data: UpdateTeamInput) {
       teamId,
       userId: user.id!,
       action: "team.updated",
+      targetType: "team",
+      targetId: teamId,
       metadata: validated,
     });
 

@@ -53,3 +53,7 @@ export function hasAllPermissions(
 ): boolean {
   return permissions.every((p) => hasPermission(role, p));
 }
+
+export function getPermissionsForRole(role: TeamRole): Permission[] {
+  return ROLE_PERMISSIONS[role] ?? [];
+}
