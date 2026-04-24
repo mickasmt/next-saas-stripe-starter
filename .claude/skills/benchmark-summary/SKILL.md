@@ -17,7 +17,7 @@ No arguments needed.
 
 Read `benchmark/results.json`. If empty or `[]`, output:
 ```
-No benchmark runs found. Run /ritual-benchmark-with-ritual or /ritual-benchmark-claude-only first.
+No benchmark runs found. Run /benchmark-implement-ritual or /benchmark-implement-claude-only first, then /benchmark-review.
 ```
 
 ### Step 2: Handle Mixed Formats
