@@ -25,6 +25,11 @@ export async function updateMemberRole(
       return { status: "error", message: decision.reason };
     }
 
+    // Only Owners can promote to Owner
+    if (data.role === "OWNER" && context!.team!.role !== "OWNER") {
+      return { status: "error", message: "Only owners can promote to owner" };
+    }
+
     const member = await prisma.teamMember.findUnique({
       where: { id: memberId },
     });

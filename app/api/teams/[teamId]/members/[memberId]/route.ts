@@ -5,8 +5,26 @@ import { prisma } from "@/lib/db";
 import { withTeamAuth } from "@/lib/auth/wrappers";
 import { logAuditEvent } from "@/lib/audit";
 
+const VALID_ASSIGNABLE_ROLES = ["OWNER", "ADMIN", "MEMBER"] as const;
+
 export const PATCH = withTeamAuth("team:members:manage", async (context, req, params) => {
   const { role } = await req.json() as { role: TeamRole };
+
+  // Runtime validation: only valid TeamRole values accepted
+  if (!VALID_ASSIGNABLE_ROLES.includes(role as any)) {
+    return NextResponse.json(
+      { error: { code: "VALIDATION_ERROR", message: "Invalid role" } },
+      { status: 400 },
+    );
+  }
+
+  // Only Owners can promote to Owner
+  if (role === "OWNER" && context.team?.role !== "OWNER") {
+    return NextResponse.json(
+      { error: { code: "FORBIDDEN", message: "Only owners can promote to owner" } },
+      { status: 403 },
+    );
+  }
 
   const member = await prisma.teamMember.findUnique({
     where: { id: params.memberId },

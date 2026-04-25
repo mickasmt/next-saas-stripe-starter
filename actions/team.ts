@@ -88,6 +88,10 @@ export async function updateTeam(
       return { status: "error", message: decision.reason };
     }
 
+    if (context!.team!.teamId !== teamId) {
+      return { status: "error", message: "Team context mismatch" };
+    }
+
     const parsed = updateTeamSchema.parse(data);
 
     await prisma.team.update({

@@ -32,6 +32,7 @@ interface MemberCardProps {
   currentUserId: string;
   currentUserRole: TeamRole;
   teamId: string;
+  ownerCount: number;
 }
 
 const roleBadgeVariant: Record<TeamRole, "default" | "secondary" | "outline"> = {
@@ -51,6 +52,7 @@ export function MemberCard({
   currentUserId,
   currentUserRole,
   teamId,
+  ownerCount,
 }: MemberCardProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -59,8 +61,19 @@ export function MemberCard({
   const canManage =
     (currentUserRole === "OWNER" || currentUserRole === "ADMIN") &&
     !isCurrentUser;
+  const isLastOwner = member.role === "OWNER" && ownerCount <= 1;
+
+  // Show leave button: for current user, unless they're the last owner
+  const canLeave = isCurrentUser && !isLastOwner;
 
   const handleRoleChange = (newRole: TeamRole) => {
+    // Confirmation for promoting to Owner (destructive-level power)
+    if (newRole === "OWNER") {
+      const name = member.user.name || member.user.email || "this member";
+      if (!confirm(`Are you sure you want to make ${name} an Owner? Owners have full control over the team, including the ability to delete it and manage billing.`)) {
+        return;
+      }
+    }
     startTransition(async () => {
       const result = await updateMemberRole(member.id, { role: newRole });
       if (result.status === "success") {
@@ -163,7 +176,7 @@ export function MemberCard({
           </DropdownMenu>
         )}
 
-        {isCurrentUser && member.role !== "OWNER" && (
+        {canLeave && (
           <Button
             variant="outline"
             size="sm"

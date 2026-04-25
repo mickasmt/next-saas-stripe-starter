@@ -31,6 +31,7 @@ export default async function MembersPage() {
 
   const currentUserRole = teamData.membership.role;
   const canManage = currentUserRole === "OWNER" || currentUserRole === "ADMIN";
+  const ownerCount = members.filter((m) => m.role === "OWNER").length;
 
   return (
     <>
@@ -59,6 +60,7 @@ export default async function MembersPage() {
             currentUserId={userId}
             currentUserRole={currentUserRole}
             teamId={teamData.team.id}
+            ownerCount={ownerCount}
           />
         ))}
       </div>

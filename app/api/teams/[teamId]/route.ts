@@ -57,6 +57,17 @@ export const DELETE = withTeamAuth("team:delete", async (context, _req, params) 
   });
 
   await prisma.$transaction(async (tx) => {
+    // Log audit before deletion so we capture it inside the transaction
+    await tx.auditLog.create({
+      data: {
+        teamId: params.teamId,
+        actorId: context.userId,
+        action: "TEAM_DELETED",
+        targetType: "team",
+        targetId: params.teamId,
+      },
+    });
+
     await tx.user.updateMany({
       where: {
         id: { in: members.map((m) => m.userId) },
@@ -66,8 +77,6 @@ export const DELETE = withTeamAuth("team:delete", async (context, _req, params) 
     });
     await tx.team.delete({ where: { id: params.teamId } });
   });
-
-  await logAuditEvent(params.teamId, context.userId, "TEAM_DELETED", "team", params.teamId);
 
   return NextResponse.json({ success: true });
 });
