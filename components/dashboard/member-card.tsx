@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { TeamRole } from "@prisma/client";
 import { toast } from "sonner";
 
-import { updateMemberRole, removeMember } from "@/actions/member";
+import { updateMemberRole, removeMember, leaveTeam } from "@/actions/member";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,6 +40,12 @@ const roleBadgeVariant: Record<TeamRole, "default" | "secondary" | "outline"> = 
   MEMBER: "outline",
 };
 
+const roleDescriptions: Record<TeamRole, string> = {
+  OWNER: "Full control including billing and team deletion",
+  ADMIN: "Manage members, invitations, and team settings",
+  MEMBER: "Read and write access to team resources",
+};
+
 export function MemberCard({
   member,
   currentUserId,
@@ -49,9 +55,10 @@ export function MemberCard({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
+  const isCurrentUser = member.userId === currentUserId;
   const canManage =
     (currentUserRole === "OWNER" || currentUserRole === "ADMIN") &&
-    member.userId !== currentUserId;
+    !isCurrentUser;
 
   const handleRoleChange = (newRole: TeamRole) => {
     startTransition(async () => {
@@ -66,13 +73,33 @@ export function MemberCard({
   };
 
   const handleRemove = () => {
+    const name = member.user.name || member.user.email || "this member";
+    if (!confirm(`Are you sure you want to remove ${name} from the team? They will lose access to all team resources.`)) {
+      return;
+    }
     startTransition(async () => {
       const result = await removeMember(member.id);
       if (result.status === "success") {
-        toast.success("Member removed.");
+        toast.success("Member removed. Their personal workspace is unaffected.");
         router.refresh();
       } else {
         toast.error(result.message || "Failed to remove member.");
+      }
+    });
+  };
+
+  const handleLeave = () => {
+    if (!confirm("Are you sure you want to leave this team? You will lose access to all team resources. Your personal workspace is unaffected.")) {
+      return;
+    }
+    startTransition(async () => {
+      const result = await leaveTeam(teamId);
+      if (result.status === "success") {
+        toast.success("You have left the team. Your personal workspace is unaffected.");
+        router.push("/dashboard");
+        router.refresh();
+      } else {
+        toast.error(result.message || "Failed to leave team.");
       }
     });
   };
@@ -86,7 +113,7 @@ export function MemberCard({
         <div>
           <p className="text-sm font-medium">
             {member.user.name || "Unnamed"}
-            {member.userId === currentUserId && (
+            {isCurrentUser && (
               <span className="ml-2 text-xs text-muted-foreground">(you)</span>
             )}
           </p>
@@ -95,7 +122,12 @@ export function MemberCard({
       </div>
 
       <div className="flex items-center gap-2">
-        <Badge variant={roleBadgeVariant[member.role]}>{member.role}</Badge>
+        <div className="flex flex-col items-end">
+          <Badge variant={roleBadgeVariant[member.role]}>{member.role}</Badge>
+          <span className="mt-0.5 text-[11px] text-muted-foreground">
+            {roleDescriptions[member.role]}
+          </span>
+        </div>
 
         {canManage && (
           <DropdownMenu>
@@ -129,6 +161,17 @@ export function MemberCard({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        )}
+
+        {isCurrentUser && member.role !== "OWNER" && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleLeave}
+            disabled={isPending}
+          >
+            Leave
+          </Button>
         )}
       </div>
     </div>

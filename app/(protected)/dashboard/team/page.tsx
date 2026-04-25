@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser, getCurrentTeam } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
 import { DashboardHeader } from "@/components/dashboard/header";
+import { CreateTeamCTA } from "@/components/dashboard/create-team-cta";
 
 export const metadata = constructMetadata({
   title: "Team – SaaS Starter",
@@ -22,6 +23,7 @@ export default async function TeamPage() {
           heading="Team"
           text="You don't have a team yet. Create one to get started."
         />
+        <CreateTeamCTA />
       </>
     );
   }

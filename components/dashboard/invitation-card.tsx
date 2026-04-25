@@ -16,6 +16,7 @@ interface InvitationCardProps {
     email: string;
     role: TeamRole;
     status: InvitationStatus;
+    token: string;
     expiresAt: Date;
     createdAt: Date;
     inviter: { name: string | null; email: string | null };
@@ -49,6 +50,13 @@ export function InvitationCard({ invitation, canManage }: InvitationCardProps) {
     });
   };
 
+  const handleCopyLink = () => {
+    const link = `${window.location.origin}/dashboard/invitations/${invitation.token}`;
+    navigator.clipboard.writeText(link).then(() => {
+      toast.success("Invite link copied to clipboard.");
+    });
+  };
+
   return (
     <div className="flex items-center justify-between py-4">
       <div className="flex flex-col gap-1">
@@ -63,19 +71,31 @@ export function InvitationCard({ invitation, canManage }: InvitationCardProps) {
         </p>
       </div>
 
-      {canManage && invitation.status === "PENDING" && !isExpired && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleRevoke}
-          disabled={isPending}
-        >
-          {isPending ? (
-            <Icons.spinner className="mr-2 size-4 animate-spin" />
-          ) : null}
-          Revoke
-        </Button>
-      )}
+      <div className="flex items-center gap-2">
+        {canManage && invitation.status === "PENDING" && !isExpired && (
+          <>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCopyLink}
+            >
+              <Icons.copy className="mr-1 size-3.5" />
+              Copy Link
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRevoke}
+              disabled={isPending}
+            >
+              {isPending ? (
+                <Icons.spinner className="mr-2 size-4 animate-spin" />
+              ) : null}
+              Revoke
+            </Button>
+          </>
+        )}
+      </div>
     </div>
   );
 }

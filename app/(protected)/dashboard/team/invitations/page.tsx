@@ -54,6 +54,7 @@ export default async function InvitationsPage() {
                 email: invitation.email,
                 role: invitation.role,
                 status: invitation.status,
+                token: invitation.token,
                 expiresAt: invitation.expiresAt,
                 createdAt: invitation.createdAt,
                 inviter: invitation.inviter,

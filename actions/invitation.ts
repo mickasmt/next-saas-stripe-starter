@@ -30,6 +30,11 @@ export async function createInvitation(
       return { status: "error", message: "Team context mismatch" };
     }
 
+    // Runtime validation: only ADMIN and MEMBER roles can be invited
+    if (data.role !== "ADMIN" && data.role !== "MEMBER") {
+      return { status: "error", message: "Invalid role. Only ADMIN and MEMBER roles can be invited." };
+    }
+
     // Check for existing pending invitation
     const existing = await prisma.invitation.findFirst({
       where: { teamId, email: data.email, status: "PENDING" },

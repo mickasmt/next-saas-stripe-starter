@@ -40,6 +40,12 @@ export function withTeamAuth(permission: TeamPermission, handler: HandlerWithAut
     }
 
     const params = await ctx.params;
+
+    // IDOR protection: if route has teamId param, validate it matches the session's active team
+    if (params.teamId && context!.team!.teamId !== params.teamId) {
+      return errorResponse(403, "TEAM_MISMATCH", "URL team does not match your active team context");
+    }
+
     return handler(context!, req, params);
   };
 }

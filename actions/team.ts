@@ -130,7 +130,18 @@ export async function deleteTeam(teamId: string): Promise<ActionResult> {
       select: { userId: true },
     });
 
+    // Log audit before deleting so we capture it inside the transaction
     await prisma.$transaction(async (tx) => {
+      await tx.auditLog.create({
+        data: {
+          teamId,
+          actorId: context.userId,
+          action: "TEAM_DELETED",
+          targetType: "team",
+          targetId: teamId,
+        },
+      });
+
       await tx.user.updateMany({
         where: {
           id: { in: members.map((m) => m.userId) },
@@ -141,14 +152,6 @@ export async function deleteTeam(teamId: string): Promise<ActionResult> {
 
       await tx.team.delete({ where: { id: teamId } });
     });
-
-    await logAuditEvent(
-      teamId,
-      context.userId,
-      "TEAM_DELETED",
-      "team",
-      teamId,
-    );
 
     revalidatePath("/dashboard");
     return { status: "success" };

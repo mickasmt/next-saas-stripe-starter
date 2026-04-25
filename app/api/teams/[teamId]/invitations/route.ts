@@ -28,6 +28,14 @@ export const POST = withTeamAuth("team:members:invite", async (context, req, par
     );
   }
 
+  // Runtime validation: only ADMIN and MEMBER roles can be invited
+  if (role !== "ADMIN" && role !== "MEMBER") {
+    return NextResponse.json(
+      { error: { code: "VALIDATION_ERROR", message: "Invalid role. Only ADMIN and MEMBER roles can be invited." } },
+      { status: 400 },
+    );
+  }
+
   // Check for existing pending invitation
   const existing = await prisma.invitation.findFirst({
     where: { teamId: params.teamId, email, status: "PENDING" },

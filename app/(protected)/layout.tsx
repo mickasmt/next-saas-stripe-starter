@@ -21,13 +21,6 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
 
   if (!user) redirect("/login");
 
-  const filteredLinks = sidebarLinks.map((section) => ({
-    ...section,
-    items: section.items.filter(
-      ({ authorizeOnly }) => !authorizeOnly || authorizeOnly === user.role,
-    ),
-  }));
-
   // Fetch team data for sidebar
   const teamData = await getCurrentTeam();
   const teams = await prisma.teamMember.findMany({
@@ -42,6 +35,18 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
     slug: m.team.slug,
     role: m.role,
   }));
+
+  const hasTeam = teamsForSwitcher.length > 0;
+
+  // Filter sidebar links: remove TEAM section if user has no team, filter by role
+  const filteredLinks = sidebarLinks
+    .filter((section) => hasTeam || section.title !== "TEAM")
+    .map((section) => ({
+      ...section,
+      items: section.items.filter(
+        ({ authorizeOnly }) => !authorizeOnly || authorizeOnly === user.role,
+      ),
+    }));
 
   return (
     <div className="relative flex min-h-screen w-full">

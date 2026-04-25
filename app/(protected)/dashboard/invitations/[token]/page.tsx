@@ -92,6 +92,10 @@ export default async function AcceptInvitationPage({
               {new Date(invitation.expiresAt).toLocaleDateString()}
             </p>
           </div>
+          <p className="text-sm text-muted-foreground">
+            By accepting, you&apos;ll be added to this team and can switch to it
+            from your dashboard. Your personal workspace is unaffected.
+          </p>
           <AcceptInvitationButton token={token} />
         </div>
       </div>
