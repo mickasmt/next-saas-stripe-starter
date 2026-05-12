@@ -39,6 +39,7 @@ npx create-next-app my-saas-project --example "https://github.com/mickasmt/next-
 Or, deploy with Vercel:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmickasmt%2Fnext-saas-stripe-starter)
+[![Deploy to PandaStack](https://dashboard.pandastack.io/deploy-button.svg)](https://dashboard.pandastack.io/deploy?repo=mickasmt/next-saas-stripe-starter&type=static&buildCmd=npm+run+build&outputDir=dist)
 
 ### Steps
 
