@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
-import { useSession } from "next-auth/react";
 
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -38,10 +37,9 @@ export default function ProjectSwitcher({
 }: {
   large?: boolean;
 }) {
-  const { data: session, status } = useSession();
   const [openPopover, setOpenPopover] = useState(false);
 
-  if (!projects || status === "loading") {
+  if (!projects) {
     return <ProjectSwitcherPlaceholder />;
   }
 

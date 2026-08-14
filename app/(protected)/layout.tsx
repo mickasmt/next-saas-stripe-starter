@@ -20,12 +20,7 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
 
   if (!user) redirect("/login");
 
-  const filteredLinks = sidebarLinks.map((section) => ({
-    ...section,
-    items: section.items.filter(
-      ({ authorizeOnly }) => !authorizeOnly || authorizeOnly === user.role,
-    ),
-  }));
+  const filteredLinks = sidebarLinks;
 
   return (
     <div className="relative flex min-h-screen w-full">

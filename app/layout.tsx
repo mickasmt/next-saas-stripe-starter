@@ -1,7 +1,6 @@
 import "@/styles/globals.css";
 
 import { fontGeist, fontHeading, fontSans, fontUrban } from "@/assets/fonts";
-import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 
 import { cn, constructMetadata } from "@/lib/utils";
@@ -9,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@/components/analytics";
 import ModalProvider from "@/components/modals/providers";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { LearnerSessionProvider } from "@/components/providers/session-provider";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -29,7 +29,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontGeist.variable,
         )}
       >
-        <SessionProvider>
+        <LearnerSessionProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -41,7 +41,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <Toaster richColors closeButton />
             <TailwindIndicator />
           </ThemeProvider>
-        </SessionProvider>
+        </LearnerSessionProvider>
       </body>
     </html>
   );

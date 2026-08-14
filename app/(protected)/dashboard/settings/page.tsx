@@ -2,10 +2,8 @@ import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
-import { DeleteAccountSection } from "@/components/dashboard/delete-account";
 import { DashboardHeader } from "@/components/dashboard/header";
-import { UserNameForm } from "@/components/forms/user-name-form";
-import { UserRoleForm } from "@/components/forms/user-role-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata = constructMetadata({
   title: "Settings – SaaS Starter",
@@ -23,11 +21,14 @@ export default async function SettingsPage() {
         heading="Settings"
         text="Manage account and website settings."
       />
-      <div className="divide-y divide-muted pb-10">
-        <UserNameForm user={{ id: user.id, name: user.name || "" }} />
-        <UserRoleForm user={{ id: user.id, role: user.role }} />
-        <DeleteAccountSection />
-      </div>
+      <Card>
+        <CardHeader><CardTitle>Profile</CardTitle></CardHeader>
+        <CardContent className="space-y-2 text-sm">
+          <p><span className="font-medium">Name:</span> {user.name || "Not set"}</p>
+          <p><span className="font-medium">Email:</span> {user.email}</p>
+          <p className="text-muted-foreground">Profile editing will be exposed through the versioned LMS API.</p>
+        </CardContent>
+      </Card>
     </>
   );
 }

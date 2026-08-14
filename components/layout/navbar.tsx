@@ -3,7 +3,6 @@
 import { useContext } from "react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 import { docsConfig } from "@/config/docs";
 import { marketingConfig } from "@/config/marketing";
@@ -16,6 +15,7 @@ import { DocsSearch } from "@/components/docs/search";
 import { ModalContext } from "@/components/modals/providers";
 import { Icons } from "@/components/shared/icons";
 import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
+import { useLearnerSession } from "@/components/providers/session-provider";
 
 interface NavBarProps {
   scroll?: boolean;
@@ -24,7 +24,7 @@ interface NavBarProps {
 
 export function NavBar({ scroll = false }: NavBarProps) {
   const scrolled = useScroll(50);
-  const { data: session, status } = useSession();
+  const { data: session, status } = useLearnerSession();
   const { setShowSignInModal } = useContext(ModalContext);
 
   const selectedLayout = useSelectedLayoutSegment();
@@ -102,7 +102,7 @@ export function NavBar({ scroll = false }: NavBarProps) {
 
           {session ? (
             <Link
-              href={session.user.role === "ADMIN" ? "/admin" : "/dashboard"}
+              href="/dashboard"
               className="hidden md:block"
             >
               <Button

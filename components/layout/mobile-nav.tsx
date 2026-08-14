@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { useSession } from "next-auth/react";
 
 import { docsConfig } from "@/config/docs";
 import { marketingConfig } from "@/config/marketing";
@@ -14,9 +13,10 @@ import { DocsSidebarNav } from "@/components/docs/sidebar-nav";
 import { Icons } from "@/components/shared/icons";
 
 import { ModeToggle } from "./mode-toggle";
+import { useLearnerSession } from "@/components/providers/session-provider";
 
 export function NavMobile() {
-  const { data: session } = useSession();
+  const { data: session } = useLearnerSession();
   const [open, setOpen] = useState(false);
   const selectedLayout = useSelectedLayoutSegment();
   const documentation = selectedLayout === "docs";
@@ -74,18 +74,6 @@ export function NavMobile() {
 
           {session ? (
             <>
-              {session.user.role === "ADMIN" ? (
-                <li className="py-3">
-                  <Link
-                    href="/admin"
-                    onClick={() => setOpen(false)}
-                    className="flex w-full font-medium capitalize"
-                  >
-                    Admin
-                  </Link>
-                </li>
-              ) : null}
-
               <li className="py-3">
                 <Link
                   href="/dashboard"

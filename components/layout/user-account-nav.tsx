@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { LayoutDashboard, Lock, LogOut, Settings } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { LayoutDashboard, LogOut, Settings } from "lucide-react";
 import { Drawer } from "vaul";
 
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -15,9 +14,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/shared/user-avatar";
+import { useLearnerSession } from "@/components/providers/session-provider";
 
 export function UserAccountNav() {
-  const { data: session } = useSession();
+  const { data: session, signOut } = useLearnerSession();
   const user = session?.user;
 
   const [open, setOpen] = useState(false);
@@ -63,19 +63,6 @@ export function UserAccountNav() {
             </div>
 
             <ul role="list" className="mb-14 mt-1 w-full text-muted-foreground">
-              {user.role === "ADMIN" ? (
-                <li className="rounded-lg text-foreground hover:bg-muted">
-                  <Link
-                    href="/admin"
-                    onClick={closeDrawer}
-                    className="flex w-full items-center gap-3 px-2.5 py-2"
-                  >
-                    <Lock className="size-4" />
-                    <p className="text-sm">Admin</p>
-                  </Link>
-                </li>
-              ) : null}
-
               <li className="rounded-lg text-foreground hover:bg-muted">
                 <Link
                   href="/dashboard"
@@ -102,9 +89,7 @@ export function UserAccountNav() {
                 className="rounded-lg text-foreground hover:bg-muted"
                 onClick={(event) => {
                   event.preventDefault();
-                  signOut({
-                    callbackUrl: `${window.location.origin}/`,
-                  });
+                  void signOut();
                 }}
               >
                 <div className="flex w-full items-center gap-3 px-2.5 py-2">
@@ -141,15 +126,6 @@ export function UserAccountNav() {
         </div>
         <DropdownMenuSeparator />
 
-        {user.role === "ADMIN" ? (
-          <DropdownMenuItem asChild>
-            <Link href="/admin" className="flex items-center space-x-2.5">
-              <Lock className="size-4" />
-              <p className="text-sm">Admin</p>
-            </Link>
-          </DropdownMenuItem>
-        ) : null}
-
         <DropdownMenuItem asChild>
           <Link href="/dashboard" className="flex items-center space-x-2.5">
             <LayoutDashboard className="size-4" />
@@ -171,9 +147,7 @@ export function UserAccountNav() {
           className="cursor-pointer"
           onSelect={(event) => {
             event.preventDefault();
-            signOut({
-              callbackUrl: `${window.location.origin}/`,
-            });
+            void signOut();
           }}
         >
           <div className="flex items-center space-x-2.5">

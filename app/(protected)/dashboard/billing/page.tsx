@@ -1,54 +1,12 @@
-import { redirect } from "next/navigation";
+import Link from "next/link";
 
-import { getCurrentUser } from "@/lib/session";
-import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { constructMetadata } from "@/lib/utils";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { DashboardHeader } from "@/components/dashboard/header";
-import { BillingInfo } from "@/components/pricing/billing-info";
-import { Icons } from "@/components/shared/icons";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export const metadata = constructMetadata({
-  title: "Billing – SaaS Starter",
-  description: "Manage billing and your subscription plan.",
-});
+export const metadata = constructMetadata({ title: "Access and payments", description: "View LMS access and purchase a learning track." });
 
-export default async function BillingPage() {
-  const user = await getCurrentUser();
-
-  let userSubscriptionPlan;
-  if (user && user.id && user.role === "USER") {
-    userSubscriptionPlan = await getUserSubscriptionPlan(user.id);
-  } else {
-    redirect("/login");
-  }
-
-  return (
-    <>
-      <DashboardHeader
-        heading="Billing"
-        text="Manage billing and your subscription plan."
-      />
-      <div className="grid gap-8">
-        <Alert className="!pl-14">
-          <Icons.warning />
-          <AlertTitle>This is a demo app.</AlertTitle>
-          <AlertDescription className="text-balance">
-            SaaS Starter app is a demo app using a Stripe test environment. You
-            can find a list of test card numbers on the{" "}
-            <a
-              href="https://stripe.com/docs/testing#cards"
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-8"
-            >
-              Stripe docs
-            </a>
-            .
-          </AlertDescription>
-        </Alert>
-        <BillingInfo userSubscriptionPlan={userSubscriptionPlan} />
-      </div>
-    </>
-  );
+export default function BillingPage() {
+  return <><DashboardHeader heading="Access and payments" text="Paystack-backed purchases and manual grants determine your learning access." /><Card><CardHeader><CardTitle>Track access</CardTitle></CardHeader><CardContent className="space-y-4"><p className="text-sm text-muted-foreground">Your entitlements are managed by the LMS backend and remain independent of cohort membership.</p><Link href="/pricing" className="inline-flex"><Button>View available offerings</Button></Link></CardContent></Card></>;
 }
