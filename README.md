@@ -1,128 +1,93 @@
-<a href="https://next-saas-stripe-starter.vercel.app">
-  <img alt="SaaS Starter" src="public/_static/og.jpg">
-  <h1 align="center">Next SaaS Stripe Starter</h1>
-</a>
+# TWE Learning — Learner Frontend
 
-<p align="center">
-  Start at full speed with SaaS Starter !
-</p>
+The learner-facing web application for the TWE Learning LMS. It serves the public website, authentication screens, learner dashboard, pricing, lessons, assessments, submissions, cohort experiences, and certificate display.
 
-<p align="center">
-  <a href="https://twitter.com/miickasmt">
-    <img src="https://img.shields.io/twitter/follow/miickasmt?style=flat&label=miickasmt&logo=twitter&color=0bf&logoColor=fff" alt="Mickasmt Twitter follower count" />
-  </a>
-</p>
+This repository is presentation-only. The backend/admin application owns authentication, Prisma, PostgreSQL, authorization, payments, progression, certificates, and every authoritative business mutation.
 
-<p align="center">
-  <a href="#introduction"><strong>Introduction</strong></a> ·
-  <a href="#installation"><strong>Installation</strong></a> ·
-  <a href="#tech-stack--features"><strong>Tech Stack + Features</strong></a> ·
-  <a href="#author"><strong>Author</strong></a> ·
-  <a href="#credits"><strong>Credits</strong></a>
-</p>
-<br/>
+## Repository role
 
-## Introduction
+| Concern | Owner |
+| --- | --- |
+| Marketing, documentation, and learner UI | This repository |
+| Forms, UI preferences, and cached API data | This repository |
+| REST API and OpenAPI contract | `next-shadcn-admin` |
+| Authentication and shared-domain sessions | `next-shadcn-admin` |
+| Prisma, migrations, and PostgreSQL | `next-shadcn-admin` |
+| Paystack, RBAC, entitlements, and certificates | `next-shadcn-admin` |
+| Curriculum source | `Software-Dev-2026` |
 
-Empower your next project with the stack of Next.js 14, Prisma, Neon, Auth.js v5, Resend, React Email, Shadcn/ui, and Stripe.
-<br/>
-All seamlessly integrated with the SaaS Starter to accelerate your development and saas journey.
+The authoritative architecture and OpenAPI documents live in `next-shadcn-admin/docs`. See [frontend documentation](docs/README.md) for the documentation boundary.
 
-## Installation
+## Technology
 
-Clone & create this repo locally with the following command:
+- Next.js 16 and React 19
+- TypeScript
+- Tailwind CSS 4 and shadcn/ui
+- Contentlayer for the retained marketing and documentation content
+- Versioned `/api/v1` communication with the backend/admin application
+- pnpm and Node.js 20.9 or newer
+
+The frontend intentionally contains no Prisma client, database credentials, payment secrets, staff RBAC rules, or certificate-generation logic.
+
+## Local development
+
+1. Install Node.js 20.9+ and enable Corepack.
+2. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+3. Copy `.env.example` to `.env.local` and set:
+
+   ```dotenv
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
+   GITHUB_OAUTH_TOKEN=your-development-token
+   ```
+
+4. Start the backend/admin application on port `3001`.
+5. Start this application:
+
+   ```bash
+   pnpm dev
+   ```
+
+6. Open [http://localhost:3000](http://localhost:3000).
+
+Authentication requests include credentials so the backend can issue and read the shared parent-domain session cookie. Production origins and cookie domains must be configured together.
+
+## Commands
 
 ```bash
-npx create-next-app my-saas-project --example "https://github.com/mickasmt/next-saas-stripe-starter"
+pnpm dev        # local development server
+pnpm build      # production build using webpack for Contentlayer compatibility
+pnpm start      # start the production server
+pnpm typecheck  # TypeScript validation
+pnpm lint       # ESLint validation
 ```
 
-Or, deploy with Vercel:
+The health endpoint is available at `/health`.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmickasmt%2Fnext-saas-stripe-starter)
+## Collaboration workflow
 
-### Steps
+- Work from short-lived branches; do not push directly to `main`.
+- The current architecture branch is `phase1/foundation`.
+- Every feature has one primary implementer and one cross-reviewer.
+- Cross-repository work merges in this order: backend and OpenAPI, generated client release, frontend integration, joint end-to-end review, then feature activation.
+- Architecture, schema, authentication, OpenAPI, payments, RBAC, and certificate changes require the product owner's approval.
+- Do not duplicate cross-system architecture in this repository.
 
-1. Install dependencies using pnpm:
+The preserved pre-extraction Prisma upgrade is recorded on `recovery/frontend-prisma7-workspace`. Do not delete or rewrite that branch.
 
-```sh
-pnpm install
-```
+## Current implementation status
 
-2. Copy `.env.example` to `.env.local` and update the variables.
+The Phase 1 foundation upgrades the app to the shared platform baseline, removes the starter-owned Prisma/Auth.js/Stripe boundary, introduces the LMS API session client, removes internal admin routes, and adds production container and health-check support. Learner domain screens and generated-client package consumption continue as subsequent cross-repository features.
 
-```sh
-cp .env.example .env.local
-```
+## Deployment
 
-3. Start the development server:
+The initial target is Vercel at `learn.<domain>`. A production multi-stage Dockerfile is included for later VPS deployment. Set `NEXT_PUBLIC_API_URL` to the backend/admin `/api/v1` origin during the build.
 
-```sh
-pnpm run dev
-```
+## Template attribution
 
-> [!NOTE]  
-> I use [npm-check-updates](https://www.npmjs.com/package/npm-check-updates) package for update this project.
->
-> Use this command for update your project: `ncu -i --format group`
-
-## Roadmap
-- [ ] Upgrade eslint to v9
-- [ ] Add resend for success subscriptions
-
-## Tech Stack + Features
-
-https://github.com/mickasmt/next-saas-stripe-starter/assets/62285783/828a4e0f-30e3-4cfe-96ff-4dfd9cd55124
-
-### Frameworks
-
-- [Next.js](https://nextjs.org/) – React framework for building performant apps with the best developer experience
-- [Auth.js](https://authjs.dev/) – Handle user authentication with ease with providers like Google, Twitter, GitHub, etc.
-- [Prisma](https://www.prisma.io/) – Typescript-first ORM for Node.js
-- [React Email](https://react.email/) – Versatile email framework for efficient and flexible email development
-
-### Platforms
-
-- [Vercel](https://vercel.com/) – Easily preview & deploy changes with git
-- [Resend](https://resend.com/) – A powerful email framework for streamlined email development
-- [Neon](https://neon.tech/) – Serverless Postgres with autoscaling, branching, bottomless storage and generous free tier.
-
-### UI
-
-- [Tailwind CSS](https://tailwindcss.com/) – Utility-first CSS framework for rapid UI development
-- [Shadcn/ui](https://ui.shadcn.com/) – Re-usable components built using Radix UI and Tailwind CSS
-- [Framer Motion](https://framer.com/motion) – Motion library for React to animate components with ease
-- [Lucide](https://lucide.dev/) – Beautifully simple, pixel-perfect icons
-- [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) – Optimize custom fonts and remove external network requests for improved performance
-- [`ImageResponse`](https://nextjs.org/docs/app/api-reference/functions/image-response) – Generate dynamic Open Graph images at the edge
-
-### Hooks and Utilities
-
-- `useIntersectionObserver` – React hook to observe when an element enters or leaves the viewport
-- `useLocalStorage` – Persist data in the browser's local storage
-- `useScroll` – React hook to observe scroll position ([example](https://github.com/mickasmt/precedent/blob/main/components/layout/navbar.tsx#L12))
-- `nFormatter` – Format numbers with suffixes like `1.2k` or `1.2M`
-- `capitalize` – Capitalize the first letter of a string
-- `truncate` – Truncate a string to a specified length
-- [`use-debounce`](https://www.npmjs.com/package/use-debounce) – Debounce a function call / state update
-
-### Code Quality
-
-- [TypeScript](https://www.typescriptlang.org/) – Static type checker for end-to-end typesafety
-- [Prettier](https://prettier.io/) – Opinionated code formatter for consistent code style
-- [ESLint](https://eslint.org/) – Pluggable linter for Next.js and TypeScript
-
-### Miscellaneous
-
-- [Vercel Analytics](https://vercel.com/analytics) – Track unique visitors, pageviews, and more in a privacy-friendly way
-
-## Author
-
-Created by [@miickasmt](https://twitter.com/miickasmt) in 2023, released under the [MIT license](https://github.com/shadcn/taxonomy/blob/main/LICENSE.md).
-
-## Credits
-
-This project was inspired by shadcn's [Taxonomy](https://github.com/shadcn-ui/taxonomy), Steven Tey’s [Precedent](https://github.com/steven-tey/precedent), and Antonio Erdeljac's [Next 13 AI SaaS](https://github.com/AntonioErdeljac/next13-ai-saas).
-
-- Shadcn ([@shadcn](https://twitter.com/shadcn))
-- Steven Tey ([@steventey](https://twitter.com/steventey))
-- Antonio Erdeljac ([@YTCodeAntonio](https://twitter.com/AntonioErdeljac))
+This application was refactored from [mickasmt/next-saas-stripe-starter](https://github.com/mickasmt/next-saas-stripe-starter). The original author remains available through the repository's `upstream` remote and the existing license is preserved.
