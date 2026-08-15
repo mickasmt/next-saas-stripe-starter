@@ -6,6 +6,7 @@ import("./env.mjs");
 const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
+  turbopack: {},
   images: {
     remotePatterns: [
       {
