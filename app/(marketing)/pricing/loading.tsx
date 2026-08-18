@@ -25,7 +25,7 @@ export default function Loading() {
         </section>
       </MaxWidthWrapper>
 
-      <hr className="container" />
+      <hr className="container mx-auto" />
     </div>
   );
 }

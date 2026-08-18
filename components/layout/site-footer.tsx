@@ -11,10 +11,10 @@ import { Icons } from "../shared/icons";
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
   return (
     <footer className={cn("border-t", className)}>
-      <div className="container grid max-w-6xl grid-cols-2 gap-6 py-14 md:grid-cols-5">
+      <div className="container mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-14 sm:px-6 md:grid-cols-5 lg:px-8">
         {footerLinks.map((section) => (
           <div key={section.title}>
-            <span className="text-sm font-medium text-foreground">
+            <span className="text-foreground text-sm font-medium">
               {section.title}
             </span>
             <ul className="mt-4 list-inside space-y-3">
@@ -22,7 +22,7 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
                 <li key={link.title}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground hover:text-primary"
+                    className="text-muted-foreground hover:text-primary text-sm"
                   >
                     {link.title}
                   </Link>
@@ -37,11 +37,11 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
       </div>
 
       <div className="border-t py-4">
-        <div className="container flex max-w-6xl items-center justify-between">
+        <div className="container mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* <span className="text-muted-foreground text-sm">
             Copyright &copy; 2024. All rights reserved.
           </span> */}
-          <p className="text-left text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-left text-sm">
             Built by{" "}
             <Link
               href={siteConfig.links.twitter}

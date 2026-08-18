@@ -56,13 +56,13 @@ export default async function PagePage({
   );
 
   return (
-    <article className="container max-w-3xl py-6 lg:py-12">
+    <article className="container mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8 lg:py-12">
       <div className="space-y-4">
-        <h1 className="inline-block font-heading text-4xl lg:text-5xl">
+        <h1 className="font-heading inline-block text-4xl lg:text-5xl">
           {page.title}
         </h1>
         {page.description && (
-          <p className="text-xl text-muted-foreground">{page.description}</p>
+          <p className="text-muted-foreground text-xl">{page.description}</p>
         )}
       </div>
       <hr className="my-4" />

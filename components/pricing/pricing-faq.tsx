@@ -42,7 +42,7 @@ const pricingFaqData = [
 
 export function PricingFaq() {
   return (
-    <section className="container max-w-4xl py-2">
+    <section className="container mx-auto max-w-4xl px-4 py-2 sm:px-6 lg:px-8">
       <HeaderSection
         label="FAQ"
         title="Frequently Asked Questions"
@@ -55,7 +55,7 @@ export function PricingFaq() {
         {pricingFaqData.map((faqItem) => (
           <AccordionItem key={faqItem.id} value={faqItem.id}>
             <AccordionTrigger>{faqItem.question}</AccordionTrigger>
-            <AccordionContent className="text-sm text-muted-foreground sm:text-[15px]">
+            <AccordionContent className="text-muted-foreground text-sm sm:text-[15px]">
               {faqItem.answer}
             </AccordionContent>
           </AccordionItem>

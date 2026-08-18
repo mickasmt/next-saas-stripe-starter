@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="container flex h-screen w-screen flex-col items-center justify-center">
+    <div className="relative flex min-h-screen w-full items-center justify-center px-6 py-12">
       <Link
         href="/"
         className={cn(
@@ -27,7 +27,7 @@ export default function LoginPage() {
           Back
         </>
       </Link>
-      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+      <div className="flex w-full max-w-[350px] flex-col justify-center space-y-6">
         <div className="flex flex-col space-y-2 text-center">
           <Icons.logo className="mx-auto size-6" />
           <h1 className="text-2xl font-semibold tracking-tight">

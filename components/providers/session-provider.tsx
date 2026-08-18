@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import { apiRequest } from "@/lib/api/client";
 import type { LearnerSession } from "@/lib/api/types";
@@ -14,7 +20,11 @@ type SessionState = {
 
 const SessionContext = createContext<SessionState | null>(null);
 
-export function LearnerSessionProvider({ children }: { children: React.ReactNode }) {
+export function LearnerSessionProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [data, setData] = useState<LearnerSession | null>(null);
   const [status, setStatus] = useState<SessionState["status"]>("loading");
 
@@ -32,15 +42,33 @@ export function LearnerSessionProvider({ children }: { children: React.ReactNode
   }, []);
 
   const signOut = useCallback(async () => {
-    await apiRequest<{ signedOut: boolean }>("/auth/logout", { method: "POST" });
+    await apiRequest<{ loggedOut: boolean }>("/auth/logout", {
+      method: "POST",
+    });
     setData(null);
     setStatus("unauthenticated");
     window.location.assign("/");
   }, []);
 
   useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    let active = true;
+    void apiRequest<LearnerSession | null>("/auth/session", {
+      cache: "no-store",
+    })
+      .then((session) => {
+        if (!active) return;
+        setData(session);
+        setStatus(session ? "authenticated" : "unauthenticated");
+      })
+      .catch(() => {
+        if (!active) return;
+        setData(null);
+        setStatus("unauthenticated");
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <SessionContext.Provider value={{ data, status, refresh, signOut }}>
@@ -51,6 +79,9 @@ export function LearnerSessionProvider({ children }: { children: React.ReactNode
 
 export function useLearnerSession() {
   const session = useContext(SessionContext);
-  if (!session) throw new Error("useLearnerSession must be used within LearnerSessionProvider");
+  if (!session)
+    throw new Error(
+      "useLearnerSession must be used within LearnerSessionProvider",
+    );
   return session;
 }

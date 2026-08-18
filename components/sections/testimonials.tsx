@@ -6,7 +6,7 @@ import { HeaderSection } from "@/components/shared/header-section";
 export default function Testimonials() {
   return (
     <section>
-      <div className="container flex max-w-6xl flex-col gap-10 py-32 sm:gap-y-16">
+      <div className="container mx-auto flex max-w-6xl flex-col gap-10 px-4 py-32 sm:gap-y-16 sm:px-6 lg:px-8">
         <HeaderSection
           label="Testimonials"
           title="What our clients are sharing."
@@ -14,10 +14,10 @@ export default function Testimonials() {
             worldwide."
         />
 
-        <div className="column-1 gap-5 space-y-5 md:columns-2 lg:columns-3 ">
+        <div className="column-1 gap-5 space-y-5 md:columns-2 lg:columns-3">
           {testimonials.map((item) => (
             <div className="break-inside-avoid" key={item.name}>
-              <div className="relative rounded-xl border bg-muted/25">
+              <div className="bg-muted/25 relative rounded-xl border">
                 <div className="flex flex-col px-4 py-5 sm:p-6">
                   <div>
                     <div className="relative mb-4 flex items-center gap-3">
@@ -31,10 +31,10 @@ export default function Testimonials() {
                         />
                       </span>
                       <div>
-                        <p className="text-sm font-semibold text-foreground">
+                        <p className="text-foreground text-sm font-semibold">
                           {item.name}
                         </p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                           {item.job}
                         </p>
                       </div>
