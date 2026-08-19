@@ -1,4 +1,5 @@
 import { env } from "@/env.mjs";
+export { LMS_API_CONTRACT_VERSION } from "@/lib/api/generated/version";
 import type { ErrorEnvelope, SuccessEnvelope } from "@/lib/api/types";
 
 export class ApiError extends Error {

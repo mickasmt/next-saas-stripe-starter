@@ -1,15 +1,7 @@
-export type LearnerUser = {
-  id: string;
-  email: string;
-  name: string | null;
-  image: string | null;
-  permissions?: string[];
-};
+import type { components } from "@/lib/api/generated/schema";
 
-export type LearnerSession = {
-  user: LearnerUser;
-  expiresAt: string;
-};
+export type LearnerSession = components["schemas"]["Session"];
+export type LearnerUser = LearnerSession["user"];
 
 export type ApiMeta = {
   correlationId: string;

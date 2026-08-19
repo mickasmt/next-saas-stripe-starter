@@ -70,8 +70,8 @@ export default async function PostPage({
   const relatedArticles =
     (post.related &&
       post.related.map(
-        (slug) => allPosts.find((post) => post.slugAsParams === slug)!,
-      )) ||
+        (slug) => allPosts.find((post) => post.slugAsParams === slug),
+      ).filter((article) => article !== undefined)) ||
     [];
 
   const toc = await getTableOfContents(post.body.raw);

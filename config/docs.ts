@@ -13,6 +13,19 @@ export const docsConfig: DocsConfig = {
   ],
   sidebarNav: [
     {
+      title: "LMS API",
+      items: [
+        {
+          title: "API Reference",
+          href: "/docs/api",
+        },
+        {
+          title: "Authentication",
+          href: "/docs/api/authentication",
+        },
+      ],
+    },
+    {
       title: "Getting Started",
       items: [
         {

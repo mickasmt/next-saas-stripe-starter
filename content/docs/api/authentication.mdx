@@ -1,0 +1,34 @@
+---
+title: Authentication and sessions
+description: Browser authentication routes, session behavior, and client responsibilities.
+---
+
+The backend/admin application is the sole identity authority. The learner app
+calls the versioned routes below with `credentials: "include"`; it never reads
+database credentials or stores session tokens in `localStorage`.
+
+| Method | Route | Purpose |
+| --- | --- | --- |
+| POST | `/api/v1/auth/register` | Create an email/password account |
+| POST | `/api/v1/auth/verify-email` | Verify the account email token |
+| POST | `/api/v1/auth/password-login` | Start a database-backed session |
+| GET | `/api/v1/auth/session` | Resolve the current user and expiry |
+| POST | `/api/v1/auth/logout` | Revoke the current session |
+| POST | `/api/v1/auth/forgot-password` | Request a reset without revealing account existence |
+| POST | `/api/v1/auth/reset-password` | Set a new password and revoke older sessions |
+
+## Browser security
+
+The API sets an encrypted `HttpOnly`, `Secure`, `SameSite=Lax` cookie on the
+shared parent domain in preview and production. Credentialed CORS is limited to
+the exact learner origin, and every browser write is subject to origin/CSRF
+validation. Authentication errors use machine-readable codes inside the common
+error envelope; UI copy should be friendly without weakening enumeration
+protection.
+
+## Documentation boundary
+
+This guide and `/docs/api` are development review tools. The complete docs route
+group returns `404` from production builds and must not be linked from the
+production navigation.
+

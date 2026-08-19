@@ -1,0 +1,35 @@
+name: API client integration
+
+on:
+  pull_request:
+    paths:
+      - "lib/api/**"
+      - "app/(docs)/**"
+      - "components/docs/**"
+      - "content/docs/api/**"
+      - "scripts/verify-api-contract.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_OAUTH_TOKEN: ci-placeholder
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.21.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.9.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm api:verify
+      - run: pnpm typecheck
+      - run: pnpm lint:api-docs
+      - run: pnpm build
