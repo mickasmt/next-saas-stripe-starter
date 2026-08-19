@@ -92,7 +92,26 @@
         },
         "responses": {
           "201": {
-            "description": "Account created; email verification is required."
+            "description": "Account created; email verification is required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/RegistrationResult"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -140,7 +159,26 @@
         },
         "responses": {
           "200": {
-            "description": "Email verified."
+            "description": "Email verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/EmailVerificationResult"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -186,7 +224,26 @@
         },
         "responses": {
           "200": {
-            "description": "Authenticated session and secure cookie."
+            "description": "Authenticated session and secure cookie.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Session"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -229,7 +286,26 @@
         },
         "responses": {
           "200": {
-            "description": "Request accepted regardless of account existence."
+            "description": "Request accepted regardless of account existence.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PasswordResetRequestResult"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
@@ -277,7 +353,26 @@
         },
         "responses": {
           "200": {
-            "description": "Password updated and existing sessions revoked."
+            "description": "Password updated and existing sessions revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PasswordResetResult"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -297,7 +392,26 @@
         "operationId": "logout",
         "responses": {
           "200": {
-            "description": "Session revoked or already absent."
+            "description": "Session revoked or already absent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/LogoutResult"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "403": {
             "$ref": "#/components/responses/Forbidden"
@@ -772,7 +886,26 @@
         "operationId": "receivePaystackWebhook",
         "responses": {
           "200": {
-            "description": "Event persisted or already received."
+            "description": "Event persisted or already received.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SuccessEnvelope"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/WebhookReceipt"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -1094,11 +1227,17 @@
         ],
         "properties": {
           "correlationId": {
-            "type": "string"
+            "type": "string",
+            "examples": [
+              "7d628735-8a1e-4f20-8e57-f6f708df42db"
+            ]
           },
           "timestamp": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "examples": [
+              "2026-08-19T12:00:00.000Z"
+            ]
           }
         }
       },
@@ -1198,6 +1337,96 @@
           "expiresAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "RegistrationResult": {
+        "type": "object",
+        "required": [
+          "requiresEmailVerification"
+        ],
+        "properties": {
+          "requiresEmailVerification": {
+            "type": "boolean",
+            "examples": [
+              true
+            ]
+          }
+        }
+      },
+      "EmailVerificationResult": {
+        "type": "object",
+        "required": [
+          "verified"
+        ],
+        "properties": {
+          "verified": {
+            "type": "boolean",
+            "examples": [
+              true
+            ]
+          }
+        }
+      },
+      "PasswordResetRequestResult": {
+        "type": "object",
+        "required": [
+          "accepted"
+        ],
+        "properties": {
+          "accepted": {
+            "type": "boolean",
+            "examples": [
+              true
+            ]
+          }
+        }
+      },
+      "PasswordResetResult": {
+        "type": "object",
+        "required": [
+          "reset"
+        ],
+        "properties": {
+          "reset": {
+            "type": "boolean",
+            "examples": [
+              true
+            ]
+          }
+        }
+      },
+      "LogoutResult": {
+        "type": "object",
+        "required": [
+          "loggedOut"
+        ],
+        "properties": {
+          "loggedOut": {
+            "type": "boolean",
+            "examples": [
+              true
+            ]
+          }
+        }
+      },
+      "WebhookReceipt": {
+        "type": "object",
+        "required": [
+          "received"
+        ],
+        "properties": {
+          "received": {
+            "type": "boolean",
+            "examples": [
+              true
+            ]
+          },
+          "duplicate": {
+            "type": "boolean",
+            "examples": [
+              false
+            ]
           }
         }
       },

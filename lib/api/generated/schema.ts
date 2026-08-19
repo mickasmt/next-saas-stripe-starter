@@ -347,8 +347,12 @@ export interface components {
             meta: components["schemas"]["ResponseMeta"];
         };
         ResponseMeta: {
+            /** @example 7d628735-8a1e-4f20-8e57-f6f708df42db */
             correlationId: string;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @example 2026-08-19T12:00:00.000Z
+             */
             timestamp: string;
         };
         CursorPage: {
@@ -376,6 +380,32 @@ export interface components {
             };
             /** Format: date-time */
             expiresAt: string;
+        };
+        RegistrationResult: {
+            /** @example true */
+            requiresEmailVerification: boolean;
+        };
+        EmailVerificationResult: {
+            /** @example true */
+            verified: boolean;
+        };
+        PasswordResetRequestResult: {
+            /** @example true */
+            accepted: boolean;
+        };
+        PasswordResetResult: {
+            /** @example true */
+            reset: boolean;
+        };
+        LogoutResult: {
+            /** @example true */
+            loggedOut: boolean;
+        };
+        WebhookReceipt: {
+            /** @example true */
+            received: boolean;
+            /** @example false */
+            duplicate?: boolean;
         };
         TrackSummary: {
             id: string;
@@ -602,7 +632,11 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SuccessEnvelope"] & {
+                        data?: components["schemas"]["RegistrationResult"];
+                    };
+                };
             };
             400: components["responses"]["BadRequest"];
             409: components["responses"]["Conflict"];
@@ -631,7 +665,11 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SuccessEnvelope"] & {
+                        data?: components["schemas"]["EmailVerificationResult"];
+                    };
+                };
             };
             400: components["responses"]["BadRequest"];
             429: components["responses"]["RateLimited"];
@@ -659,7 +697,11 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SuccessEnvelope"] & {
+                        data?: components["schemas"]["Session"];
+                    };
+                };
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorized"];
@@ -687,7 +729,11 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SuccessEnvelope"] & {
+                        data?: components["schemas"]["PasswordResetRequestResult"];
+                    };
+                };
             };
             429: components["responses"]["RateLimited"];
         };
@@ -715,7 +761,11 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SuccessEnvelope"] & {
+                        data?: components["schemas"]["PasswordResetResult"];
+                    };
+                };
             };
             400: components["responses"]["BadRequest"];
             429: components["responses"]["RateLimited"];
@@ -735,7 +785,11 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SuccessEnvelope"] & {
+                        data?: components["schemas"]["LogoutResult"];
+                    };
+                };
             };
             403: components["responses"]["Forbidden"];
         };
@@ -1021,7 +1075,11 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["SuccessEnvelope"] & {
+                        data?: components["schemas"]["WebhookReceipt"];
+                    };
+                };
             };
             401: components["responses"]["Unauthorized"];
         };
