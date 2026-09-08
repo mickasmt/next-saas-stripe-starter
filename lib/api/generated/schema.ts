@@ -174,91 +174,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/me/dashboard": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get the learner dashboard */
-        get: operations["getLearnerDashboard"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/lessons/{lessonId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get an accessible published lesson */
-        get: operations["getLesson"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/lessons/{lessonId}/complete": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Mark an eligible lesson complete */
-        post: operations["completeLesson"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/quizzes/{quizId}/attempts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Submit and grade a quiz attempt */
-        post: operations["submitQuizAttempt"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/assignments/{assignmentId}/submissions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create an assignment submission version */
-        post: operations["submitAssignment"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/checkout-sessions": {
         parameters: {
             query?: never;
@@ -287,40 +202,6 @@ export interface paths {
         put?: never;
         /** Receive a Paystack payment event */
         post: operations["receivePaystackWebhook"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/cohorts/{cohortId}/check-ins": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Check in to a cohort session */
-        post: operations["checkInToCohortSession"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/certificates/verify/{verificationToken}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Verify a public certificate */
-        get: operations["verifyCertificate"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -437,73 +318,6 @@ export interface components {
                 enabled?: boolean;
             }[];
         };
-        LearnerDashboard: {
-            enrollments: {
-                track: components["schemas"]["TrackSummary"];
-                completedLessons: number;
-                totalLessons: number;
-                nextLessonId?: string | null;
-                cohortId?: string | null;
-            }[];
-            unreadNotifications: number;
-        };
-        LessonDetail: {
-            id: string;
-            title: string;
-            document: components["schemas"]["ContentDocument"];
-            progress: components["schemas"]["LessonProgress"];
-        };
-        ContentDocument: {
-            schemaVersion: number;
-            blocks: {
-                id: string;
-                type: string;
-                version: number;
-                data: {
-                    [key: string]: unknown;
-                };
-            }[];
-        };
-        LessonProgress: {
-            lessonId: string;
-            /** @enum {string} */
-            status: "LOCKED" | "AVAILABLE" | "IN_PROGRESS" | "COMPLETED";
-            /** Format: date-time */
-            completedAt?: string | null;
-        };
-        QuizAttemptInput: {
-            quizVersionId: string;
-            answers: {
-                questionId: string;
-                value: unknown;
-            }[];
-        };
-        QuizAttemptResult: {
-            id: string;
-            score: number;
-            passed: boolean;
-            /** Format: date-time */
-            submittedAt: string;
-            /** Format: date-time */
-            cooldownUntil?: string | null;
-        };
-        SubmissionInput: {
-            /** Format: uri */
-            repositoryUrl?: string | null;
-            /** Format: uri */
-            deploymentUrl?: string | null;
-            notes?: string | null;
-            assetIds?: string[];
-        } | unknown | unknown | unknown;
-        Submission: {
-            id: string;
-            assignmentId: string;
-            /** @enum {string} */
-            status: "PENDING" | "IN_REVIEW" | "CHANGES_REQUESTED" | "APPROVED" | "REJECTED";
-            version: number;
-            /** Format: date-time */
-            submittedAt: string;
-        };
         CheckoutInput: {
             offeringId: string;
             priceId: string;
@@ -515,25 +329,6 @@ export interface components {
             authorizationUrl: string;
             /** Format: date-time */
             expiresAt: string;
-        };
-        Attendance: {
-            sessionId: string;
-            learnerId: string;
-            /** @enum {string} */
-            status: "PRESENT" | "LATE" | "ABSENT" | "EXCUSED";
-            /** @enum {string} */
-            source: "CHECK_IN" | "FACILITATOR" | "IMPORT";
-            /** Format: date-time */
-            recordedAt?: string;
-        };
-        CertificateVerification: {
-            learnerName: string;
-            trackName: string;
-            /** Format: date-time */
-            issuedAt: string;
-            /** @enum {string} */
-            status: "VALID" | "REVOKED";
-            portfolioLinks: string[];
         };
     };
     responses: {
@@ -598,10 +393,6 @@ export interface components {
         Limit: number;
         IdempotencyKey: string;
         TrackSlug: string;
-        LessonId: string;
-        QuizId: string;
-        AssignmentId: string;
-        CohortId: string;
     };
     requestBodies: never;
     headers: never;
@@ -890,148 +681,6 @@ export interface operations {
             404: components["responses"]["NotFound"];
         };
     };
-    getLearnerDashboard: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Learner enrollments, progress, cohort, and notifications. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessEnvelope"] & {
-                        data?: components["schemas"]["LearnerDashboard"];
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-        };
-    };
-    getLesson: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                lessonId: components["parameters"]["LessonId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Published lesson version and learner state. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessEnvelope"] & {
-                        data?: components["schemas"]["LessonDetail"];
-                    };
-                };
-            };
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-        };
-    };
-    completeLesson: {
-        parameters: {
-            query?: never;
-            header: {
-                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
-            };
-            path: {
-                lessonId: components["parameters"]["LessonId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Updated progress. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessEnvelope"] & {
-                        data?: components["schemas"]["LessonProgress"];
-                    };
-                };
-            };
-            403: components["responses"]["Forbidden"];
-            409: components["responses"]["Conflict"];
-        };
-    };
-    submitQuizAttempt: {
-        parameters: {
-            query?: never;
-            header: {
-                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
-            };
-            path: {
-                quizId: components["parameters"]["QuizId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["QuizAttemptInput"];
-            };
-        };
-        responses: {
-            /** @description Graded quiz attempt. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessEnvelope"] & {
-                        data?: components["schemas"]["QuizAttemptResult"];
-                    };
-                };
-            };
-            409: components["responses"]["Conflict"];
-            429: components["responses"]["RateLimited"];
-        };
-    };
-    submitAssignment: {
-        parameters: {
-            query?: never;
-            header: {
-                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
-            };
-            path: {
-                assignmentId: components["parameters"]["AssignmentId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SubmissionInput"];
-            };
-        };
-        responses: {
-            /** @description Created submission version. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessEnvelope"] & {
-                        data?: components["schemas"]["Submission"];
-                    };
-                };
-            };
-            400: components["responses"]["BadRequest"];
-            401: components["responses"]["Unauthorized"];
-            403: components["responses"]["Forbidden"];
-        };
-    };
     createCheckoutSession: {
         parameters: {
             query?: never;
@@ -1082,64 +731,6 @@ export interface operations {
                 };
             };
             401: components["responses"]["Unauthorized"];
-        };
-    };
-    checkInToCohortSession: {
-        parameters: {
-            query?: never;
-            header: {
-                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
-            };
-            path: {
-                cohortId: components["parameters"]["CohortId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    token: string;
-                };
-            };
-        };
-        responses: {
-            /** @description Attendance check-in recorded. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessEnvelope"] & {
-                        data?: components["schemas"]["Attendance"];
-                    };
-                };
-            };
-            409: components["responses"]["Conflict"];
-        };
-    };
-    verifyCertificate: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                verificationToken: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Minimal public verification record. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SuccessEnvelope"] & {
-                        data?: components["schemas"]["CertificateVerification"];
-                    };
-                };
-            };
-            404: components["responses"]["NotFound"];
         };
     };
 }
