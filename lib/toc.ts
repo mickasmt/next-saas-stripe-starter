@@ -1,3 +1,7 @@
+// Untyped mdast/unist AST traversal; properly typing this is a real task on
+// its own, not a mechanical lint fix. Left as documented, narrowly-suppressed
+// debt.
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 // TODO: Fix this when we turn strict mode on.
 

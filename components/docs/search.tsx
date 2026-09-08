@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 
-interface DocsSearchProps extends React.HTMLAttributes<HTMLFormElement> {}
+type DocsSearchProps = React.HTMLAttributes<HTMLFormElement>;
 
 export function DocsSearch({ className, ...props }: DocsSearchProps) {
   function onSubmit(event: React.SyntheticEvent) {

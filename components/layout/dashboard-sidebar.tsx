@@ -57,6 +57,9 @@ export function DashboardSidebar({ links }: DashboardSidebarProps) {
   };
 
   useEffect(() => {
+    // Intentionally re-derives expanded state whenever the tablet breakpoint
+    // changes, overriding the user's manual toggleSidebar() choice.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsSidebarExpanded(!isTablet);
   }, [isTablet]);
 

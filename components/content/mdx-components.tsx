@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import NextImage, { ImageProps } from "next/image";
 import Link from "next/link";
@@ -204,34 +206,47 @@ interface MdxProps {
   images?: { alt: string; src: string; blurDataURL: string }[];
 }
 
+// `images` is supplied via context, not a closure or prop, so that both
+// MDXImage and the components map handed to the compiled MDX output can be
+// plain module-level constants: nothing is created inside Mdx()'s render
+// body, which is what "components during render" actually requires - a
+// component declared during another component's render gets a new identity
+// on every render, remounting its subtree and losing state.
+const MdxImagesContext = React.createContext<MdxProps["images"]>(undefined);
+
+function MDXImage(props: React.ComponentProps<typeof BlurImage>) {
+  const images = React.useContext(MdxImagesContext);
+  if (!images) return null;
+  const blurDataURL = images.find(
+    (image) => image.src === props.src,
+  )?.blurDataURL;
+
+  return (
+    <div className="mt-5 w-full overflow-hidden rounded-lg border">
+      <BlurImage
+        {...props}
+        blurDataURL={blurDataURL}
+        className="size-full object-cover object-center"
+      />
+    </div>
+  );
+}
+
+const mdxComponents = { ...components, Image: MDXImage };
+
 export function Mdx({ code, images }: MdxProps) {
   const Component = useMDXComponent(code);
 
-  const MDXImage = (props: any) => {
-    if (!images) return null;
-    const blurDataURL = images.find(
-      (image) => image.src === props.src,
-    )?.blurDataURL;
-
-    return (
-      <div className="mt-5 w-full overflow-hidden rounded-lg border">
-        <BlurImage
-          {...props}
-          blurDataURL={blurDataURL}
-          className="size-full object-cover object-center"
-        />
-      </div>
-    );
-  };
-
   return (
-    <div className="mdx">
-      <Component
-        components={{
-          ...components,
-          Image: MDXImage,
-        }}
-      />
-    </div>
+    <MdxImagesContext.Provider value={images}>
+      <div className="mdx">
+        {/* useMDXComponent's whole contract is synthesizing a component
+            from compiled MDX; it memoizes internally by `code`, so this
+            isn't actually a fresh identity every render despite the shape
+            the lint rule is matching on. */}
+        {/* eslint-disable-next-line react-hooks/static-components -- see comment above */}
+        <Component components={mdxComponents} />
+      </div>
+    </MdxImagesContext.Provider>
   );
 }
