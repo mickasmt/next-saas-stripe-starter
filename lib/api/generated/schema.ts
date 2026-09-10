@@ -191,6 +191,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/checkout-sessions/{paymentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get checkout/payment status, reconciling with Paystack if still pending */
+        get: operations["getCheckoutSession"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/payments/paystack/webhook": {
         parameters: {
             query?: never;
@@ -311,6 +328,7 @@ export interface components {
             kind: "SELF_PACED" | "MANAGED_COHORT";
             title: string;
             prices: {
+                id: string;
                 /** @enum {string} */
                 currency: "NGN" | "USD";
                 /** @description Integer currency subunits. */
@@ -329,6 +347,19 @@ export interface components {
             authorizationUrl: string;
             /** Format: date-time */
             expiresAt: string;
+        };
+        PaymentStatusDetail: {
+            paymentId: string;
+            /** @enum {string} */
+            status: "PENDING" | "SUCCEEDED" | "FAILED" | "CANCELLED" | "REFUNDED" | "DISPUTED" | "CHARGEBACK";
+            /** @description Integer currency subunits. */
+            amount: number;
+            /** @enum {string} */
+            currency: "NGN" | "USD";
+            /** Format: date-time */
+            expiresAt?: string | null;
+            /** Format: date-time */
+            paidAt?: string | null;
         };
     };
     responses: {
@@ -393,6 +424,7 @@ export interface components {
         Limit: number;
         IdempotencyKey: string;
         TrackSlug: string;
+        PaymentId: string;
     };
     requestBodies: never;
     headers: never;
@@ -708,6 +740,32 @@ export interface operations {
                 };
             };
             409: components["responses"]["Conflict"];
+        };
+    };
+    getCheckoutSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                paymentId: components["parameters"]["PaymentId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current payment status. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuccessEnvelope"] & {
+                        data?: components["schemas"]["PaymentStatusDetail"];
+                    };
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            404: components["responses"]["NotFound"];
         };
     };
     receivePaystackWebhook: {
