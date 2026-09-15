@@ -24,6 +24,15 @@ const BILLING_MANAGER_ROLES = new Set(["owner", "admin"])
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "pg", schema }),
   emailAndPassword: { enabled: true },
+  socialProviders: {
+    // Callback URL: {BETTER_AUTH_URL}/api/auth/callback/google
+    google: {
+      enabled: Boolean(process.env.GOOGLE_CLIENT_ID),
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      prompt: "select_account",
+    },
+  },
 
   databaseHooks: {
     user: {
