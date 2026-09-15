@@ -1,48 +1,30 @@
-import "@/styles/globals.css";
+import { Geist, Geist_Mono, Inter } from "next/font/google"
 
-import { fontGeist, fontHeading, fontSans, fontUrban } from "@/assets/fonts";
-import { SessionProvider } from "next-auth/react";
-import { ThemeProvider } from "next-themes";
+import "./globals.css"
+import { ThemeProvider } from "@/components/theme-provider"
+import { cn } from "@/lib/utils";
 
-import { cn, constructMetadata } from "@/lib/utils";
-import { Toaster } from "@/components/ui/sonner";
-import { Analytics } from "@/components/analytics";
-import ModalProvider from "@/components/modals/providers";
-import { TailwindIndicator } from "@/components/tailwind-indicator";
+const inter = Inter({subsets:['latin'],variable:'--font-sans'})
 
-interface RootLayoutProps {
-  children: React.ReactNode;
-}
+const fontMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+})
 
-export const metadata = constructMetadata();
-
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-          fontUrban.variable,
-          fontHeading.variable,
-          fontGeist.variable,
-        )}
-      >
-        <SessionProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ModalProvider>{children}</ModalProvider>
-            <Analytics />
-            <Toaster richColors closeButton />
-            <TailwindIndicator />
-          </ThemeProvider>
-        </SessionProvider>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
+    >
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
