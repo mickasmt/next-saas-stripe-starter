@@ -47,14 +47,7 @@ export function RegisterForm({
   }
 
   return (
-    <div className="grid gap-5">
-      {googleEnabled && (
-        <>
-          <GoogleButton redirectTo={redirectTo} onError={setError} />
-          <AuthDivider>or sign up with email</AuthDivider>
-        </>
-      )}
-
+    <div className="grid gap-4">
       <form onSubmit={onSubmit} className="grid gap-4">
         <AuthField
           id="name"
@@ -86,8 +79,15 @@ export function RegisterForm({
 
         <FormError message={error} />
 
-        <SubmitButton pending={pending}>Create account</SubmitButton>
+        <SubmitButton pending={pending}>Sign up</SubmitButton>
       </form>
+
+      {googleEnabled && (
+        <>
+          <AuthDivider />
+          <GoogleButton redirectTo={redirectTo} onError={setError} />
+        </>
+      )}
     </div>
   )
 }

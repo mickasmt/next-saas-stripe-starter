@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 
-import { AuthHeader } from "@/components/auth/auth-header"
 import { LoginForm } from "@/components/auth/login-form"
 import { siteConfig } from "@/config/site"
 import { getSafeRedirect } from "@/lib/auth/redirect"
@@ -19,32 +19,29 @@ export default async function LoginPage({
 
   return (
     <>
-      <AuthHeader
-        prompt="Don't have an account?"
-        href={
-          next
-            ? `/register?next=${encodeURIComponent(redirectTo)}`
-            : "/register"
-        }
-        action="Sign up"
+      <h1 className="mb-8 text-center text-xl font-semibold">
+        Log in to your {siteConfig.name} account
+      </h1>
+
+      <LoginForm
+        redirectTo={redirectTo}
+        googleEnabled={Boolean(process.env.GOOGLE_CLIENT_ID)}
+        initialError={error ? "Something went wrong. Please try again." : null}
       />
 
-      <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center py-12">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
-          <p className="mt-2 text-muted-foreground">
-            Log in to your {siteConfig.name} account
-          </p>
-        </div>
-
-        <LoginForm
-          redirectTo={redirectTo}
-          googleEnabled={Boolean(process.env.GOOGLE_CLIENT_ID)}
-          initialError={
-            error ? "Something went wrong. Please try again." : null
+      <p className="mt-6 text-center text-sm text-muted-foreground">
+        Don&apos;t have an account?{" "}
+        <Link
+          href={
+            next
+              ? `/register?next=${encodeURIComponent(redirectTo)}`
+              : "/register"
           }
-        />
-      </main>
+          className="font-semibold text-foreground hover:underline"
+        >
+          Sign up
+        </Link>
+      </p>
     </>
   )
 }

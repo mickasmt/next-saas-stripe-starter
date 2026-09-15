@@ -57,7 +57,14 @@ export function LoginForm({
   }
 
   return (
-    <div className="grid gap-5">
+    <div className="grid gap-4">
+      {googleEnabled && (
+        <>
+          <GoogleButton redirectTo={redirectTo} onError={setError} />
+          <AuthDivider />
+        </>
+      )}
+
       <form onSubmit={onSubmit} className="grid gap-4">
         <AuthField
           id="email"
@@ -86,16 +93,9 @@ export function LoginForm({
         <FormError message={error} />
 
         <SubmitButton pending={pending}>
-          {step === "email" ? "Continue with email" : "Log in"}
+          {step === "email" ? "Log in with email" : "Log in"}
         </SubmitButton>
       </form>
-
-      {googleEnabled && (
-        <>
-          <AuthDivider />
-          <GoogleButton redirectTo={redirectTo} onError={setError} />
-        </>
-      )}
     </div>
   )
 }

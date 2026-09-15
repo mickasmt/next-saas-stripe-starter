@@ -18,17 +18,8 @@ export function AuthField({
 }: React.ComponentProps<typeof Input> & { id: string; label: string }) {
   return (
     <div className="grid gap-2">
-      <Label htmlFor={id} className="text-muted-foreground">
-        {label}
-      </Label>
-      <Input
-        id={id}
-        className={cn(
-          "h-11 border-transparent bg-muted px-4 focus-visible:bg-background dark:bg-muted/60",
-          className
-        )}
-        {...props}
-      />
+      <Label htmlFor={id}>{label}</Label>
+      <Input id={id} className={cn("h-10", className)} {...props} />
     </div>
   )
 }
@@ -42,7 +33,7 @@ export function SubmitButton({
     <Button
       type="submit"
       size="lg"
-      className="h-11 w-full"
+      className="h-10 w-full"
       disabled={pending}
       {...props}
     >
@@ -53,7 +44,7 @@ export function SubmitButton({
 }
 
 export function AuthDivider({
-  children = "or",
+  children = "OR",
 }: {
   children?: React.ReactNode
 }) {
@@ -71,7 +62,7 @@ export function FormError({ message }: { message?: string | null }) {
   return (
     <p
       role="alert"
-      className="rounded-2xl bg-destructive/10 px-4 py-2.5 text-sm text-destructive"
+      className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive"
     >
       {message}
     </p>
@@ -106,7 +97,7 @@ export function GoogleButton({
       type="button"
       variant="outline"
       size="lg"
-      className="h-11 w-full bg-background"
+      className="h-10 w-full"
       disabled={pending}
       onClick={signInWithGoogle}
     >

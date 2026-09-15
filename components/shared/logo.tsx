@@ -9,7 +9,7 @@ export function Logo({ className }: { className?: string }) {
       href="/"
       className={cn("inline-flex items-center gap-2 font-semibold", className)}
     >
-      <span className="grid size-7 place-items-center rounded-lg bg-foreground text-background">
+      <span className="grid size-7 place-items-center rounded-md bg-foreground text-background">
         <svg
           viewBox="0 0 24 24"
           className="size-4"
