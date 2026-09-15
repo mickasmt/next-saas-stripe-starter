@@ -47,7 +47,7 @@ export function FeatureFlagsPanel({ flags }: { flags: Flag[] }) {
             size="icon-lg"
             variant="outline"
             aria-label="Feature flags"
-            className="fixed right-4 bottom-4 z-50 bg-background shadow-lg"
+            className="fixed right-5 bottom-16 z-50 bg-background shadow-lg"
           />
         }
       >
