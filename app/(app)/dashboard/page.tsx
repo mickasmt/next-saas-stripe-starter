@@ -1,41 +1,49 @@
-import Link from "next/link"
+import { Blocks } from "lucide-react"
+import type { Metadata } from "next"
 
-import { SignOutButton } from "@/components/auth/sign-out-button"
-import { dashboardNav } from "@/config/nav"
+import { EmptyState } from "@/components/dashboard/empty-state"
+import { PageContent, PageHeader } from "@/components/dashboard/page-header"
+import { siteConfig } from "@/config/site"
 import { getActiveOrganization } from "@/lib/auth/session"
-import { getFeatures } from "@/lib/features/resolve"
-import { filterNav } from "@/lib/nav"
 
-// Temporary page to validate auth and feature flags until the dashboard layout lands.
+export const metadata: Metadata = {
+  title: `Overview | ${siteConfig.name}`,
+}
+
 export default async function DashboardPage() {
   const { session, organization, member } = await getActiveOrganization()
-  const nav = filterNav(dashboardNav, {
-    features: await getFeatures(),
-    role: session.user.role,
-  })
+
+  const stats = [
+    { label: "Organization", value: organization.name },
+    { label: "Members", value: organization.members.length },
+    { label: "Your role", value: member.role },
+  ]
 
   return (
-    <main className="mx-auto flex min-h-svh max-w-md flex-col justify-center gap-4 p-6">
-      <h1 className="text-2xl font-bold tracking-tight">
-        Hi, {session.user.name}
-      </h1>
-      <p className="text-muted-foreground">
-        {organization.name} · {member.role}
-      </p>
-      <nav className="grid gap-1">
-        {nav.flatMap((section) =>
-          section.items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-xl px-3 py-2 text-sm hover:bg-muted"
-            >
-              {item.title}
-            </Link>
-          ))
-        )}
-      </nav>
-      <SignOutButton />
-    </main>
+    <PageContent>
+      <PageHeader
+        title={`Welcome back, ${session.user.name.split(" ")[0]}`}
+        description="Here's what's happening in your organization."
+      />
+
+      <div className="grid gap-3 sm:grid-cols-3">
+        {stats.map((stat) => (
+          <div key={stat.label} className="rounded-xl border p-5">
+            <p className="text-sm text-muted-foreground">{stat.label}</p>
+            <p className="mt-1.5 truncate text-2xl font-semibold tracking-tight capitalize">
+              {stat.value}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6">
+        <EmptyState
+          icon={Blocks}
+          title="Start building your product"
+          description="This is your dashboard. Replace this page with the core of your SaaS."
+        />
+      </div>
+    </PageContent>
   )
 }

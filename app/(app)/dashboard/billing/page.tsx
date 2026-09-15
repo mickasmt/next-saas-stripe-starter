@@ -1,8 +1,26 @@
+import { CreditCard } from "lucide-react"
+import type { Metadata } from "next"
+
+import { EmptyState } from "@/components/dashboard/empty-state"
+import { PageContent, PageHeader } from "@/components/dashboard/page-header"
+import { siteConfig } from "@/config/site"
+
+export const metadata: Metadata = {
+  title: `Billing | ${siteConfig.name}`,
+}
+
 export default function BillingPage() {
   return (
-    <main className="mx-auto flex min-h-svh max-w-md flex-col justify-center gap-2 p-6">
-      <h1 className="text-2xl font-bold tracking-tight">Billing</h1>
-      <p className="text-muted-foreground">Coming soon.</p>
-    </main>
+    <PageContent>
+      <PageHeader
+        title="Billing"
+        description="Manage your plan and payment details."
+      />
+      <EmptyState
+        icon={CreditCard}
+        title="No active subscription"
+        description="Plans and the Stripe customer portal will show up here."
+      />
+    </PageContent>
   )
 }
