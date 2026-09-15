@@ -1,0 +1,46 @@
+import type { FeatureKey } from "@/config/features"
+
+export type NavIcon = "dashboard" | "billing" | "settings" | "admin"
+
+export type NavItem = {
+  title: string
+  href: string
+  // Icon name, not a component: nav items are passed to client components.
+  icon: NavIcon
+  // Platform role (user.role) required to see the item.
+  authorizeOnly?: "admin"
+  // Hidden while this flag is off. Must match the flag checked by the
+  // route's layout so nav and routes never disagree.
+  feature?: FeatureKey
+}
+
+export type NavSection = {
+  title?: string
+  items: NavItem[]
+}
+
+export const dashboardNav: NavSection[] = [
+  {
+    items: [
+      { title: "Overview", href: "/dashboard", icon: "dashboard" },
+      {
+        title: "Billing",
+        href: "/dashboard/billing",
+        icon: "billing",
+        feature: "billing",
+      },
+    ],
+  },
+  {
+    title: "Admin",
+    items: [
+      {
+        title: "Admin panel",
+        href: "/admin",
+        icon: "admin",
+        authorizeOnly: "admin",
+        feature: "admin",
+      },
+    ],
+  },
+]

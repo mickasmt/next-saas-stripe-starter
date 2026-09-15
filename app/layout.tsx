@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono, Inter } from "next/font/google"
 
 import "./globals.css"
+import { DevToolbar } from "@/components/dev/dev-toolbar"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
 
@@ -23,7 +24,10 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          {process.env.NODE_ENV === "development" && <DevToolbar />}
+        </ThemeProvider>
       </body>
     </html>
   )

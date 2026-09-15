@@ -1,0 +1,112 @@
+import "server-only"
+
+import { cookies } from "next/headers"
+import { cache } from "react"
+
+import {
+  featureKeys,
+  features,
+  isFeatureKey,
+  type FeatureKey,
+} from "@/config/features"
+
+export const FEATURE_OVERRIDES_COOKIE = "dev-feature-overrides"
+
+export type FeatureSource = "default" | "env" | "override"
+
+export type FeatureState = {
+  key: FeatureKey
+  enabled: boolean
+  // Where the flag's own value comes from, before dependencies are applied.
+  source: FeatureSource
+  // Dependencies currently switched off, forcing this flag off.
+  blockedBy: FeatureKey[]
+}
+
+export type FeatureOverrides = Partial<Record<FeatureKey, boolean>>
+
+// Resolution order: config default < FEATURE_* env var < dev override cookie.
+export const getFeatureStates = cache(async () => {
+  const overrides = await getDevOverrides()
+
+  const own = Object.fromEntries(
+    featureKeys.map((key) => {
+      if (overrides[key] !== undefined) {
+        return [key, { value: overrides[key], source: "override" }]
+      }
+      const env = parseBoolean(process.env[toEnvName(key)])
+      if (env !== undefined) return [key, { value: env, source: "env" }]
+      return [key, { value: features[key].default, source: "default" }]
+    })
+  ) as Record<FeatureKey, { value: boolean; source: FeatureSource }>
+
+  const resolved = new Map<FeatureKey, boolean>()
+
+  function isEnabled(key: FeatureKey, path: FeatureKey[] = []): boolean {
+    const known = resolved.get(key)
+    if (known !== undefined) return known
+    if (path.includes(key)) {
+      throw new Error(
+        `Circular feature dependency: ${[...path, key].join(" -> ")}`
+      )
+    }
+
+    const deps = features[key].dependsOn ?? []
+    const enabled =
+      own[key].value && deps.every((dep) => isEnabled(dep, [...path, key]))
+    resolved.set(key, enabled)
+    return enabled
+  }
+
+  return featureKeys.map((key): FeatureState => {
+    const deps = features[key].dependsOn ?? []
+    return {
+      key,
+      enabled: isEnabled(key),
+      source: own[key].source,
+      blockedBy: deps.filter((dep) => !isEnabled(dep)),
+    }
+  })
+})
+
+export async function getFeatures() {
+  const states = await getFeatureStates()
+  return Object.fromEntries(
+    states.map((state) => [state.key, state.enabled])
+  ) as Record<FeatureKey, boolean>
+}
+
+export async function isFeatureEnabled(key: FeatureKey) {
+  return (await getFeatures())[key]
+}
+
+export async function getDevOverrides(): Promise<FeatureOverrides> {
+  // Checked before cookies() so production pages are never made dynamic
+  // and overrides can't be injected by a visitor.
+  if (process.env.NODE_ENV !== "development") return {}
+
+  const raw = (await cookies()).get(FEATURE_OVERRIDES_COOKIE)?.value
+  if (!raw) return {}
+
+  try {
+    const parsed: unknown = JSON.parse(raw)
+    if (!parsed || typeof parsed !== "object") return {}
+    return Object.fromEntries(
+      Object.entries(parsed).filter(
+        ([key, value]) => isFeatureKey(key) && typeof value === "boolean"
+      )
+    )
+  } catch {
+    return {}
+  }
+}
+
+function toEnvName(key: FeatureKey) {
+  return `FEATURE_${key.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toUpperCase()}`
+}
+
+function parseBoolean(value: string | undefined) {
+  if (value === "true" || value === "1") return true
+  if (value === "false" || value === "0") return false
+  return undefined
+}
