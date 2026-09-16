@@ -2,12 +2,11 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowUpRight } from "lucide-react"
 
 import { GridSection } from "@/components/marketing/grid-section"
 import { getMDXComponents } from "@/components/content/mdx-components"
+import { ProCtaCard } from "@/components/content/pro-cta-card"
 import { TableOfContents } from "@/components/content/table-of-contents"
-import { getStarterCta } from "@/components/marketing/starter-cta"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -30,7 +29,6 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound()
 
   const MDX = post.data.body
-  const cta = await getStarterCta()
   const authors = post.data.authors
     .map((key) => blogAuthors[key as BlogAuthor])
     .filter(Boolean)
@@ -151,18 +149,7 @@ export default async function BlogPostPage({ params }: Props) {
 
               <TableOfContents className="pt-4" items={post.data.toc} />
 
-              <Link
-                href={cta.href}
-                {...(cta.external && { target: "_blank", rel: "noreferrer" })}
-                className="group relative mt-8 block overflow-hidden rounded-xl border bg-background p-4 transition-colors hover:bg-background/60"
-              >
-                <ArrowUpRight className="absolute right-4 top-4 size-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                <p className="pr-6 text-sm font-semibold">{cta.label}</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Free and open source. Auth, billing and admin, ready to plug
-                  in.
-                </p>
-              </Link>
+              <ProCtaCard className="mt-8" />
             </div>
           </aside>
         </div>

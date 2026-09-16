@@ -1,0 +1,45 @@
+---
+title: Stripe billing, from checkout to webhooks
+description: Subscriptions, a self-serve customer portal, and keeping the database in sync with typed webhook events.
+image: /_static/blog/cover-billing.svg
+date: "2026-07-03"
+authors:
+  - mickasmt
+categories:
+  - education
+related:
+  - organizations-and-roles
+  - why-drizzle-and-neon
+---
+
+Billing is the module people copy-paste the least and read the most, because getting it wrong either bills the wrong person or silently doesn't bill anyone. Here's how the pieces fit together.
+
+## One config file drives the pricing page
+
+Plans, prices and the features listed under each one live in `modules/billing/plans.ts`. The pricing page renders straight from that array, and the checkout call references the same price ids — there's nowhere for the marketing page and the actual Stripe price to drift apart.
+
+## Checkout hands off to Stripe, not to us
+
+Upgrading a plan calls `authClient.subscription.upgrade` with the organization id and the target price, which redirects to Stripe Checkout. We never touch a card number, and the redirect back only confirms the session — it doesn't grant access. Access is granted by the webhook below, once Stripe actually confirms the payment.
+
+```ts
+// modules/billing/webhooks.ts
+switch (event.type) {
+  case "customer.subscription.updated":
+  case "customer.subscription.deleted":
+    await syncSubscription(event.data.object)
+    break
+}
+```
+
+## Why the webhook is the source of truth
+
+A user can close the tab mid-checkout, a card can be declined after the redirect, a subscription can be cancelled from the Stripe dashboard directly. None of those go through our UI. The webhook handler is the only place that writes subscription state to the database, so however the change happened, the app finds out the same way.
+
+## The customer portal instead of a settings form
+
+Updating a card, downloading an invoice, switching plans, cancelling — Stripe's customer portal already does all of it, correctly, in every currency and tax jurisdiction we don't want to think about. The billing settings page is mostly a button into that portal, plus the read-only summary of the current plan.
+
+## Testing it without a real card
+
+`stripe listen` forwards Stripe's webhooks to `localhost` during development, which is the only way to see `customer.subscription.updated` fire without deploying first. The dev panel flags the billing module as "unconfigured" until `STRIPE_WEBHOOK_SECRET` is set, specifically to catch the case where someone tests checkout without ever running `stripe listen`.

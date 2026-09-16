@@ -1,0 +1,45 @@
+---
+title: Organizations, roles and multi-tenant workspaces
+description: How the organization module turns a single-user starter into multi-tenant SaaS, built on Better Auth.
+image: /_static/blog/cover-organizations.svg
+date: "2026-08-12"
+authors:
+  - mickasmt
+categories:
+  - education
+related:
+  - rebuilding-the-starter-as-modules
+  - stripe-billing-from-checkout-to-webhooks
+---
+
+Most SaaS starters treat "who is the customer" as a solved problem: one user, one account. The moment your product is meant for teams, that assumption gets expensive to undo. The organization module exists so you don't have to make that call on day one.
+
+## Why not roll our own
+
+Invitations, pending-invite expiry, role checks on every mutation, a switcher that keeps the active org in sync across tabs — none of it is hard on its own, and all of it is easy to get subtly wrong. Better Auth ships an `organization` plugin that already handles the state machine, so the module is mostly wiring it to our schema and UI rather than inventing one.
+
+```ts
+// lib/auth/server.ts
+plugins: [
+  admin(),
+  organization({
+    roles: ["owner", "admin", "member"],
+  }),
+],
+```
+
+## Roles are checked server-side, not hidden in the UI
+
+Hiding an "Invite member" button from a `member` role is a UX nicety, not a permission boundary. Every action that changes an organization — inviting, changing a role, removing a member — re-checks the caller's role against the database before doing anything, so a crafted request can't do what the UI wouldn't show.
+
+## The workspace switcher
+
+The dashboard sidebar now carries a switcher instead of a static team name. Switching organizations updates the active session's organization id and revalidates the routes that read from it, so the dashboard, billing and members pages all reflect the org you're actually looking at.
+
+## Invitations without a queue
+
+Sending an invite writes a row with a token and an expiry, then sends an email through the same Resend integration billing receipts use. Accepting it is a single route that verifies the token and adds the membership — no background job, no separate service.
+
+## What's still single-tenant on purpose
+
+Billing stays attached to the organization, not the individual member, which is the part most half-finished multi-tenant implementations get backwards. An organization's subscription is what the billing module checks in [stripe-billing-from-checkout-to-webhooks](/blog/stripe-billing-from-checkout-to-webhooks), not any one user's.

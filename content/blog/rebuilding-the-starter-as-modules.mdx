@@ -1,0 +1,42 @@
+---
+title: Rebuilding the starter as modules
+description: Why v2 splits auth, billing, admin and content into modules you can switch on and off.
+image: /_static/blog/cover-modules.svg
+date: "2026-09-16"
+authors:
+  - mickasmt
+categories:
+  - news
+related:
+  - feature-flags-you-can-prune
+  - organizations-and-roles
+---
+
+The first version of this starter shipped auth, billing and a dashboard as one block: turn it on, or fork the whole thing and rip out what you don't need. That worked fine for the people who wanted everything. It worked badly for everyone else, and "everyone else" turned out to be most of you.
+
+## The problem with an all-or-nothing starter
+
+Every issue that came in had the same shape: "I don't need organizations, how do I remove them cleanly?", "Can I ship without Stripe for now?", "Why does the admin panel assume Better Auth's `admin()` plugin is configured?" The code wasn't wrong, it was just wired together as a single feature rather than a set of independent ones. Removing a piece meant hunting down every place it was imported.
+
+## Modules with a single source of truth
+
+v2 defines each optional piece — auth, billing, admin, docs, blog, changelog — as a module with a flag in `config/features.ts`. A module can depend on another (billing depends on auth), and a dependency that's off forces the module off too. Every route that belongs to a module calls `requireFeature("billing")` once, in its layout, instead of scattering checks through pages and actions.
+
+```ts
+// lib/features/guard.ts
+export async function requireFeature(key: FeatureKey) {
+  if (!(await isFeatureEnabled(key))) notFound()
+}
+```
+
+## Foundation pieces aren't optional, but they are swappable
+
+Auth, database and payments aren't modules you switch off — the app needs somewhere to store users. What they are is providers: `config/foundation.ts` names Neon, Better Auth and Stripe as the current ones, plus the environment variables each needs. A module that depends on a foundation piece with missing env vars shows as "unconfigured" rather than crashing at request time.
+
+## A dev panel instead of a README table
+
+Reading which flags are on, which are blocked by a missing dependency, and which are missing an API key used to mean grepping `.env.local`. The dev panel now renders that state directly: every module, its status, and a link to where the missing credential comes from.
+
+## What this unlocks
+
+Because a disabled module's code still ships (just gated), you can flip a flag to see if you need it before committing to it. And because the flags are the same ones `scripts/prune.ts` reads, going from "I don't need this" to "this code is gone" is one command, covered in [feature-flags-you-can-prune](/blog/feature-flags-you-can-prune).

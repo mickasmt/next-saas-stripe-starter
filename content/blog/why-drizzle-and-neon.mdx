@@ -1,0 +1,44 @@
+---
+title: Why Drizzle and Neon
+description: Picking a typed SQL ORM and a serverless Postgres that both fit a starter people fork and deploy in an afternoon.
+image: /_static/blog/cover-database.svg
+date: "2026-06-05"
+authors:
+  - shadcn
+categories:
+  - education
+related:
+  - stripe-billing-from-checkout-to-webhooks
+  - feature-flags-you-can-prune
+---
+
+Every SaaS starter has an opinion about its database layer, and every opinion looks reasonable until someone forks the project and hits its edges. Here's the reasoning behind ours.
+
+## The constraint that mattered most
+
+This project is meant to be deployed by someone with a free-tier account and half an hour, not a platform team. That ruled out anything that assumes a long-running connection pool sitting next to the app server — most serverless deployments don't give you one.
+
+## Neon, because Postgres doesn't have to mean a server you manage
+
+Neon separates storage from compute and speaks Postgres wire protocol over HTTP, which matters specifically on serverless: a function can open a connection, run a query and finish, without holding a socket open the way traditional Postgres expects. Branching a database per pull request, for free, was the feature that sealed it.
+
+## Drizzle, because migrations should read like the schema
+
+```ts
+// db/schema/user.ts
+export const user = pgTable("user", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+})
+```
+
+That table definition *is* the migration source — `drizzle-kit generate` diffs it against the database and writes the SQL. There's no separate schema language to keep in sync, and no query builder abstraction between what you write and the SQL that runs; `db.select().from(user).where(eq(user.email, email))` compiles to exactly the query it looks like.
+
+## What we didn't pick, and why
+
+Prisma's generated client is excellent but means a build step and a runtime engine that doesn't fit every serverless target equally well. Raw `pg` with hand-written SQL has none of that overhead but gives up type safety exactly where a fork is most likely to introduce a typo: a new column referenced from a query before the migration that adds it. Drizzle sits at the point where both of those stop being a problem.
+
+## The part that actually saved time
+
+Type inference: a query's return type comes straight from the schema, so renaming a column is a compiler error everywhere it's used instead of a runtime `undefined`. For a codebase meant to be edited by people who didn't write it, that's worth more than any benchmark number.

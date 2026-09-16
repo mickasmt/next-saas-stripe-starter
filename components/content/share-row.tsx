@@ -1,53 +1,48 @@
 "use client"
 
-import { FacebookIcon, LinkedInIcon, XIcon } from "@/components/shared/icons"
+import { GitHubIcon, XIcon } from "@/components/shared/icons"
+import { siteConfig } from "@/config/site"
+import { cn } from "@/lib/utils"
 
-// Standard share-intent popups (no app credentials or tracking involved).
-// Reads the current URL client-side to avoid needing a configured site origin.
-export function ShareRow({ title }: { title: string }) {
-  function share(build: (url: string, title: string) => string) {
-    const url = window.location.href
+// Share intent on X plus a link to the repo (no app credentials or tracking
+// involved). Reads the current URL client-side to avoid needing a
+// configured site origin.
+export function ShareRow({
+  title,
+  className,
+}: {
+  title: string
+  className?: string
+}) {
+  function shareOnX() {
+    const url = encodeURIComponent(window.location.href)
+    const text = encodeURIComponent(title)
     window.open(
-      build(encodeURIComponent(url), encodeURIComponent(title)),
+      `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
       "_blank",
       "noopener,noreferrer"
     )
   }
 
-  const links = [
-    {
-      label: "Share on X",
-      icon: XIcon,
-      build: (url: string, text: string) =>
-        `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
-    },
-    {
-      label: "Share on LinkedIn",
-      icon: LinkedInIcon,
-      build: (url: string) =>
-        `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
-    },
-    {
-      label: "Share on Facebook",
-      icon: FacebookIcon,
-      build: (url: string) =>
-        `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-    },
-  ]
-
   return (
-    <div className="flex items-center gap-1.5">
-      {links.map(({ label, icon: Icon, build }) => (
-        <button
-          key={label}
-          type="button"
-          onClick={() => share(build)}
-          aria-label={label}
-          className="flex size-8 items-center justify-center rounded-full border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-        >
-          <Icon className="size-4" />
-        </button>
-      ))}
+    <div className={cn("flex items-center gap-1.5", className)}>
+      <button
+        type="button"
+        onClick={shareOnX}
+        aria-label="Share on X"
+        className="flex size-8 items-center justify-center rounded-full border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+      >
+        <XIcon className="size-4" />
+      </button>
+      <a
+        href={siteConfig.links.github}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="View on GitHub"
+        className="flex size-8 items-center justify-center rounded-full border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+      >
+        <GitHubIcon className="size-4" />
+      </a>
     </div>
   )
 }

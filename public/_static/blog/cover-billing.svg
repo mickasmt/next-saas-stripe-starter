@@ -1,0 +1,27 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="glow" cx="983.9999999999999" cy="94.5" r="620" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#d946ef" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#d946ef" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="badge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#d946ef"/>
+    </linearGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M60 0H0V60" fill="none" stroke="#ffffff" stroke-opacity="0.05"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="#0a0a0b"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <circle cx="600" cy="315" r="128" fill="#111113" stroke="url(#badge)" stroke-width="2" stroke-opacity="0.55"/>
+  <g transform="translate(510, 225) scale(7.5)">
+    <rect x="2" y="5" width="20" height="14" rx="2" fill="none" stroke="#e4e4e7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><line x1="2" x2="22" y1="10" y2="10" fill="none" stroke="#e4e4e7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 14h2" fill="none" stroke="#e4e4e7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <rect x="0.5" y="0.5" width="1199" height="629" fill="none" stroke="#ffffff" stroke-opacity="0.08"/>
+</svg>

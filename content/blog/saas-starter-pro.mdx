@@ -1,0 +1,31 @@
+---
+title: "SaaS Starter Pro: what's inside"
+description: Onboarding, teams, transactional emails and seat billing — the parts customers notice first, ready to ship.
+image: /_static/blog/cover-pro.svg
+date: "2026-09-16"
+authors:
+  - mickasmt
+categories:
+  - news
+related:
+  - rebuilding-the-starter-as-modules
+  - feature-flags-you-can-prune
+---
+
+The free starter gives you the foundation: auth, one subscription plan, an admin panel, and the modules system this blog has been describing for months. It deliberately stops there. Pro is everything we kept building past that point, packaged as modules you install the same way.
+
+## The gap between "it works" and "customers pay for it"
+
+A working login form isn't an onboarding flow. A single Stripe price isn't team billing. Most of the work that makes a SaaS feel finished — the guided first five minutes, invites that actually land in someone's inbox, seats that update when a teammate leaves — is exactly the part that's easy to skip and expensive to build later. Pro is that part, already built.
+
+## What ships in the module
+
+Team invitations with owner, admin and member roles; seat-based Stripe billing that prorates when someone joins or leaves; a guided onboarding flow for a new workspace; transactional emails as React Email templates sent through Resend; file uploads, scoped API keys and outgoing webhooks; an in-app notification inbox; i18n for the app and its emails; and a streaming AI chatbot you point at the model of your choice.
+
+## It's still modules, not a fork
+
+Pro doesn't replace the free codebase — it adds to it. The same dev panel lists Pro modules alongside the free ones, and `pnpm modules:prune` works on them the same way: install what you're actually going to use, delete the rest.
+
+## One payment, not another subscription
+
+You're already paying for enough SaaS tools. Pro is a one-time payment for the private repository and lifetime updates, not a recurring line item — check the current price and what's included on the [pricing section](/#pro).

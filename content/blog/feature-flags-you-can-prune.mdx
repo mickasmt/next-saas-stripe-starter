@@ -1,0 +1,39 @@
+---
+title: Feature flags for a codebase you can prune
+description: A dev panel, a requireFeature guard, and a script that deletes the code for modules you'll never use.
+image: /_static/blog/cover-flags.svg
+date: "2026-09-10"
+authors:
+  - mickasmt
+  - shadcn
+categories:
+  - education
+related:
+  - rebuilding-the-starter-as-modules
+  - why-drizzle-and-neon
+---
+
+A feature flag that only hides a button isn't enough for a starter kit: the code for the disabled module is still sitting in the repository, still showing up in search results, still a file someone opens by mistake six months later. We wanted flags that could eventually mean the code is just gone.
+
+## Flags as the single dependency graph
+
+`config/features.ts` lists every module with the foundation pieces and other modules it depends on. `isFeatureEnabled` walks that graph: a module is only "ready" if it's turned on, every dependency is on, and every required environment variable for its foundation pieces is set.
+
+```ts
+// lib/features/resolve.ts
+export type FeatureStatus = "disabled" | "blocked" | "unconfigured" | "ready"
+```
+
+Those four states are deliberately distinct in the dev panel. "Disabled" is a choice; "blocked" means a dependency is off; "unconfigured" means the code is enabled but missing an API key. Debugging "why doesn't billing work" starts with reading which of the three it is, instead of re-checking `.env.local` line by line.
+
+## Overrides that don't touch the environment
+
+The dev panel can flip a flag on or off for your own browser session via a cookie, without editing `.env.local` or restarting the server. That's what makes it safe to try disabling a module you're not sure you need — the override is yours alone and disappears when the cookie does.
+
+## `pnpm modules:prune`, for when the answer is final
+
+Once you know you'll never use the blog, running `pnpm modules:prune blog` deletes `content/blog`, the blog routes, and every import that only exists to support them — checked against the same dependency graph the dev panel reads, so it won't remove something another enabled module still needs.
+
+## The tradeoff we accepted
+
+Keeping every module's code in the base repository means the starter is bigger than a version with the unused pieces cut. We think that's the right trade: you get to see the billing module actually working before deciding you don't need it, rather than trusting a README that says it exists.
