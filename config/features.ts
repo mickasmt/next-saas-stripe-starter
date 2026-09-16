@@ -33,16 +33,6 @@ function defineFeatures<Key extends string>(
   return features
 }
 
-// module:docs,blog,changelog start
-// MDX content (docs, blog, changelog) is built on Fumadocs.
-const CONTENT_PACKAGES = [
-  "fumadocs-core",
-  "fumadocs-mdx",
-  "fumadocs-ui",
-  "@types/mdx",
-]
-// module:docs,blog,changelog end
-
 export const features = defineFeatures({
   // Accounts, sessions and the dashboard. Every other module that needs a
   // signed-in user depends on it. Off: no database is needed at all.
@@ -77,9 +67,7 @@ export const features = defineFeatures({
       "app/api/search",
       "lib/content/docs.ts",
       "content/docs",
-      "components/content/mdx-components.tsx",
     ],
-    packages: CONTENT_PACKAGES,
     routes: ["/docs"],
   },
   // module:docs end
@@ -96,9 +84,7 @@ export const features = defineFeatures({
       "public/_static/avatars",
       "config/blog.ts",
       "components/marketing/category-tabs.tsx",
-      "components/content/mdx-components.tsx",
     ],
-    packages: CONTENT_PACKAGES,
     routes: ["/blog"],
   },
   // module:blog end
@@ -114,9 +100,7 @@ export const features = defineFeatures({
       "public/_static/avatars",
       "config/blog.ts",
       "components/content/share-row.tsx",
-      "components/content/mdx-components.tsx",
     ],
-    packages: CONTENT_PACKAGES,
     routes: ["/changelog"],
   },
   // module:changelog end
