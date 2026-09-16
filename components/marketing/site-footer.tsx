@@ -22,9 +22,9 @@ const columns: FooterColumn[] = [
   {
     title: "Resources",
     links: [
-      { title: "Blog", href: "/blog", feature: "blog" },
-      { title: "Changelog", href: "/changelog", feature: "changelog" },
-      { title: "Docs", href: "/docs", feature: "docs" },
+      { title: "Blog", href: "/blog", feature: "blog" }, // module:blog
+      { title: "Changelog", href: "/changelog", feature: "changelog" }, // module:changelog
+      { title: "Docs", href: "/docs", feature: "docs" }, // module:docs
       { title: "GitHub", href: siteConfig.links.github },
     ],
   },

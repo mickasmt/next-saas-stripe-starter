@@ -22,59 +22,64 @@ export default async function ChangelogPage() {
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 
   return (
-    <GridSection lines innerClassName="py-12 sm:py-14">
-      <div className="mx-auto max-w-lg text-center">
-        <h1 className="font-display text-3xl font-medium text-balance sm:text-4xl">
+    <>
+      <GridSection lines innerClassName="py-12">
+        <h1 className="font-display text-4xl font-medium sm:text-5xl sm:leading-[1.15]">
           Changelog
         </h1>
-        <p className="mt-3 text-muted-foreground">
+        <p className="mt-2 text-lg text-muted-foreground sm:text-lg">
           New features, fixes and improvements.
         </p>
-      </div>
+      </GridSection>
 
-      <div className="mx-auto mt-14 max-w-3xl divide-y">
+      {/* Entries sit in their own band with unmasked rails, like
+          dub.co/changelog. Each date sticks under the site header while its
+          entry scrolls past. */}
+      <GridSection>
         {entries.map((entry) => {
           const MDX = entry.data.body
           return (
             <article
               key={entry.url}
-              className="grid grid-cols-1 gap-4 py-10 first:pt-0 sm:grid-cols-[120px_1fr] sm:gap-8"
+              className="grid grid-cols-1 gap-4 py-10 sm:py-14 md:grid-cols-[200px_1fr] md:gap-12"
             >
-              <time
-                dateTime={entry.data.date.toISOString()}
-                className="text-sm text-muted-foreground sm:pt-1"
-              >
-                {formatDate(entry.data.date)}
-              </time>
+              <div>
+                <time
+                  dateTime={entry.data.date.toISOString()}
+                  className="block text-sm font-medium text-muted-foreground md:sticky md:top-24 md:mt-1.5 md:text-foreground"
+                >
+                  {formatDate(entry.data.date)}
+                </time>
+              </div>
 
               <div>
                 <Link href={entry.url} className="group">
-                  <h2 className="text-xl font-semibold group-hover:underline group-hover:underline-offset-4">
+                  <h2 className="font-display text-2xl font-medium group-hover:underline group-hover:underline-offset-4 sm:text-3xl">
                     {entry.data.title}
                   </h2>
                 </Link>
 
                 {entry.data.image && (
-                  <Link href={entry.url}>
-                    <div className="relative mt-4 aspect-video w-full overflow-hidden rounded-lg border">
-                      <Image
-                        src={entry.data.image}
-                        alt={entry.data.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
+                  <Link href={entry.url} className="mt-6 block">
+                    <Image
+                      src={entry.data.image}
+                      alt={entry.data.title}
+                      width={1200}
+                      height={675}
+                      sizes="(min-width: 768px) 740px, 100vw"
+                      className="aspect-video w-full rounded-xl border object-cover"
+                    />
                   </Link>
                 )}
 
-                <div className="prose prose-neutral dark:prose-invert mt-4 max-w-none prose-sm">
+                <div className="prose prose-neutral dark:prose-invert mt-6 max-w-none">
                   <MDX components={getMDXComponents()} />
                 </div>
               </div>
             </article>
           )
         })}
-      </div>
-    </GridSection>
+      </GridSection>
+    </>
   )
 }

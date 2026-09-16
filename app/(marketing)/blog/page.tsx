@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 
-import { CategoryTabs } from "@/components/marketing/category-tabs"
+import { CategoryMenu, CategoryTabs } from "@/components/marketing/category-tabs"
 import { GridSection } from "@/components/marketing/grid-section"
 import {
   Avatar,
@@ -15,7 +15,8 @@ import { blogAuthors, blogCategories, type BlogAuthor } from "@/config/blog"
 import { siteConfig } from "@/config/site"
 import { blogSource } from "@/lib/content/blog"
 import { requireFeature } from "@/lib/features/guard"
-import { formatDate } from "@/lib/utils"
+import { isFeatureEnabled } from "@/lib/features/resolve"
+import { cn, formatDate } from "@/lib/utils"
 
 export const metadata: Metadata = {
   title: `Blog | ${siteConfig.name}`,
@@ -40,77 +41,109 @@ export default async function BlogPage({ searchParams }: Props) {
       label: value.title,
       href: `/blog?category=${key}`,
     })),
+    // Links out rather than filtering, like dub.co/blog. Hidden when the
+    // changelog module is off so it never points at a 404.
+    ...((await isFeatureEnabled("changelog"))
+      ? [{ key: "changelog", label: "Changelog", href: "/changelog" }]
+      : []),
   ]
 
   return (
-    <GridSection lines innerClassName="py-12 sm:py-14">
-      <div className="mx-auto max-w-lg text-center">
-        <h1 className="font-display text-3xl font-medium text-balance sm:text-4xl">
+    <>
+      <GridSection lines innerClassName="py-12">
+        <h1 className="font-display text-4xl font-medium sm:text-5xl sm:leading-[1.15]">
           Blog
         </h1>
-        <p className="mt-3 text-muted-foreground">
+        <p className="mt-2 text-lg text-muted-foreground sm:text-lg">
           Guides and news about the starter.
         </p>
-      </div>
+        <CategoryTabs
+          tabs={tabs}
+          active={category ?? "all"}
+          className="mt-7 hidden w-fit justify-start sm:flex"
+        />
+        <CategoryMenu
+          tabs={tabs}
+          active={category ?? "all"}
+          className="mt-8 sm:hidden"
+        />
+      </GridSection>
 
-      <div className="mt-8 flex justify-center">
-        <CategoryTabs tabs={tabs} active={category ?? "all"} />
-      </div>
-
-      <div className="mt-10 grid grid-cols-1 gap-px border-t border-b border-grid-border bg-grid-border sm:grid-cols-2 lg:grid-cols-3">
-        {posts.map((post) => {
-          const authors = post.data.authors
-            .map((key) => blogAuthors[key as BlogAuthor])
-            .filter(Boolean)
-          return (
-            <Link
-              key={post.url}
-              href={post.url}
-              className="group flex flex-col bg-background transition-colors hover:bg-muted/40"
-            >
-              <div className="relative aspect-[40/21] w-full overflow-hidden">
+      {/* Posts sit in their own band: the rails run unmasked down its sides
+          and each card draws its own dividers, so a short last row leaves
+          empty (not filled) cells, like dub.co/blog. The dividers are
+          pseudo-elements above the card content rather than borders: the
+          grid can land on half pixels, where a neighbouring image would
+          otherwise round over a 1px border. */}
+      <GridSection innerClassName="px-0 sm:px-0">
+        <div className="grid grid-cols-1 md:grid-cols-3">
+          {posts.map((post) => {
+            const authors = post.data.authors
+              .map((key) => blogAuthors[key as BlogAuthor])
+              .filter(Boolean)
+            return (
+              <Link
+                key={post.url}
+                href={post.url}
+                className={cn(
+                  "relative flex flex-col transition-colors hover:bg-muted/50",
+                  // Top divider: every card but the first row.
+                  "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:z-10 before:h-px before:bg-grid-border max-md:first:before:hidden md:[&:nth-child(-n+3)]:before:hidden",
+                  // Right divider: desktop only, not on the last column.
+                  "after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:z-10 after:hidden after:w-px after:bg-grid-border md:after:block md:[&:nth-child(3n)]:after:hidden"
+                )}
+              >
+                {/* In flow rather than `fill`: an absolutely positioned image
+                    lands on sub-pixel offsets and can cover the cell borders. */}
                 <Image
                   src={post.data.image}
                   alt={post.data.title}
-                  fill
-                  className="object-cover"
+                  width={1200}
+                  height={630}
+                  sizes="(min-width: 768px) 360px, 100vw"
+                  className="aspect-[1200/630] w-full object-cover"
                 />
-              </div>
-              <div className="flex flex-1 flex-col p-5">
-                <h2 className="line-clamp-2 text-base font-semibold group-hover:underline group-hover:underline-offset-4">
-                  {post.data.title}
-                </h2>
-                <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">
-                  {post.data.description}
-                </p>
-                {authors.length > 0 && (
-                  <div className="mt-4 flex items-center gap-2">
-                    <AvatarGroup>
-                      {authors.map((author) => (
-                        <Avatar key={author.name} size="sm">
-                          <AvatarImage src={author.image} alt={author.name} />
-                          <AvatarFallback>
-                            {author.name.slice(0, 2)}
-                          </AvatarFallback>
-                        </Avatar>
-                      ))}
-                    </AvatarGroup>
-                    <span className="text-sm text-muted-foreground">
-                      {formatDate(post.data.date)}
-                    </span>
+                <div className="flex flex-1 flex-col justify-between p-6">
+                  <div>
+                    <h2 className="line-clamp-2 font-display text-lg font-bold">
+                      {post.data.title}
+                    </h2>
+                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+                      {post.data.description}
+                    </p>
                   </div>
-                )}
-              </div>
-            </Link>
-          )
-        })}
-        {posts.length === 0 && (
-          <p className="col-span-full flex items-center justify-center gap-2 bg-background p-10 text-sm text-muted-foreground">
-            <CornerDownRight className="size-4" />
-            No posts in this category yet.
-          </p>
-        )}
-      </div>
-    </GridSection>
+                  <div className="mt-4 flex items-center gap-2">
+                    {authors.length > 0 && (
+                      <AvatarGroup>
+                        {authors.map((author) => (
+                          <Avatar key={author.name}>
+                            <AvatarImage src={author.image} alt={author.name} />
+                            <AvatarFallback>
+                              {author.name.slice(0, 2)}
+                            </AvatarFallback>
+                          </Avatar>
+                        ))}
+                      </AvatarGroup>
+                    )}
+                    <time
+                      dateTime={post.data.date.toISOString()}
+                      className="text-sm text-muted-foreground"
+                    >
+                      {formatDate(post.data.date)}
+                    </time>
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
+          {posts.length === 0 && (
+            <p className="col-span-full flex items-center justify-center gap-2 p-10 text-sm text-muted-foreground">
+              <CornerDownRight className="size-4" />
+              No posts in this category yet.
+            </p>
+          )}
+        </div>
+      </GridSection>
+    </>
   )
 }

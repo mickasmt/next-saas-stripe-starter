@@ -5,7 +5,8 @@
 // database schema: every table exists from the first migration.
 //
 // Override a default per environment with FEATURE_<SCREAMING_SNAKE_KEY>,
-// e.g. FEATURE_BILLING=false.
+// e.g. FEATURE_BILLING=false. Static pages keep the value they were built
+// with: rebuild after changing one.
 
 import type { FoundationKey } from "@/config/foundation"
 
@@ -17,6 +18,13 @@ type FeatureDefinition<Key extends string> = {
   dependsOn?: readonly NoInfer<Key>[]
   // The flag is forced off while any of these services misses its env vars.
   requires?: readonly FoundationKey[]
+  // What `pnpm modules:prune` deletes with the module. A path or package listed by
+  // several modules is only deleted once all of them are pruned.
+  files?: readonly string[]
+  packages?: readonly string[]
+  // Pathnames the module serves. After a prune, a link still pointing at one
+  // of them is reported.
+  routes?: readonly string[]
 }
 
 function defineFeatures<Key extends string>(
@@ -24,6 +32,16 @@ function defineFeatures<Key extends string>(
 ) {
   return features
 }
+
+// module:docs,blog,changelog start
+// MDX content (docs, blog, changelog) is built on Fumadocs.
+const CONTENT_PACKAGES = [
+  "fumadocs-core",
+  "fumadocs-mdx",
+  "fumadocs-ui",
+  "@types/mdx",
+]
+// module:docs,blog,changelog end
 
 export const features = defineFeatures({
   // Accounts, sessions and the dashboard. Every other module that needs a
@@ -47,21 +65,59 @@ export const features = defineFeatures({
     default: true,
     dependsOn: ["auth"],
   },
+  // module:docs start
   docs: {
     label: "Documentation",
     description: "MDX documentation powered by Fumadocs.",
     default: true,
+    files: [
+      "app/(docs)",
+      "app/api/search",
+      "lib/content/docs.ts",
+      "content/docs",
+      "components/content/mdx-components.tsx",
+    ],
+    packages: CONTENT_PACKAGES,
+    routes: ["/docs"],
   },
+  // module:docs end
+  // module:blog start
   blog: {
     label: "Blog",
     description: "MDX articles with authors and categories.",
     default: true,
+    files: [
+      "app/(marketing)/blog",
+      "lib/content/blog.ts",
+      "content/blog",
+      "public/_static/blog",
+      "public/_static/avatars",
+      "config/blog.ts",
+      "components/marketing/category-tabs.tsx",
+      "components/content/mdx-components.tsx",
+    ],
+    packages: CONTENT_PACKAGES,
+    routes: ["/blog"],
   },
+  // module:blog end
+  // module:changelog start
   changelog: {
     label: "Changelog",
     description: "Product updates on a single page.",
     default: true,
+    files: [
+      "app/(marketing)/changelog",
+      "lib/content/changelog.ts",
+      "content/changelog",
+      "public/_static/avatars",
+      "config/blog.ts",
+      "components/content/share-row.tsx",
+      "components/content/mdx-components.tsx",
+    ],
+    packages: CONTENT_PACKAGES,
+    routes: ["/changelog"],
   },
+  // module:changelog end
 })
 
 export type FeatureKey = keyof typeof features

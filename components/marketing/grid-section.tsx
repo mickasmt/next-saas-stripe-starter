@@ -36,11 +36,13 @@ export function GridSection({
           innerClassName
         )}
       >
-        {/* Rails. Kept off the border box so they can fade independently. */}
+        {/* Rails. Kept off the border box so they can fade independently, and
+            stacked above the content so full-bleed children (e.g. card
+            images) can't paint over them. */}
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-0 border-x border-grid-border",
+            "pointer-events-none absolute inset-0 z-10 border-x border-grid-border",
             lines && "mask-[linear-gradient(transparent,black)]"
           )}
         />

@@ -29,6 +29,10 @@ export type FeatureState = {
   status: FeatureStatus
   // Where the flag's own value comes from, before dependencies are applied.
   source: FeatureSource
+  // The flag's own value once its dev override is removed (env or default).
+  inherited: boolean
+  // The variable that overrides the default, e.g. FEATURE_BILLING.
+  envName: string
   // Dependencies currently switched off, forcing this flag off.
   blockedBy: FeatureKey[]
   // Env vars of required services that are not set.
@@ -68,14 +72,18 @@ export const getFeatureStates = cache(async () => {
 
   const own = Object.fromEntries(
     featureKeys.map((key) => {
-      if (overrides[key] !== undefined) {
-        return [key, { value: overrides[key], source: "override" }]
-      }
       const env = parseBoolean(process.env[toEnvName(key)])
-      if (env !== undefined) return [key, { value: env, source: "env" }]
-      return [key, { value: features[key].default, source: "default" }]
+      const inherited = env ?? features[key].default
+      if (overrides[key] !== undefined) {
+        return [key, { value: overrides[key], source: "override", inherited }]
+      }
+      const source = env !== undefined ? "env" : "default"
+      return [key, { value: inherited, source, inherited }]
     })
-  ) as Record<FeatureKey, { value: boolean; source: FeatureSource }>
+  ) as Record<
+    FeatureKey,
+    { value: boolean; source: FeatureSource; inherited: boolean }
+  >
 
   const resolved = new Map<FeatureKey, boolean>()
 
@@ -112,6 +120,8 @@ export const getFeatureStates = cache(async () => {
       enabled: isEnabled(key),
       status,
       source: own[key].source,
+      inherited: own[key].inherited,
+      envName: toEnvName(key),
       blockedBy,
       missingEnv,
     }

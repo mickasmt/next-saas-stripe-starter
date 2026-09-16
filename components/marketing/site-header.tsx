@@ -18,9 +18,9 @@ const links: {
   feature?: FeatureKey
 }[] = [
   { title: "Pricing", href: siteConfig.links.pricing, feature: "billing" },
-  { title: "Blog", href: "/blog", feature: "blog" },
-  { title: "Changelog", href: "/changelog", feature: "changelog" },
-  { title: "Docs", href: "/docs", feature: "docs" },
+  { title: "Blog", href: "/blog", feature: "blog" }, // module:blog
+  { title: "Changelog", href: "/changelog", feature: "changelog" }, // module:changelog
+  { title: "Docs", href: "/docs", feature: "docs" }, // module:docs
 ]
 
 export async function SiteHeader() {

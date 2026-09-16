@@ -3,6 +3,7 @@ import Link from "next/link"
 
 import { GridSection } from "@/components/marketing/grid-section"
 import { ModuleDeck } from "@/components/marketing/module-deck"
+import { getStarterCta } from "@/components/marketing/starter-cta"
 import { buttonVariants } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
 import { formatStars, getGithubStars } from "@/lib/github"
@@ -11,6 +12,7 @@ import { cn } from "@/lib/utils"
 export async function HeroStarter() {
   const count = await getGithubStars()
   const stars = count ? formatStars(count) : null
+  const cta = await getStarterCta()
 
   return (
     <GridSection
@@ -55,16 +57,17 @@ export async function HeroStarter() {
 
       <div className="mx-auto mt-10 flex max-w-fit animate-slide-up-fade gap-4 [--offset:5px] [animation-delay:300ms] motion-reduce:animate-none">
         <Link
-          href="/register"
+          href={cta.href}
+          {...(cta.external && { target: "_blank", rel: "noreferrer" })}
           className={cn(
             buttonVariants({ size: "lg" }),
             "px-5 shadow-sm hover:ring-4 hover:ring-neutral-200 dark:hover:ring-white/10"
           )}
         >
-          Start for free
+          {cta.label}
         </Link>
         <Link
-          href={siteConfig.links.pricing}
+          href={siteConfig.links.pro}
           className={cn(
             buttonVariants({ variant: "outline", size: "lg" }),
             "px-5 shadow-sm hover:ring-4 hover:ring-neutral-200 dark:hover:ring-white/10"

@@ -5,6 +5,8 @@ export const siteConfig = {
   links: {
     github: "https://github.com/mickasmt/next-saas-stripe-starter",
     pricing: "/dashboard/billing",
+    // TODO: link to the Pro site (demo and purchase) once it exists.
+    pro: "#",
     terms: "/terms",
     privacy: "/privacy",
   },

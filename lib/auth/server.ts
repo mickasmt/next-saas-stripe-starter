@@ -21,7 +21,17 @@ const stripeClient = new Stripe(
 
 const BILLING_MANAGER_ROLES = new Set(["owner", "admin"])
 
+// Better Auth validates its config as soon as this file is imported, and
+// rejects in production without a secret, even with the auth module off. The
+// module stays off until both variables are set (see config/foundation.ts),
+// so these placeholders never sign or redirect anything.
+const secret =
+  process.env.BETTER_AUTH_SECRET || crypto.randomUUID() + crypto.randomUUID()
+const baseURL = process.env.BETTER_AUTH_URL || "http://localhost:3000"
+
 export const auth = betterAuth({
+  secret,
+  baseURL,
   database: drizzleAdapter(db, { provider: "pg", schema }),
   emailAndPassword: { enabled: true },
   socialProviders: {

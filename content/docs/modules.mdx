@@ -25,6 +25,8 @@ In development, use the dev panel. In production, set an environment variable an
 FEATURE_BILLING=false
 ```
 
+Flags are read when the app is built: static pages (home, blog posts, docs) keep the value they were built with. Changing a variable without rebuilding leaves some pages out of sync, so always rebuild. On Vercel, a redeploy does it for you.
+
 <Callout type="warn">
   Switching billing off hides it from your users, but existing Stripe subscriptions keep being charged. Cancel them in Stripe first.
 </Callout>

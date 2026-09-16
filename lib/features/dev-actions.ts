@@ -16,14 +16,19 @@ function assertDevelopment() {
   }
 }
 
-// `enabled: null` removes the override and falls back to env/default.
-export async function setFeatureOverride(key: string, enabled: boolean | null) {
+// Applies several overrides in one cookie write, so a module and the modules
+// it depends on switch together. `null` removes an override and falls back to
+// env/default.
+export async function setFeatureOverrides(
+  patch: Record<string, boolean | null>
+) {
   assertDevelopment()
-  if (!isFeatureKey(key)) throw new Error(`Unknown feature "${key}"`)
-
   const overrides = await getDevOverrides()
-  if (enabled === null) delete overrides[key]
-  else overrides[key] = enabled
+  for (const [key, enabled] of Object.entries(patch)) {
+    if (!isFeatureKey(key)) throw new Error(`Unknown feature "${key}"`)
+    if (enabled === null) delete overrides[key]
+    else overrides[key] = enabled
+  }
 
   const cookieStore = await cookies()
   if (Object.keys(overrides).length === 0) {

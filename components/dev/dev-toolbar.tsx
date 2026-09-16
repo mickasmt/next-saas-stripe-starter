@@ -1,6 +1,7 @@
-import { FeatureFlagsPanel } from "@/components/dev/feature-flags-panel"
+import { ModulesPanel } from "@/components/dev/modules-panel"
 import { features } from "@/config/features"
-import { getFeatureStates } from "@/lib/features/resolve"
+import { foundation } from "@/config/foundation"
+import { getFeatureStates, getFoundationStates } from "@/lib/features/resolve"
 
 export async function DevToolbar() {
   if (process.env.NODE_ENV !== "development") return null
@@ -8,13 +9,28 @@ export async function DevToolbar() {
   const states = await getFeatureStates()
 
   return (
-    <FeatureFlagsPanel
-      flags={states.map((state) => ({
-        ...state,
+    <ModulesPanel
+      modules={states.map((state) => ({
+        key: state.key,
         label: features[state.key].label,
         description: features[state.key].description,
-        blockedBy: state.blockedBy.map((key) => features[key].label),
+        default: features[state.key].default,
+        inherited: state.inherited,
+        source: state.source,
+        envName: state.envName,
+        dependsOn: [...(features[state.key].dependsOn ?? [])],
+        requires: [...(features[state.key].requires ?? [])],
       }))}
+      services={getFoundationStates().map((state) => ({
+        key: state.key,
+        label: foundation[state.key].label,
+        providerLabel: foundation[state.key].providerLabel,
+        setupUrl: foundation[state.key].setupUrl,
+        missingEnv: state.missingEnv,
+      }))}
+      own={Object.fromEntries(
+        states.map((state) => [state.key, state.status !== "disabled"])
+      )}
     />
   )
 }

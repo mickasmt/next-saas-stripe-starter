@@ -1,8 +1,15 @@
 "use client"
 
+import { Check, List } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
 import { cn } from "@/lib/utils"
 
 type Tab = { key: string; label: string; href: string }
@@ -13,9 +20,11 @@ type Tab = { key: string; label: string; href: string }
 export function CategoryTabs({
   tabs,
   active,
+  className,
 }: {
   tabs: Tab[]
   active: string
+  className?: string
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const tabRefs = useRef<Map<string, HTMLAnchorElement>>(new Map())
@@ -43,7 +52,10 @@ export function CategoryTabs({
   return (
     <div
       ref={containerRef}
-      className="relative flex flex-wrap items-center justify-center gap-1"
+      className={cn(
+        "relative flex flex-wrap items-center justify-center gap-1",
+        className
+      )}
     >
       {indicator && (
         <div
@@ -60,7 +72,7 @@ export function CategoryTabs({
             if (el) tabRefs.current.set(tab.key, el)
           }}
           className={cn(
-            "relative z-10 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-colors",
+            "relative z-10 rounded-lg px-4 py-1.5 text-sm font-medium transition-colors",
             tab.key === active
               ? "text-white dark:text-neutral-900"
               : "text-muted-foreground hover:text-foreground"
@@ -70,5 +82,57 @@ export function CategoryTabs({
         </Link>
       ))}
     </div>
+  )
+}
+
+// The same tabs for narrow screens, where a wrapping row gets cramped: a
+// full-width "Categories" button that opens the list in a bottom drawer
+// you can swipe down to dismiss.
+export function CategoryMenu({
+  tabs,
+  active,
+  className,
+}: {
+  tabs: Tab[]
+  active: string
+  className?: string
+}) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <Drawer open={open} onOpenChange={setOpen} showSwipeHandle>
+      <DrawerTrigger
+        render={
+          <button
+            type="button"
+            className={cn(
+              "flex h-10 w-full items-center gap-2 rounded-lg border border-input bg-background px-4 text-sm",
+              className
+            )}
+          />
+        }
+      >
+        <List className="size-4" />
+        Categories
+      </DrawerTrigger>
+
+      <DrawerContent>
+        <DrawerTitle className="sr-only">Categories</DrawerTitle>
+        <nav className="flex flex-col p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+          {tabs.map((tab) => (
+            <Link
+              key={tab.key}
+              href={tab.href}
+              onClick={() => setOpen(false)}
+              aria-current={tab.key === active ? "page" : undefined}
+              className="flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted"
+            >
+              {tab.label}
+              {tab.key === active && <Check className="size-4" />}
+            </Link>
+          ))}
+        </nav>
+      </DrawerContent>
+    </Drawer>
   )
 }

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation"
 
 import { GridSection } from "@/components/marketing/grid-section"
 import { getMDXComponents } from "@/components/content/mdx-components"
+import { getStarterCta } from "@/components/marketing/starter-cta"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -27,6 +28,7 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound()
 
   const MDX = post.data.body
+  const cta = await getStarterCta()
   const authors = post.data.authors
     .map((key) => blogAuthors[key as BlogAuthor])
     .filter(Boolean)
@@ -80,9 +82,7 @@ export default async function BlogPostPage({ params }: Props) {
                   <div key={author.name} className="flex items-center gap-3">
                     <Avatar>
                       <AvatarImage src={author.image} alt={author.name} />
-                      <AvatarFallback>
-                        {author.name.slice(0, 2)}
-                      </AvatarFallback>
+                      <AvatarFallback>{author.name.slice(0, 2)}</AvatarFallback>
                     </Avatar>
                     <div>
                       <p className="text-sm font-medium">{author.name}</p>
@@ -115,12 +115,13 @@ export default async function BlogPostPage({ params }: Props) {
           )}
 
           <Link
-            href="/register"
+            href={cta.href}
+            {...(cta.external && { target: "_blank", rel: "noreferrer" })}
             className="block rounded-xl border bg-muted/40 p-4 transition-colors hover:bg-muted/60"
           >
-            <p className="text-sm font-semibold">Start building for free</p>
+            <p className="text-sm font-semibold">{cta.label}</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Auth, billing and admin, ready to plug in.
+              Free and open source. Auth, billing and admin, ready to plug in.
             </p>
           </Link>
         </aside>

@@ -1,0 +1,36 @@
+# Prunes each module in a fresh checkout and builds what is left, so a module
+# that can no longer be removed cleanly fails here instead of in a user's repo.
+name: Prune
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        modules:
+          - docs
+          - blog
+          - changelog
+          - docs blog changelog
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm modules:prune ${{ matrix.modules }} --yes
+      # Drops the uninstalled packages, so a leftover import fails the build.
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm build
