@@ -58,6 +58,8 @@ export const features = defineFeatures({
     default: true,
     dependsOn: ["auth"],
     requires: ["payments"],
+    files: ["app/(marketing)/pricing", "components/marketing/pricing"],
+    routes: ["/pricing"],
   },
   admin: {
     label: "Admin panel",
