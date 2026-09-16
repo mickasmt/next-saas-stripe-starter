@@ -1,6 +1,7 @@
 import Link from "next/link"
 
 import { Logo } from "@/components/shared/logo"
+import { ThemeSwitcher } from "@/components/shared/theme-switcher"
 import type { FeatureKey } from "@/config/features"
 import { siteConfig } from "@/config/site"
 import { getFeatures } from "@/lib/features/resolve"
@@ -78,10 +79,13 @@ export async function SiteFooter() {
       </div>
 
       <div className="border-t">
-        <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-muted-foreground sm:px-6">
-          © {new Date().getFullYear()} {siteConfig.name}. Open source under the
-          MIT license.
-        </p>
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-6 sm:px-6">
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} {siteConfig.name}. Open source under
+            the MIT license.
+          </p>
+          <ThemeSwitcher />
+        </div>
       </div>
     </footer>
   )

@@ -142,6 +142,22 @@ export default async function BlogPage({ searchParams }: Props) {
               No posts in this category yet.
             </p>
           )}
+          {/* Complete a short last row with empty cells so the dividers close
+              off the grid instead of trailing into blank space. */}
+          {posts.length > 0 &&
+            Array.from({ length: (3 - (posts.length % 3)) % 3 }).map(
+              (_, i) => (
+                <div
+                  key={`filler-${i}`}
+                  aria-hidden
+                  className={cn(
+                    "relative hidden md:block",
+                    "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:z-10 before:h-px before:bg-grid-border md:[&:nth-child(-n+3)]:before:hidden",
+                    "after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:z-10 after:hidden after:w-px after:bg-grid-border md:after:block md:[&:nth-child(3n)]:after:hidden"
+                  )}
+                />
+              )
+            )}
         </div>
       </GridSection>
     </>
