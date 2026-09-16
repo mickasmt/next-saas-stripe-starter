@@ -13,18 +13,17 @@ export async function HeroStarter() {
   const stars = count ? formatStars(count) : null
 
   return (
-    <GridSection lines innerClassName="pt-20 pb-12">
-      {/* Wash rising with the grid, so the band is not flat white. A single
-          two-stop gradient, unblurred: blurring several hues goes blotchy. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -inset-x-4 top-0 -bottom-12 -z-1 overflow-hidden sm:-inset-x-12"
-      >
-        <div className="absolute -left-1/4 top-0 h-full w-[150%] opacity-15 dark:opacity-25">
+    <GridSection
+      lines
+      innerClassName="pt-20 pb-10"
+      background={
+        // Wash rising with the grid, between the rails only. A single two-stop
+        // gradient, unblurred: blurring several hues goes blotchy.
+        <div className="absolute top-0 -left-1/4 h-full w-[150%] opacity-15 dark:opacity-25">
           <div className="size-full bg-[linear-gradient(90deg,#6366f1,#8b5cf6)] mask-[linear-gradient(transparent_25%,black)]" />
         </div>
-      </div>
-
+      }
+    >
       <div className="mx-auto flex w-full max-w-lg flex-col items-center text-center">
         <a
           href={siteConfig.links.github}

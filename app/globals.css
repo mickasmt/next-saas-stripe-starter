@@ -7,6 +7,9 @@
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: var(--font-sans);
+    --font-display: "Satoshi", var(--font-sans);
+    --color-grid-border: var(--grid-border);
+    --container-grid-width: 1080px;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -80,6 +83,7 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+    --grid-border: oklch(0.922 0 0);
 }
 
 .dark {
@@ -114,6 +118,7 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+    --grid-border: oklch(1 0 0 / 12%);
 }
 
 @layer base {
@@ -126,4 +131,62 @@
   html {
     @apply font-sans;
     }
+}
+@theme {
+    --animate-infinite-scroll: infinite-scroll 40s linear infinite;
+    --animate-slide-up-fade: slide-up-fade 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+    --animate-deal-in: deal-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    --animate-deal-out: deal-out 0.45s cubic-bezier(0.4, 0, 1, 1) both;
+
+    @keyframes infinite-scroll {
+        to {
+            transform: translateX(-100%);
+        }
+    }
+
+    @keyframes slide-up-fade {
+        from {
+            opacity: 0;
+            transform: translateY(var(--offset, 10px));
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Card-dealing entrance/exit for components/marketing/module-deck.tsx.
+       The fan rotation is a static transform on the card's wrapper; these
+       only animate the rise/lift so the two transforms don't fight. */
+    @keyframes deal-in {
+        from {
+            opacity: 0;
+            transform: translateY(70px) scale(0.92);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @keyframes deal-out {
+        from {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-26px) scale(0.94);
+        }
+    }
+}
+
+
+/* 60px graph paper, drawn in the current text color so a section can tint and
+   mask it. Used by the marketing grid bands. */
+@utility grid-lines {
+    background-image:
+        linear-gradient(to right, currentColor 1px, transparent 1px),
+        linear-gradient(to bottom, currentColor 1px, transparent 1px);
+    background-size: 60px 60px;
 }
