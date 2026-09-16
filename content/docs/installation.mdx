@@ -1,0 +1,28 @@
+---
+title: Installation
+description: Clone the starter and run it locally.
+---
+
+## Clone the repository
+
+```bash
+npx create-next-app my-saas --example "https://github.com/mickasmt/next-saas-stripe-starter"
+cd my-saas
+```
+
+## Set your environment variables
+
+Copy `.env.example` to `.env.local`. You don't need to fill everything at once: a module stays off until the services it requires are configured, and the dev panel lists what is missing.
+
+```bash
+cp .env.example .env.local
+```
+
+## Start the app
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Open [localhost:3000](http://localhost:3000) and click the flag button in the bottom-right corner to see the state of every module.

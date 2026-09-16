@@ -3,10 +3,10 @@ import Link from "next/link"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
-export function Logo({ className }: { className?: string }) {
+// Without the link, for layouts that provide their own (e.g. Fumadocs).
+export function LogoMark({ className }: { className?: string }) {
   return (
-    <Link
-      href="/"
+    <span
       className={cn("inline-flex items-center gap-2 font-semibold", className)}
     >
       <span className="grid size-7 place-items-center rounded-md bg-foreground text-background">
@@ -20,6 +20,14 @@ export function Logo({ className }: { className?: string }) {
         </svg>
       </span>
       {siteConfig.name}
+    </span>
+  )
+}
+
+export function Logo({ className }: { className?: string }) {
+  return (
+    <Link href="/">
+      <LogoMark className={className} />
     </Link>
   )
 }

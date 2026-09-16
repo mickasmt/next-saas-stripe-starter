@@ -1,0 +1,34 @@
+---
+title: Modules
+description: Turn on what you need, turn off the rest.
+---
+
+Modules are declared in `config/features.ts`.
+
+| Module | Depends on | Requires |
+| --- | --- | --- |
+| `auth` | | Database, Auth |
+| `billing` | `auth` | Payments |
+| `admin` | `auth` | |
+| `docs` | | |
+| `blog` | | |
+| `changelog` | | |
+
+- **Depends on**: the module is forced off while one of these modules is off.
+- **Requires**: the module stays off while one of these services misses its environment variables (see `config/foundation.ts`).
+
+## Switch a module off
+
+In development, use the dev panel. In production, set an environment variable and redeploy:
+
+```bash
+FEATURE_BILLING=false
+```
+
+<Callout type="warn">
+  Switching billing off hides it from your users, but existing Stripe subscriptions keep being charged. Cancel them in Stripe first.
+</Callout>
+
+## Without authentication
+
+With `auth` off, the app no longer needs a database: you get a marketing site with docs, blog and changelog.
