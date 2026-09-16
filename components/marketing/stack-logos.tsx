@@ -48,6 +48,13 @@ export const stack = {
     color: "#635BFF",
     path: "M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.090 1.631l.890-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.560 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.760 6.476 7.219 2.585.920 3.445 1.574 3.445 2.583 0 .980-.840 1.545-2.354 1.545-1.875 0-4.965-.921-6.990-2.109l-.900 5.555C5.175 22.990 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.594-7.305h.003z",
   },
+  fumadocs: {
+    name: "Fumadocs",
+    color: null,
+    // Not in Simple Icons: a disc shaded from the text color to transparent.
+    gradient: true,
+    path: "M12 0a12 12 0 1 0 0 24 12 12 0 1 0 0-24Z",
+  },
   vercel: {
     name: "Vercel",
     color: null,
@@ -65,6 +72,8 @@ export function StackLogo({
   className?: string
 }) {
   const logo = stack[name]
+  const gradientId = `stack-logo-${name}-gradient`
+  const gradient = "gradient" in logo && logo.gradient
 
   return (
     <span
@@ -74,7 +83,20 @@ export function StackLogo({
       )}
     >
       <svg viewBox="0 0 24 24" className="size-6" aria-hidden>
-        <path fill={logo.color ?? "currentColor"} d={logo.path} />
+        {gradient && (
+          <defs>
+            <radialGradient id={gradientId} cx="20%" cy="20%" r="100%">
+              <stop offset="35%" stopColor="currentColor" />
+              <stop offset="100%" stopColor="currentColor" stopOpacity={0.08} />
+            </radialGradient>
+          </defs>
+        )}
+        <path
+          fill={
+            gradient ? `url(#${gradientId})` : (logo.color ?? "currentColor")
+          }
+          d={logo.path}
+        />
       </svg>
       {logo.name}
     </span>

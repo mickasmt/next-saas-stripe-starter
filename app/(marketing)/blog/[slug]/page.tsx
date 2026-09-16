@@ -5,6 +5,7 @@ import { notFound } from "next/navigation"
 
 import { GridSection } from "@/components/marketing/grid-section"
 import { getMDXComponents } from "@/components/content/mdx-components"
+import { TableOfContents } from "@/components/content/table-of-contents"
 import { getStarterCta } from "@/components/marketing/starter-cta"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -69,11 +70,11 @@ export default async function BlogPostPage({ params }: Props) {
       </div>
 
       <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-10 lg:grid-cols-3">
-        <article className="prose prose-neutral dark:prose-invert max-w-none lg:col-span-2">
+        <article className="prose-neutral dark:prose-invert prose max-w-none lg:col-span-2">
           <MDX components={getMDXComponents()} />
         </article>
 
-        <aside className="space-y-8 lg:col-span-1">
+        <aside className="space-y-8 lg:sticky lg:top-20 lg:col-span-1 lg:self-start">
           {authors.length > 0 && (
             <div>
               <p className="text-sm font-medium">Written by</p>
@@ -96,23 +97,7 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           )}
 
-          {post.data.toc.length > 0 && (
-            <div>
-              <p className="text-sm font-medium">On this page</p>
-              <ul className="mt-3 space-y-2 border-l pl-4 text-sm">
-                {post.data.toc.map((item) => (
-                  <li key={item.url}>
-                    <a
-                      href={item.url}
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      {item.title}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <TableOfContents items={post.data.toc} />
 
           <Link
             href={cta.href}
