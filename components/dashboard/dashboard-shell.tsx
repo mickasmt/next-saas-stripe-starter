@@ -1,22 +1,30 @@
-import { MobileNav } from "@/components/dashboard/mobile-nav"
+import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { Sidebar, type SidebarProps } from "@/components/dashboard/sidebar"
+import { cn } from "@/lib/utils"
 
 export function DashboardShell({
   children,
+  className,
   ...sidebar
-}: Omit<SidebarProps, "onNavigate"> & { children: React.ReactNode }) {
+}: Omit<SidebarProps, "onNavigate"> & {
+  children: React.ReactNode
+  className?: string
+}) {
   return (
-    <div className="min-h-svh bg-sidebar lg:grid lg:h-svh lg:grid-cols-[15rem_minmax(0,1fr)] lg:overflow-hidden">
-      <aside className="hidden lg:block">
+    <div
+      data-dashboard
+      className={cn(
+        "min-h-svh bg-background font-sans text-sm text-foreground",
+        className
+      )}
+    >
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-divider bg-sidebar md:block">
         <Sidebar {...sidebar} />
       </aside>
 
-      <MobileNav {...sidebar} />
-
-      <div className="min-w-0 lg:pt-2 lg:pr-2">
-        <main className="min-h-[calc(100svh-3.5rem)] bg-background lg:h-full lg:min-h-0 lg:overflow-y-auto lg:rounded-t-xl lg:border lg:border-b-0">
-          {children}
-        </main>
+      <div className="flex min-h-svh flex-col md:pl-64">
+        <DashboardHeader {...sidebar} />
+        <main className="flex-1">{children}</main>
       </div>
     </div>
   )

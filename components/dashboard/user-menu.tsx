@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronsUpDown, LogOut, Monitor, Moon, Sun } from "lucide-react"
+import { Ellipsis, LogOut, Monitor, Moon, Sun } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 
@@ -40,21 +40,29 @@ export function UserMenu({ user }: { user: ShellUser }) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex w-full items-center gap-2.5 rounded-lg p-1.5 text-left transition-colors outline-none hover:bg-foreground/5 focus-visible:ring-2 focus-visible:ring-ring/50 data-popup-open:bg-foreground/5">
-        <Avatar>
+      <DropdownMenuTrigger className="group flex h-9 w-full items-center gap-2 rounded-full pr-1.5 pl-2.5 text-left transition-colors outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50 data-popup-open:bg-accent">
+        <Avatar className="size-5">
           {user.image && <AvatarImage src={user.image} alt="" />}
-          <AvatarFallback className="text-xs">
+          <AvatarFallback className="text-[9px]">
             {getInitials(user.name)}
           </AvatarFallback>
         </Avatar>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium">{user.name}</p>
-          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-        </div>
-        <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" />
+        <span className="min-w-0 flex-1 truncate">{user.name}</span>
+        <span className="grid size-6 shrink-0 place-items-center rounded-full bg-card text-muted-foreground ring-1 ring-input transition-colors group-hover:text-foreground">
+          <Ellipsis className="size-3.5" />
+        </span>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent side="top" sideOffset={6}>
+      <DropdownMenuContent side="top" align="start" sideOffset={6}>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="max-w-60">
+            <span className="block truncate text-sm font-medium text-foreground">
+              {user.name}
+            </span>
+            <span className="block truncate font-normal">{user.email}</span>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuLabel>Theme</DropdownMenuLabel>
           <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>

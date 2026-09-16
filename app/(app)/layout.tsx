@@ -1,9 +1,14 @@
+import { Geist } from "next/font/google"
+
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
-import { dashboardNav } from "@/config/nav"
+import { dashboardNav, settingsNav } from "@/config/nav"
 import { getActiveOrganization } from "@/lib/auth/session"
 import { requireFeature } from "@/lib/features/guard"
 import { getFeatures } from "@/lib/features/resolve"
 import { filterNav } from "@/lib/nav"
+
+// Dashboard-only font; marketing keeps its own.
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
 export default async function AppLayout({
   children,
@@ -14,14 +19,15 @@ export default async function AppLayout({
   // Redirects to /login without a session.
   const { session, organization, member } = await getActiveOrganization()
 
-  const nav = filterNav(dashboardNav, {
-    features: await getFeatures(),
-    role: session.user.role,
-  })
+  const features = await getFeatures()
+  const nav = filterNav(dashboardNav, { features, role: session.user.role })
+  const settings = filterNav(settingsNav, { features, role: session.user.role })
 
   return (
     <DashboardShell
+      className={geist.variable}
       nav={nav}
+      settingsNav={settings}
       organization={{
         name: organization.name,
         logo: organization.logo ?? null,

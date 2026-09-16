@@ -6,7 +6,7 @@ export type NavItem = {
   title: string
   href: string
   // Icon name, not a component: nav items are passed to client components.
-  icon: NavIcon
+  icon?: NavIcon
   // Platform role (user.role) required to see the item.
   authorizeOnly?: "admin"
   // Hidden while this flag is off. Must match the flag checked by the
@@ -29,6 +29,11 @@ export const dashboardNav: NavSection[] = [
         icon: "billing",
         feature: "billing",
       },
+      {
+        title: "Settings",
+        href: "/dashboard/settings/general",
+        icon: "settings",
+      },
     ],
   },
   {
@@ -40,6 +45,18 @@ export const dashboardNav: NavSection[] = [
         icon: "admin",
         authorizeOnly: "admin",
         feature: "admin",
+      },
+    ],
+  },
+]
+
+// Shown instead of dashboardNav while inside /dashboard/settings.
+export const settingsNav: NavSection[] = [
+  {
+    items: [
+      {
+        title: "General",
+        href: "/dashboard/settings/general",
       },
     ],
   },

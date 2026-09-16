@@ -8,12 +8,12 @@ import type { NavItem, NavSection } from "@/config/nav"
 import { cn } from "@/lib/utils"
 
 // The most specific matching href wins, so /dashboard isn't active on /dashboard/billing.
-function getActiveHref(pathname: string, items: NavItem[]) {
+export function getActiveItem(pathname: string, items: NavItem[]) {
   return items
     .filter(
       (item) => pathname === item.href || pathname.startsWith(`${item.href}/`)
     )
-    .sort((a, b) => b.href.length - a.href.length)[0]?.href
+    .sort((a, b) => b.href.length - a.href.length)[0]
 }
 
 export function SidebarNav({
@@ -24,22 +24,28 @@ export function SidebarNav({
   onNavigate?: () => void
 }) {
   const pathname = usePathname()
-  const activeHref = getActiveHref(
+  const activeHref = getActiveItem(
     pathname,
     sections.flatMap((section) => section.items)
-  )
+  )?.href
 
   return (
-    <nav className="grid gap-5">
+    <nav className="flex flex-col gap-3 px-2">
       {sections.map((section, index) => (
-        <div key={section.title ?? index} className="grid gap-0.5">
+        <div
+          key={section.title ?? index}
+          className={cn(
+            "flex flex-col gap-px",
+            index > 0 && "border-t border-divider pt-3"
+          )}
+        >
           {section.title && (
-            <p className="mb-1 px-2.5 text-xs font-medium text-muted-foreground">
+            <p className="px-2.5 pb-1 text-xs font-medium text-muted-foreground">
               {section.title}
             </p>
           )}
           {section.items.map((item) => {
-            const Icon = navIcons[item.icon]
+            const Icon = item.icon && navIcons[item.icon]
             const active = item.href === activeHref
 
             return (
@@ -49,12 +55,12 @@ export function SidebarNav({
                 onClick={onNavigate}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex h-8 items-center gap-2.5 rounded-lg px-2.5 text-sm text-foreground/70 transition-colors hover:bg-foreground/5 hover:text-foreground",
-                  active && "bg-foreground/[0.07] font-medium text-foreground"
+                  "flex h-9 items-center gap-2.5 rounded-lg px-2.5 font-medium tracking-[-0.02em] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
+                  active && "bg-accent text-foreground"
                 )}
               >
-                <Icon className="size-4 shrink-0" />
-                {item.title}
+                {Icon && <Icon className="size-4 shrink-0" />}
+                <span className="truncate">{item.title}</span>
               </Link>
             )
           })}

@@ -26,18 +26,18 @@ export default async function DashboardPage() {
         description="Here's what's happening in your organization."
       />
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3">
         {stats.map((stat) => (
-          <div key={stat.label} className="rounded-xl border p-5">
-            <p className="text-sm text-muted-foreground">{stat.label}</p>
-            <p className="mt-1.5 truncate text-2xl font-semibold tracking-tight capitalize">
+          <div key={stat.label} className="rounded-lg border bg-card p-5">
+            <p className="text-muted-foreground">{stat.label}</p>
+            <p className="mt-1 truncate text-2xl font-semibold tracking-[-0.04em] capitalize">
               {stat.value}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="mt-6">
+      <div className="mt-4">
         <EmptyState
           icon={Blocks}
           title="Start building your product"

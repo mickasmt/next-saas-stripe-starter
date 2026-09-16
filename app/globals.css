@@ -12,6 +12,7 @@
     --font-sans: var(--font-sans);
     --font-display: "Satoshi", var(--font-sans);
     --color-grid-border: var(--grid-border);
+    --color-divider: var(--divider);
     --container-grid-width: 1080px;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
@@ -87,6 +88,7 @@
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
     --grid-border: oklch(0.922 0 0);
+    --divider: var(--border);
 }
 
 .dark {
@@ -122,6 +124,42 @@
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
     --grid-border: oklch(1 0 0 / 12%);
+}
+
+/* Dashboard palette, scoped so marketing keeps its own. */
+[data-dashboard] {
+    --radius: 0.375rem;
+    --background: #fafafa;
+    --foreground: #171717;
+    --card: #ffffff;
+    --card-foreground: #171717;
+    --primary: #171717;
+    --primary-foreground: #ffffff;
+    --muted: #f2f2f2;
+    --muted-foreground: #666666;
+    --accent: oklch(0 0 0 / 6%);
+    --accent-foreground: #171717;
+    --border: #ebebeb;
+    --input: #e0e0e0;
+    --divider: #ebebeb;
+    --sidebar: #fafafa;
+}
+
+.dark [data-dashboard] {
+    --background: #000000;
+    --foreground: #ededed;
+    --card: #0a0a0a;
+    --card-foreground: #ededed;
+    --primary: #ededed;
+    --primary-foreground: #0a0a0a;
+    --muted: #1a1a1a;
+    --muted-foreground: #a1a1a1;
+    --accent: #1f1f1f;
+    --accent-foreground: #ededed;
+    --border: #2e2e2e;
+    --input: oklch(1 0 0 / 14%);
+    --divider: #1a1a1a;
+    --sidebar: #000000;
 }
 
 @layer base {
