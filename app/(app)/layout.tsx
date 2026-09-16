@@ -1,6 +1,7 @@
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
 import { dashboardNav } from "@/config/nav"
 import { getActiveOrganization } from "@/lib/auth/session"
+import { requireFeature } from "@/lib/features/guard"
 import { getFeatures } from "@/lib/features/resolve"
 import { filterNav } from "@/lib/nav"
 
@@ -9,6 +10,7 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode
 }) {
+  await requireFeature("auth")
   // Redirects to /login without a session.
   const { session, organization, member } = await getActiveOrganization()
 

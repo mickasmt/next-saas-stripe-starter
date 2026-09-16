@@ -7,12 +7,14 @@ import { Logo } from "@/components/shared/logo"
 import { siteConfig } from "@/config/site"
 import { DEFAULT_LOGIN_REDIRECT } from "@/lib/auth/redirect"
 import { getSession } from "@/lib/auth/session"
+import { requireFeature } from "@/lib/features/guard"
 
 export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  await requireFeature("auth")
   if (await getSession()) redirect(DEFAULT_LOGIN_REDIRECT)
 
   return (

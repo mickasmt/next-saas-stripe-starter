@@ -85,6 +85,7 @@ export function FeatureFlagsPanel({ flags }: { flags: Flag[] }) {
         <ul className="grid gap-1">
           {optimisticFlags.map((flag) => {
             const blocked = flag.blockedBy.length > 0
+            const unconfigured = !blocked && flag.missingEnv.length > 0
 
             return (
               <li
@@ -125,18 +126,20 @@ export function FeatureFlagsPanel({ flags }: { flags: Flag[] }) {
                   <p
                     className={cn(
                       "text-xs text-muted-foreground",
-                      blocked && "text-destructive"
+                      (blocked || unconfigured) && "text-destructive"
                     )}
                   >
                     {blocked
                       ? `Requires ${flag.blockedBy.join(", ")}`
-                      : flag.description}
+                      : unconfigured
+                        ? `Missing ${flag.missingEnv.join(", ")}`
+                        : flag.description}
                   </p>
                 </div>
                 <Switch
                   id={`flag-${flag.key}`}
                   checked={flag.enabled}
-                  disabled={blocked}
+                  disabled={blocked || unconfigured}
                   onCheckedChange={(enabled) =>
                     startTransition(async () => {
                       toggleOptimistic({ key: flag.key, enabled })
