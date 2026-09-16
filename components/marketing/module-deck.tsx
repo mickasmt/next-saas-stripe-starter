@@ -147,9 +147,18 @@ export function ModuleDeck() {
         ))}
       </ul>
 
-      <p className="mt-10 text-center text-sm text-balance text-muted-foreground">
-        <span className="font-medium text-foreground">{setup.label}</span> ·{" "}
-        {enabled.size} of {modules.length} modules on
+      {/* Fixed width so the pill does not jump as the setup name changes. */}
+      <p className="mt-8 flex w-60 items-center justify-between gap-2 rounded-md border border-neutral-900/10 bg-background/70 p-1 pr-3 text-xs shadow-sm backdrop-blur-sm sm:mt-16 dark:border-white/10 dark:bg-white/5">
+        <span className="min-w-0 flex-1 truncate rounded-sm bg-muted px-2 py-1 text-left font-medium text-foreground">
+          {setup.label}
+        </span>
+        <span className="flex shrink-0 items-center gap-1.5 text-muted-foreground tabular-nums">
+          <span className="relative flex size-1.5">
+            <span className="absolute inset-0 animate-ping rounded-full bg-emerald-500/60 motion-reduce:animate-none" />
+            <span className="relative size-1.5 rounded-full bg-emerald-500" />
+          </span>
+          {enabled.size} modules on
+        </span>
       </p>
     </div>
   )
@@ -171,7 +180,7 @@ function ModuleCard({
   return (
     <div
       className={cn(
-        "flex aspect-square w-full animate-deal-in flex-col rounded-2xl border p-3 transition-[background-color,border-color,box-shadow] duration-500 motion-reduce:animate-none sm:aspect-[4/5] sm:p-3.5 lg:aspect-square lg:p-5",
+        "flex w-full animate-deal-in flex-col rounded-2xl border p-3 transition-[background-color,border-color,box-shadow] duration-500 motion-reduce:animate-none sm:p-3.5 lg:p-4",
         on
           ? "border-neutral-900/10 bg-background shadow-lg shadow-neutral-900/5 dark:border-white/10 dark:shadow-black/40"
           : "border-neutral-900/5 bg-neutral-50 shadow-sm shadow-transparent dark:border-white/5 dark:bg-neutral-900"
@@ -184,7 +193,7 @@ function ModuleCard({
       <div className="flex items-start justify-between gap-2">
         <span
           className={cn(
-            "flex size-8 shrink-0 items-center justify-center rounded-full transition-colors duration-500 lg:size-11",
+            "flex size-8 shrink-0 items-center justify-center rounded-full transition-colors duration-500 lg:size-10",
             on
               ? module.tint
               : "bg-neutral-200/70 text-neutral-400 dark:bg-white/5 dark:text-neutral-600"
@@ -198,15 +207,15 @@ function ModuleCard({
 
       <div
         className={cn(
-          "mt-auto text-left transition-opacity duration-500",
+          "mt-3 text-left transition-opacity duration-500 lg:mt-4",
           !on && "opacity-45"
         )}
         style={flipDelay}
       >
-        <h3 className="font-display text-sm font-medium lg:text-lg">
+        <h3 className="font-display text-sm font-medium lg:text-base">
           {module.title}
         </h3>
-        <p className="mt-1 line-clamp-3 text-[11px] leading-snug text-muted-foreground max-sm:hidden lg:text-sm">
+        <p className="mt-1 line-clamp-2 min-h-[2lh] text-[11px] leading-snug text-muted-foreground max-sm:hidden lg:text-[13px]">
           {module.description}
         </p>
       </div>

@@ -15,7 +15,7 @@ export async function HeroStarter() {
   return (
     <GridSection
       lines
-      innerClassName="pt-20 pb-10"
+      innerClassName="pt-16 pb-8"
       background={
         // Wash rising with the grid, between the rails only. A single two-stop
         // gradient, unblurred: blurring several hues goes blotchy.
@@ -75,7 +75,7 @@ export async function HeroStarter() {
         </Link>
       </div>
 
-      <div className="mt-16 animate-slide-up-fade [animation-delay:400ms] motion-reduce:animate-none">
+      <div className="mt-12 animate-slide-up-fade [animation-delay:400ms] motion-reduce:animate-none">
         <ModuleDeck />
       </div>
     </GridSection>
