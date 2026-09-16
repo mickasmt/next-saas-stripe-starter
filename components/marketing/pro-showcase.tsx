@@ -1,4 +1,24 @@
-import { Check, ImageUp, Lock, Minus, Sparkles } from "lucide-react"
+import {
+  Activity,
+  Bell,
+  Bot,
+  Check,
+  ChevronDown,
+  CreditCard,
+  KeyRound,
+  Languages,
+  Lock,
+  Mail,
+  Minus,
+  RefreshCw,
+  Route,
+  Send,
+  Sparkles,
+  Upload,
+  Users,
+  Webhook,
+  type LucideIcon,
+} from "lucide-react"
 import Link from "next/link"
 
 import { GridSection } from "@/components/marketing/grid-section"
@@ -38,10 +58,10 @@ const proFeatures: ProFeature[] = [
     overflows: true,
   },
   {
-    title: "Profiles with real avatars",
+    title: "Invitations, roles and permissions",
     description:
-      "Avatar upload with crop and preview, name and email changes, account deletion. The settings page your users expect, designed and wired.",
-    visual: <ProfileCard />,
+      "Invite by email, accept in one click, assign owner, admin or member. Every page and action checks the role, so teammates only see what they should.",
+    visual: <TeamRoles />,
   },
   {
     title: "Seat-based billing for teams",
@@ -64,10 +84,81 @@ const comparison: { label: string; free: boolean; pro: boolean }[] = [
   { label: "Admin panel", free: true, pro: true },
   { label: "Docs, blog and changelog", free: true, pro: true },
   { label: "Guided onboarding flow", free: false, pro: true },
-  { label: "Email templates with Resend", free: false, pro: true },
-  { label: "Profile settings with avatar upload", free: false, pro: true },
+  { label: "Team invitations, roles and permissions", free: false, pro: true },
   { label: "Seat-based team billing", free: false, pro: true },
+  { label: "Transactional emails with Resend", free: false, pro: true },
+  { label: "File uploads, API keys and webhooks", free: false, pro: true },
+  {
+    label: "Notifications, translations and AI chatbot",
+    free: false,
+    pro: true,
+  },
   { label: "Private repository and lifetime updates", free: false, pro: true },
+]
+
+// Everything Pro adds, as short tiles under the feature cards. Its sheer
+// length is part of the pitch.
+const proExtras: { icon: LucideIcon; title: string; description: string }[] = [
+  {
+    icon: Route,
+    title: "Onboarding",
+    description: "Workspace, invites and plan in one guided flow.",
+  },
+  {
+    icon: Users,
+    title: "Teams and roles",
+    description: "Invitations, owner, admin and member permissions.",
+  },
+  {
+    icon: CreditCard,
+    title: "Seat billing",
+    description: "Per-member Stripe pricing with prorations.",
+  },
+  {
+    icon: Mail,
+    title: "Emails",
+    description: "React Email templates sent through Resend.",
+  },
+  {
+    icon: Upload,
+    title: "File uploads",
+    description: "Direct uploads to S3-compatible storage.",
+  },
+  {
+    icon: KeyRound,
+    title: "API keys",
+    description: "Let customers call your API with scoped keys.",
+  },
+  {
+    icon: Webhook,
+    title: "Webhooks",
+    description: "Notify customers' servers when things happen.",
+  },
+  {
+    icon: Bell,
+    title: "Notifications",
+    description: "In-app inbox with read state and preferences.",
+  },
+  {
+    icon: Languages,
+    title: "Translations",
+    description: "i18n for the app, emails and marketing pages.",
+  },
+  {
+    icon: Bot,
+    title: "AI chatbot",
+    description: "Streaming chat with the model of your choice.",
+  },
+  {
+    icon: Activity,
+    title: "Error monitoring",
+    description: "Sentry wired for server and client errors.",
+  },
+  {
+    icon: RefreshCw,
+    title: "Lifetime updates",
+    description: "Private repository, new modules as they ship.",
+  },
 ]
 
 export async function ProShowcase() {
@@ -139,6 +230,27 @@ export async function ProShowcase() {
                 {feature.description}
               </p>
             </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="border-t border-grid-border bg-background px-4 pt-14 pb-10 text-center sm:px-12">
+        <h3 className="font-display text-2xl font-medium sm:text-3xl">
+          Everything in Pro
+        </h3>
+        <p className="mt-2 text-muted-foreground">
+          Each one is a module: keep it, switch it off, or prune it.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 gap-px border-t border-grid-border bg-grid-border text-sm sm:grid-cols-2 lg:grid-cols-4">
+        {proExtras.map(({ icon: Icon, title, description }) => (
+          <div
+            key={title}
+            className="flex flex-col items-start gap-2 bg-background p-6 text-left lg:px-8 lg:py-8"
+          >
+            <Icon className="size-4 shrink-0 text-violet-600 dark:text-violet-400" />
+            <h4 className="font-medium">{title}</h4>
+            <p className="text-pretty text-muted-foreground">{description}</p>
           </div>
         ))}
       </div>
@@ -346,38 +458,71 @@ function EmailPreview() {
   )
 }
 
-function ProfileCard() {
+function TeamRoles() {
+  const members = [
+    ["SC", "Sarah Chen", "sarah@acme.com", "Owner", "bg-fuchsia-500"],
+    ["TM", "Tom Martin", "tom@acme.com", "Admin", "bg-sky-500"],
+    ["LN", "Lina Nguyen", "lina@acme.com", "Member", "bg-violet-500"],
+  ]
+
   return (
-    <div className="mx-auto flex h-full max-w-sm flex-col justify-center">
-      <div className="rounded-xl border bg-background p-5 text-left shadow-lg shadow-neutral-900/5 dark:shadow-black/30">
-        <p className="text-sm font-medium">Profile</p>
-        <div className="mt-4 flex items-center gap-4">
-          <span className="relative size-16 shrink-0 rounded-full bg-[conic-gradient(from_200deg,#6366f1,#8b5cf6,#d946ef,#6366f1)] ring-4 ring-violet-500/20">
-            <span className="absolute -right-1 -bottom-1 flex size-6 items-center justify-center rounded-full border bg-background shadow-sm">
-              <ImageUp className="size-3" />
+    <div className="mx-auto flex h-full max-w-sm flex-col justify-center gap-3">
+      <div className="flex items-center gap-2 rounded-xl border bg-background p-1.5 pl-3 text-left shadow-lg shadow-neutral-900/5 dark:shadow-black/30">
+        <span className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
+          alex@acme.com
+        </span>
+        <span className="flex h-7 items-center gap-1 rounded-md border px-2 text-xs">
+          Member <ChevronDown className="size-3" />
+        </span>
+        <span className="flex h-7 items-center gap-1.5 rounded-md bg-foreground px-2.5 text-xs font-medium text-background">
+          <Send className="size-3" /> Invite
+        </span>
+      </div>
+
+      <div className="rounded-xl border bg-background p-1.5 text-left shadow-lg shadow-neutral-900/5 dark:shadow-black/30">
+        <p className="px-2 pt-1 pb-1.5 text-xs font-medium text-muted-foreground">
+          Members
+        </p>
+        {members.map(([initials, name, email, role, color]) => (
+          <div
+            key={name}
+            className="flex items-center gap-3 rounded-lg px-2 py-1.5"
+          >
+            <span
+              className={cn(
+                "flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white",
+                color
+              )}
+            >
+              {initials}
             </span>
-          </span>
-          <div className="min-w-0 flex-1 rounded-lg border border-dashed px-3 py-2.5 text-xs text-muted-foreground">
-            Drop an image or <span className="text-foreground">browse</span>
-            <p className="mt-0.5 text-[10px]">PNG or JPG, cropped to square</p>
-          </div>
-        </div>
-        <div className="mt-5 grid gap-3">
-          {[
-            ["Name", "Sarah Chen"],
-            ["Email", "sarah@acme.com"],
-          ].map(([label, value]) => (
-            <div key={label}>
-              <p className="mb-1 text-xs font-medium">{label}</p>
-              <div className="flex h-8 items-center rounded-md border px-3 text-sm">
-                {value}
-              </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm">{name}</p>
+              <p className="truncate text-[11px] text-muted-foreground">
+                {email}
+              </p>
             </div>
-          ))}
-        </div>
-        <div className="mt-4 flex justify-end">
-          <span className="flex h-8 items-center rounded-md bg-foreground px-3 text-xs font-medium text-background">
-            Save changes
+            <span
+              className={cn(
+                "rounded-full px-2 py-0.5 text-[11px]",
+                role === "Owner"
+                  ? "bg-violet-500/10 text-violet-700 dark:text-violet-300"
+                  : "bg-muted text-muted-foreground"
+              )}
+            >
+              {role}
+            </span>
+          </div>
+        ))}
+        <div className="mt-1 flex items-center gap-3 rounded-lg border border-dashed px-2 py-1.5">
+          <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-dashed text-muted-foreground">
+            <Send className="size-3" />
+          </span>
+          <p className="min-w-0 flex-1 truncate text-sm text-muted-foreground">
+            jordan@acme.com
+          </p>
+          <span className="text-[11px] text-muted-foreground">
+            Pending · Resend
           </span>
         </div>
       </div>
@@ -386,36 +531,14 @@ function ProfileCard() {
 }
 
 function SeatBilling() {
-  const members = [
-    ["SC", "Sarah Chen", "Owner", "bg-fuchsia-500"],
-    ["TM", "Tom Martin", "Admin", "bg-sky-500"],
-    ["LN", "Lina Nguyen", "Member", "bg-violet-500"],
+  const invoices = [
+    ["Sep 1", "4 seats", "$48.00"],
+    ["Aug 14", "+1 seat, prorated", "$6.40"],
+    ["Aug 1", "3 seats", "$36.00"],
   ]
 
   return (
     <div className="mx-auto flex h-full max-w-sm flex-col justify-center gap-3">
-      <div className="rounded-xl border bg-background p-2 text-left shadow-lg shadow-neutral-900/5 dark:shadow-black/30">
-        <p className="px-2 pt-1 pb-2 text-xs font-medium text-muted-foreground">
-          Members · 3 seats
-        </p>
-        {members.map(([initials, name, role, color]) => (
-          <div
-            key={name}
-            className="flex items-center gap-3 rounded-lg px-2 py-1.5"
-          >
-            <span
-              className={cn(
-                "flex size-7 items-center justify-center rounded-full text-[10px] font-semibold text-white",
-                color
-              )}
-            >
-              {initials}
-            </span>
-            <span className="flex-1 text-sm">{name}</span>
-            <span className="text-xs text-muted-foreground">{role}</span>
-          </div>
-        ))}
-      </div>
       <div className="rounded-xl border bg-background p-4 text-left shadow-lg shadow-neutral-900/5 dark:shadow-black/30">
         <div className="flex items-center justify-between text-sm">
           <span className="font-medium">Team plan</span>
@@ -424,14 +547,41 @@ function SeatBilling() {
           </span>
         </div>
         <div className="mt-3 flex items-baseline justify-between text-xs text-muted-foreground">
-          <span>3 seats × $12</span>
-          <span className="font-display text-xl font-medium text-foreground">
-            $36<span className="text-xs text-muted-foreground">/mo</span>
+          <span>4 seats × $12</span>
+          <span className="font-display text-2xl font-medium text-foreground">
+            $48<span className="text-xs text-muted-foreground">/mo</span>
           </span>
         </div>
+        <div className="mt-3 flex gap-1">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <span
+              key={i}
+              className={cn(
+                "h-1.5 flex-1 rounded-full",
+                i < 4 ? "bg-violet-500" : "bg-muted"
+              )}
+            />
+          ))}
+        </div>
         <p className="mt-2 text-[11px] text-muted-foreground">
-          Next seat is prorated: +$8.40 today
+          Seats follow members. Adding one is prorated automatically.
         </p>
+      </div>
+
+      <div className="rounded-xl border bg-background p-1.5 text-left shadow-lg shadow-neutral-900/5 dark:shadow-black/30">
+        <p className="px-2 pt-1 pb-1.5 text-xs font-medium text-muted-foreground">
+          Invoices
+        </p>
+        {invoices.map(([date, label, amount]) => (
+          <div
+            key={date}
+            className="flex items-center gap-3 rounded-lg px-2 py-1.5 text-sm"
+          >
+            <span className="w-12 text-xs text-muted-foreground">{date}</span>
+            <span className="flex-1 truncate">{label}</span>
+            <span className="tabular-nums">{amount}</span>
+          </div>
+        ))}
       </div>
     </div>
   )
