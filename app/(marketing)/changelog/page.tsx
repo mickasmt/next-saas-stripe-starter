@@ -32,9 +32,7 @@ export default async function ChangelogPage() {
         </p>
       </GridSection>
 
-      {/* Entries sit in their own band with unmasked rails, like
-          dub.co/changelog. Each date sticks under the site header while its
-          entry scrolls past. */}
+      {/* Each date sticks under the site header while its entry scrolls past. */}
       <GridSection>
         {entries.map((entry) => {
           const MDX = entry.data.body

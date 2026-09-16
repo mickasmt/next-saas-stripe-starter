@@ -41,8 +41,8 @@ export default async function BlogPage({ searchParams }: Props) {
       label: value.title,
       href: `/blog?category=${key}`,
     })),
-    // Links out rather than filtering, like dub.co/blog. Hidden when the
-    // changelog module is off so it never points at a 404.
+    // Links out rather than filtering. Hidden when the changelog module is
+    // off so it never points at a 404.
     ...((await isFeatureEnabled("changelog"))
       ? [{ key: "changelog", label: "Changelog", href: "/changelog" }]
       : []),
@@ -69,12 +69,9 @@ export default async function BlogPage({ searchParams }: Props) {
         />
       </GridSection>
 
-      {/* Posts sit in their own band: the rails run unmasked down its sides
-          and each card draws its own dividers, so a short last row leaves
-          empty (not filled) cells, like dub.co/blog. The dividers are
-          pseudo-elements above the card content rather than borders: the
-          grid can land on half pixels, where a neighbouring image would
-          otherwise round over a 1px border. */}
+      {/* A short last row leaves empty cells rather than filled ones. Dividers
+          are pseudo-elements, not borders, so a neighbouring image can't
+          round over them on half-pixel grid lines. */}
       <GridSection innerClassName="px-0 sm:px-0">
         <div className="grid grid-cols-1 md:grid-cols-3">
           {posts.map((post) => {

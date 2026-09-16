@@ -10,8 +10,7 @@ import { legalSource } from "@/lib/content/legal"
 import { formatDate } from "@/lib/utils"
 
 // Renders a page of content/legal: title band, numbered sections with a
-// sticky table of contents, then the last update date. Adapted from dub.co's
-// legal pages.
+// sticky table of contents, then the last update date.
 export function LegalPage({ slug }: { slug: string }) {
   const page = legalSource.getPage([slug])
   if (!page) notFound()

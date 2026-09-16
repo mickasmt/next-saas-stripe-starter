@@ -1,15 +1,7 @@
 import { cn } from "@/lib/utils"
 
-// The layout primitive the marketing page stacks into: a full-bleed band whose
-// content is fenced by two vertical rails, over faint graph paper. Adapted from
-// dub.co's 2025 landing page.
-//
-// `lines` draws the graph paper, which rises from the bottom edge of the band:
-// full strength between the rails, fading outwards on either side so it reads
-// as a backdrop for the content rather than as page-wide wallpaper.
-//
-// `background` is painted between the rails, over the graph paper and under
-// the content (e.g. a color wash), so it never spills past the rails.
+// Full-bleed band with two vertical rails and optional graph paper (`lines`)
+// or a color wash (`background`) fenced between them.
 export function GridSection({
   lines = false,
   background,

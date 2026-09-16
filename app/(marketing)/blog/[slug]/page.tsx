@@ -41,8 +41,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <>
-      {/* Header band: badge/date, title, description. Left-aligned inside the
-          rails, like dub.co's blog post header, not centered. */}
+      {/* Header band: badge/date, title, description, left-aligned. */}
       <GridSection lines innerClassName="pb-12 pt-16 sm:px-12">
         <div className="max-w-screen-sm">
           <div className="flex flex-wrap items-center gap-4">
@@ -64,10 +63,8 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       </GridSection>
 
-      {/* Content band: a 3-column grid that runs edge-to-edge inside the
-          rails, no gap. Left 2/3 holds the flush hero image + article. Right
-          1/3 is a distinct grey column (border-l + bg-muted) that runs the
-          full height, holding "Written by", the TOC and the CTA card. */}
+      {/* Gapless 3-column grid: flush image + article in the left 2/3, a
+          full-height bg-muted sidebar in the right 1/3. */}
       <GridSection innerClassName="px-0 sm:px-0">
         <div className="grid grid-cols-1 md:grid-cols-3">
           <div className="md:col-span-2">

@@ -17,9 +17,8 @@ import { GridSection } from "@/components/marketing/grid-section"
 import { PanelDemo } from "@/components/marketing/panel-demo"
 import { cn } from "@/lib/utils"
 
-// The landing page's case for the module system, laid out like dub.co's 2025
-// feature bands: a heading over a playable copy of the dev panel, a 2x2 grid
-// of feature cards, then a row of short facts.
+// The landing page's case for the module system: a heading over a playable
+// copy of the dev panel, a 2x2 grid of feature cards, then a row of facts.
 
 type Feature = {
   title: string
