@@ -1,8 +1,8 @@
 import { ArrowUpRight, Sparkles } from "lucide-react"
 import Link from "next/link"
 
-import { GetStartedCard } from "@/components/marketing/get-started-card"
 import { GridSection } from "@/components/marketing/grid-section"
+import { ModuleDeck } from "@/components/marketing/module-deck"
 import { buttonVariants } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
 import { formatStars, getGithubStars } from "@/lib/github"
@@ -43,8 +43,8 @@ export async function HeroStarter() {
         </a>
 
         <h1 className="mt-5 animate-slide-up-fade font-display text-4xl font-medium text-balance [--offset:20px] [animation-delay:100ms] motion-reduce:animate-none sm:text-5xl sm:leading-[1.15]">
-          Start with anything. <br />
-          Grow into everything.
+          One starter. <br className="hidden sm:block" />
+          Any project.
         </h1>
 
         <p className="mt-5 animate-slide-up-fade text-base text-balance text-muted-foreground [animation-delay:200ms] motion-reduce:animate-none sm:text-xl">
@@ -76,7 +76,7 @@ export async function HeroStarter() {
       </div>
 
       <div className="mt-16 animate-slide-up-fade [animation-delay:400ms] motion-reduce:animate-none">
-        <GetStartedCard stars={stars} />
+        <ModuleDeck />
       </div>
     </GridSection>
   )
