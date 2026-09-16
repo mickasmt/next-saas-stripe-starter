@@ -19,10 +19,10 @@ export async function HeroStarter() {
       lines
       innerClassName="pt-16 pb-8"
       background={
-        // Wash rising with the grid, between the rails only. A single two-stop
-        // gradient, unblurred: blurring several hues goes blotchy.
+        // Wash rising with the grid, between the rails only. Same colors as
+        // the closing CTA's wash for a consistent hue across the page.
         <div className="absolute top-0 -left-1/4 h-full w-[150%] opacity-15 dark:opacity-25">
-          <div className="size-full bg-[linear-gradient(90deg,#6366f1,#8b5cf6)] mask-[linear-gradient(transparent_25%,black)]" />
+          <div className="size-full bg-[linear-gradient(90deg,#6366f1,#8b5cf6,#d946ef)] mask-[linear-gradient(transparent_25%,black)]" />
         </div>
       }
     >
