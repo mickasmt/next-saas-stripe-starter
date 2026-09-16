@@ -43,12 +43,13 @@ export async function HeroStarter() {
         </a>
 
         <h1 className="mt-5 animate-slide-up-fade font-display text-4xl font-medium text-balance [--offset:20px] [animation-delay:100ms] motion-reduce:animate-none sm:text-5xl sm:leading-[1.15]">
-          The foundation for your next product
+          Start with anything. <br />
+          Grow into everything.
         </h1>
 
         <p className="mt-5 animate-slide-up-fade text-base text-balance text-muted-foreground [animation-delay:200ms] motion-reduce:animate-none sm:text-xl">
-          Authentication, database, billing, roles, admin and more — ready to
-          plug in when you need them. Build once. Evolve without starting over.
+          A modular Next.js foundation. <br className="hidden sm:block" />
+          Begin with a blog, end up with a SaaS.
         </p>
       </div>
 
