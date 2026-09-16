@@ -128,7 +128,7 @@ export function ModuleDeck() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <ul className="flex flex-wrap justify-center gap-y-5 sm:flex-nowrap sm:gap-y-0">
+      <ul className="flex flex-wrap justify-center gap-y-5 sm:flex-nowrap sm:gap-y-0 pt-4 pb-12">
         {modules.map((module, index) => (
           <li
             key={module.key}
@@ -146,20 +146,6 @@ export function ModuleDeck() {
           </li>
         ))}
       </ul>
-
-      {/* Fixed width so the pill does not jump as the setup name changes. */}
-      <p className="mt-8 flex w-60 items-center justify-between gap-2 rounded-md border border-neutral-900/10 bg-background/70 p-1 pr-3 text-xs shadow-sm backdrop-blur-sm sm:mt-16 dark:border-white/10 dark:bg-white/5">
-        <span className="min-w-0 flex-1 truncate rounded-sm bg-muted px-2 py-1 text-left font-medium text-foreground">
-          {setup.label}
-        </span>
-        <span className="flex shrink-0 items-center gap-1.5 text-muted-foreground tabular-nums">
-          <span className="relative flex size-1.5">
-            <span className="absolute inset-0 animate-ping rounded-full bg-emerald-500/60 motion-reduce:animate-none" />
-            <span className="relative size-1.5 rounded-full bg-emerald-500" />
-          </span>
-          {enabled.size} modules on
-        </span>
-      </p>
     </div>
   )
 }
