@@ -67,13 +67,13 @@ export async function HeroStarter() {
           {cta.label}
         </Link>
         <Link
-          href={siteConfig.links.pro}
+          href="#pro"
           className={cn(
             buttonVariants({ variant: "outline", size: "lg" }),
             "px-5 shadow-sm hover:ring-4 hover:ring-neutral-200 dark:hover:ring-white/10"
           )}
         >
-          <Sparkles className="text-amber-500" />
+          <Sparkles className="text-violet-500" />
           Explore Pro
         </Link>
       </div>
