@@ -74,8 +74,8 @@ export async function SiteHeader() {
               href={siteConfig.links.pro}
               className={cn(linkClassName, "group flex items-center gap-1.5")}
             >
-              <Sparkles className="size-3.5 text-violet-500 transition-transform group-hover:rotate-12" />
-              <span className="animate-shine bg-[linear-gradient(110deg,#7c3aed_35%,#e879f9_50%,#7c3aed_65%)] bg-size-[250%_100%] bg-clip-text text-transparent motion-reduce:animate-none dark:bg-[linear-gradient(110deg,#a78bfa_35%,#f5d0fe_50%,#a78bfa_65%)]">
+              <Sparkles className="size-3.5 text-violet-500 transition-transform dark:text-violet-300 group-hover:rotate-12" />
+              <span className="animate-shine bg-[linear-gradient(110deg,#7c3aed_35%,#e879f9_50%,#7c3aed_65%)] bg-size-[250%_100%] bg-clip-text text-transparent motion-reduce:animate-none dark:bg-[linear-gradient(110deg,#c4b5fd_35%,#fae8ff_50%,#c4b5fd_65%)]">
                 Pro
               </span>
             </Link>
@@ -89,7 +89,7 @@ export async function SiteHeader() {
                 href={siteConfig.links.pro}
                 className={cn(
                   buttonVariants({ variant: "outline", size: "sm" }),
-                  "border-violet-500/40 bg-violet-500/10 px-3 text-violet-700 hover:bg-violet-500/15 hover:text-violet-800 dark:border-violet-400/30 dark:bg-violet-400/10 dark:text-violet-200 dark:hover:bg-violet-400/20 dark:hover:text-violet-100"
+                  "border-violet-500/40 bg-violet-500/10 px-3 text-violet-700 hover:bg-violet-500/15 hover:text-violet-800 dark:border-violet-400/50 dark:bg-violet-400/15 dark:text-violet-100 dark:hover:bg-violet-400/25 dark:hover:text-white"
                 )}
               >
                 <Sparkles />

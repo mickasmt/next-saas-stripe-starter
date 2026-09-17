@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 
 import { NavFind } from "@/components/dashboard/nav-find"
 import { OrganizationSwitcher } from "@/components/dashboard/organization-switcher"
+import { ProSidebarCard } from "@/components/dashboard/pro/sidebar-card"
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import type { ShellOrganization, ShellUser } from "@/components/dashboard/types"
 import { UserMenu } from "@/components/dashboard/user-menu"
@@ -72,6 +73,7 @@ export function Sidebar({
       </div>
 
       <div className="flex flex-col gap-1 p-2">
+        <ProSidebarCard />
         <Link
           href="/"
           onClick={onNavigate}

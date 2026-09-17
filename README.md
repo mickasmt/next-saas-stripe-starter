@@ -90,6 +90,8 @@ Titles, descriptions, canonical URLs and social cards come from `lib/metadata.ts
 
 A paid version adds what comes after launch — onboarding, transactional emails, team management and seat-based billing — on the same foundation. See the `/pro` page.
 
+The dashboard previews those features on locked pages: sample data, inert controls and a "Get Pro" banner. When you ship your own product, delete `components/dashboard/pro`, the routes that use it and the `pro: true` nav items in `config/nav.ts`.
+
 ## License
 
 MIT — see [LICENSE.md](LICENSE.md).

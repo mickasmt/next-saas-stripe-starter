@@ -7,14 +7,13 @@ import {
   Search,
   ShieldCheck,
   ShieldOff,
-  Sparkles,
   UserCheck,
   type LucideIcon,
 } from "lucide-react"
-import Link from "next/link"
 import { Fragment, useState } from "react"
 
 import { sampleUsers, type SampleUser } from "@/components/admin/sample-users"
+import { ProBanner } from "@/components/dashboard/pro/pro-banner"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -26,8 +25,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
 
 function getInitials(name: string) {
   return name
@@ -71,34 +68,14 @@ export function UsersPreview() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div
-        className={cn(
-          "flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-card px-4 py-3 transition-colors",
-          lockedAction && "border-foreground/30"
-        )}
-      >
-        <div className="flex min-w-0 items-start gap-3">
-          <Sparkles className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-          <div className="min-w-0">
-            <p className="font-medium">
-              {lockedAction
-                ? `"${lockedAction}" is included in Pro`
-                : "User management is included in Pro"}
-            </p>
-            <p className="text-muted-foreground">
-              This page shows sample data. Pro ships the working code: real
-              users, roles, bans and logging in as a user.
-            </p>
-          </div>
-        </div>
-        <Button
-          size="sm"
-          nativeButton={false}
-          render={<Link href={siteConfig.links.pro} />}
-        >
-          Get Pro
-        </Button>
-      </div>
+      <ProBanner
+        title={
+          lockedAction
+            ? `"${lockedAction}" is included in Pro`
+            : "User management is included in Pro"
+        }
+        description="This page shows sample data. Pro ships the working code: real users, roles, bans and logging in as a user."
+      />
 
       <div className="relative w-full sm:w-64">
         <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />

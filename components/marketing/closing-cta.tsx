@@ -63,10 +63,11 @@ export async function ClosingCta() {
               href={siteConfig.links.pro}
               className={cn(
                 buttonVariants({ variant: "outline", size: "lg" }),
-                "px-5 shadow-sm hover:ring-4 hover:ring-neutral-200 dark:hover:ring-white/10"
+                "px-5 shadow-sm hover:ring-4 hover:ring-neutral-200",
+                "dark:border-violet-400/40 dark:bg-violet-400/10 dark:text-violet-100 dark:hover:bg-violet-400/20 dark:hover:ring-violet-400/20"
               )}
             >
-              <Sparkles className="text-violet-500" />
+              <Sparkles className="text-violet-500 dark:text-violet-300" />
               Explore Pro
             </Link>
           </div>
