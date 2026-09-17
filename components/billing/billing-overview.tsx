@@ -92,6 +92,14 @@ export function BillingOverview({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Drops ?checkout=success so a reload doesn't show the banner again. Plain
+  // history API: the banner stays until the user leaves, with no refetch.
+  useEffect(() => {
+    if (checkoutSucceeded) {
+      window.history.replaceState(null, "", "/dashboard/billing")
+    }
+  }, [checkoutSucceeded])
+
   async function openPortal() {
     setPortalPending(true)
     setPortalError(null)
