@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
-// The header sits flush on the hero at rest and only grows a background and a
+// The header sits flush on the hero at rest and turns into a solid bar with a
 // bottom rule once the page scrolls under it.
 export function SiteHeaderBackdrop() {
   const [scrolled, setScrolled] = useState(false)
@@ -22,7 +22,7 @@ export function SiteHeaderBackdrop() {
       className={cn(
         "absolute inset-0 border-b transition-all",
         scrolled
-          ? "border-grid-border bg-background/75 backdrop-blur-lg"
+          ? "border-grid-border bg-background"
           : "border-transparent"
       )}
     />
