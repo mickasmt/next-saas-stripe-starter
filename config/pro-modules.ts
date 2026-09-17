@@ -10,4 +10,59 @@ export type ProModule = {
   url: string
 }
 
-export const proModules: ProModule[] = []
+export const proModules: ProModule[] = [
+  {
+    key: "onboarding",
+    label: "Onboarding",
+    description: "Guided first steps, saved and resumed per member.",
+    url: "/pro",
+  },
+  {
+    key: "emails",
+    label: "Transactional emails",
+    description: "Templates, provider setup and a delivery log.",
+    url: "/pro",
+  },
+  {
+    key: "teams",
+    label: "Teams",
+    description: "Invitations, roles, switching and leaving an organization.",
+    url: "/pro",
+  },
+  {
+    key: "seats",
+    label: "Seat billing",
+    description: "Per-seat pricing, proration, invoices and billing details.",
+    url: "/pro",
+  },
+  {
+    key: "usage",
+    label: "Usage metering",
+    description: "Metered counters, plan limits and overage.",
+    url: "/pro",
+  },
+  {
+    key: "audit",
+    label: "Audit log",
+    description: "Recorded events, filters and CSV export.",
+    url: "/pro",
+  },
+  {
+    key: "apiKeys",
+    label: "API keys",
+    description: "Hashed keys, scopes, rate limits and revocation.",
+    url: "/pro",
+  },
+  {
+    key: "security",
+    label: "Account security",
+    description: "Password changes, two-factor and session revocation.",
+    url: "/pro",
+  },
+  {
+    key: "adminPro",
+    label: "Admin panel",
+    description: "Real user management: roles, bans and logging in as a user.",
+    url: "/pro",
+  },
+]
