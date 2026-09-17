@@ -9,11 +9,12 @@ import {
 import type { PlanKey } from "@/components/marketing/pricing/data"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import type { PlanName } from "@/modules/billing/plans"
+import { adminPlan, type PlanName } from "@/modules/billing/plans"
 import type { BillingViewer } from "@/modules/billing/pricing"
 
 export function isCurrentPlan(viewer: BillingViewer, plan: PlanKey) {
   if (!viewer.signedIn) return false
+  if (viewer.adminAccess) return plan === adminPlan
   return plan === "free"
     ? !viewer.subscription
     : viewer.subscription?.plan === plan
@@ -67,6 +68,13 @@ export function PlanCta({
     return plan === "free"
       ? link("/register", signedOutLabel)
       : upgrade(signedOutLabel)
+  }
+
+  // Admins see the plans but never check out.
+  if (viewer.adminAccess) {
+    return plan === "free"
+      ? link("/dashboard", "Go to dashboard")
+      : link("/dashboard/billing", compact ? "Included" : "Included for admins")
   }
 
   const current = viewer.subscription

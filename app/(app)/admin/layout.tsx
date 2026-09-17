@@ -1,5 +1,8 @@
-import { requireRole } from "@/lib/auth/session"
+import { notFound } from "next/navigation"
+
+import { requireSession } from "@/lib/auth/session"
 import { requireFeature } from "@/lib/features/guard"
+import { canViewAdmin } from "@/modules/admin/preview"
 
 export default async function AdminLayout({
   children,
@@ -7,6 +10,7 @@ export default async function AdminLayout({
   children: React.ReactNode
 }) {
   await requireFeature("admin")
-  await requireRole("admin")
+  const session = await requireSession()
+  if (!(await canViewAdmin(session))) notFound()
   return children
 }

@@ -4,7 +4,7 @@ import { headers } from "next/headers"
 import { BillingOverview } from "@/components/billing/billing-overview"
 import { PageContent, PageHeader } from "@/components/dashboard/page-header"
 import { siteConfig } from "@/config/site"
-import { isOrganizationManager } from "@/lib/auth/roles"
+import { isOrganizationManager, isPlatformAdmin } from "@/lib/auth/roles"
 import { auth } from "@/lib/auth/server"
 import { getActiveOrganization } from "@/lib/auth/session"
 import { plans, type PlanName } from "@/modules/billing/plans"
@@ -19,7 +19,8 @@ export default async function BillingPage({
 }: {
   searchParams: Promise<{ plan?: string; interval?: string; checkout?: string }>
 }) {
-  const { organization, member } = await getActiveOrganization()
+  const { session, organization, member } = await getActiveOrganization()
+  const adminAccess = isPlatformAdmin(session.user.role)
   const params = await searchParams
 
   const [subscriptions, prices] = await Promise.all([
@@ -32,7 +33,9 @@ export default async function BillingPage({
   const subscription = subscriptions[0]
 
   // Set by the pricing page when a signed-out visitor picked a paid plan.
-  const resumePlan = plans.find((plan) => plan.name === params.plan)?.name
+  const resumePlan = adminAccess
+    ? undefined
+    : plans.find((plan) => plan.name === params.plan)?.name
 
   return (
     <PageContent>
@@ -59,6 +62,7 @@ export default async function BillingPage({
         }
         prices={prices}
         canManage={isOrganizationManager(member.role)}
+        adminAccess={adminAccess}
         resume={
           resumePlan
             ? {

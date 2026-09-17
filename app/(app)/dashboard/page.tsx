@@ -1,10 +1,13 @@
 import { Blocks } from "lucide-react"
 import type { Metadata } from "next"
 
+import { DemoBanner } from "@/components/admin/demo-banner" // module:admin
 import { EmptyState } from "@/components/dashboard/empty-state"
 import { PageContent, PageHeader } from "@/components/dashboard/page-header"
 import { siteConfig } from "@/config/site"
 import { getActiveOrganization } from "@/lib/auth/session"
+import { isFeatureEnabled } from "@/lib/features/resolve" // module:admin
+import { getViewRole, isDemoMode } from "@/modules/admin/preview" // module:admin
 
 export const metadata: Metadata = {
   title: `Overview | ${siteConfig.name}`,
@@ -12,6 +15,11 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const { session, organization, member } = await getActiveOrganization()
+
+  // module:admin start
+  const showDemoBanner = isDemoMode() && (await isFeatureEnabled("admin"))
+  const viewRole = await getViewRole(session)
+  // module:admin end
 
   const stats = [
     { label: "Organization", value: organization.name },
@@ -21,6 +29,9 @@ export default async function DashboardPage() {
 
   return (
     <PageContent>
+      {/* module:admin start */}
+      {showDemoBanner && <DemoBanner role={viewRole} />}
+      {/* module:admin end */}
       <PageHeader
         title={`Welcome back, ${session.user.name.split(" ")[0]}`}
         description="Here's what's happening in your organization."

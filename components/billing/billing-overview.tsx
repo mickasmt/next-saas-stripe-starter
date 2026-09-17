@@ -10,7 +10,7 @@ import { plans as pricingPlans } from "@/components/marketing/pricing/data"
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth/client"
 import { cn } from "@/lib/utils"
-import type { PlanName } from "@/modules/billing/plans"
+import { adminPlan, type PlanName } from "@/modules/billing/plans"
 import {
   formatAmount,
   monthlyAmount,
@@ -40,6 +40,7 @@ function formatDate(value: string | null) {
 export function BillingOverview({
   subscription,
   canManage,
+  adminAccess,
   prices,
   resume,
   checkoutSucceeded,
@@ -47,6 +48,8 @@ export function BillingOverview({
   subscription: Subscription | null
   prices: PlanPrices
   canManage: boolean
+  // Platform admin: top plan without a subscription, no checkout.
+  adminAccess: boolean
   resume: { plan: PlanName; interval: Interval } | null
   checkoutSucceeded: boolean
 }) {
@@ -61,7 +64,8 @@ export function BillingOverview({
   const resumed = useRef(false)
 
   const current = pricingPlans.find(
-    (plan) => plan.key === (subscription?.plan ?? "free")
+    (plan) =>
+      plan.key === (adminAccess ? adminPlan : (subscription?.plan ?? "free"))
   )
   // Plans without a Stripe price can't be bought, so they're not shown.
   const paidPlans = pricingPlans.filter(
@@ -136,18 +140,24 @@ export function BillingOverview({
       <SectionCard
         title="Current Plan"
         description={
-          subscription
-            ? "Your organization's subscription. Invoices, payment methods and cancellation live in the billing portal."
-            : "Your organization is on the Free plan. Upgrade anytime to unlock more."
+          adminAccess
+            ? "Platform admins get every feature of the highest plan, without a subscription."
+            : subscription
+              ? "Your organization's subscription. Invoices, payment methods and cancellation live in the billing portal."
+              : "Your organization is on the Free plan. Upgrade anytime to unlock more."
         }
         footer={
           <>
             <p>
-              {canManage
-                ? subscription
-                  ? "Changes made in the portal show up here within seconds."
-                  : "Payments are processed securely."
-                : "Only owners and admins can manage billing."}
+              {adminAccess
+                ? subscription && canManage
+                  ? "No payment needed. You can still cancel your old subscription."
+                  : "No payment needed for admin accounts."
+                : canManage
+                  ? subscription
+                    ? "Changes made in the portal show up here within seconds."
+                    : "Payments are processed securely."
+                  : "Only owners and admins can manage billing."}
             </p>
             {canManage && subscription && (
               <Button
@@ -166,7 +176,12 @@ export function BillingOverview({
           <span className="text-2xl font-semibold tracking-[-0.04em]">
             {current?.name ?? subscription?.plan}
           </span>
-          {subscription && (
+          {adminAccess && (
+            <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
+              Admin access
+            </span>
+          )}
+          {subscription && !adminAccess && (
             <span
               className={cn(
                 "rounded-full px-2 py-0.5 text-xs font-medium",
@@ -182,7 +197,7 @@ export function BillingOverview({
                   : "Active"}
             </span>
           )}
-          {subscription && (
+          {subscription && !adminAccess && (
             <span className="text-muted-foreground">
               {currentPrice
                 ? `${formatAmount(currentPrice.amount, currentPrice.currency)} / ${subscription.interval}`
@@ -211,8 +226,9 @@ export function BillingOverview({
         <div className="grid gap-4 md:grid-cols-2">
           {paidPlans.map((plan) => {
             const key = plan.key as PlanName
-            const isCurrent =
-              subscription?.plan === key && subscription.interval === interval
+            const isCurrent = adminAccess
+              ? key === adminPlan
+              : subscription?.plan === key && subscription.interval === interval
             const price = prices[key][interval]
 
             return (
@@ -258,7 +274,7 @@ export function BillingOverview({
                     </li>
                   ))}
                 </ul>
-                {canManage && (
+                {canManage && !adminAccess && (
                   <Button
                     className="mt-5 w-full"
                     variant={isCurrent ? "outline" : "default"}

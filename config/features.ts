@@ -56,12 +56,16 @@ export const features = defineFeatures({
     ],
     routes: ["/pricing", "/dashboard/billing"],
   },
+  // module:admin start
   admin: {
     label: "Admin panel",
     description: "User management for platform admins.",
     default: true,
     dependsOn: ["auth"],
+    files: ["app/(app)/admin", "components/admin", "modules/admin"],
+    routes: ["/admin"],
   },
+  // module:admin end
   // module:docs start
   docs: {
     label: "Documentation",

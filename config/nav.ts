@@ -36,6 +36,7 @@ export const dashboardNav: NavSection[] = [
       },
     ],
   },
+  // module:admin start
   {
     title: "Admin",
     items: [
@@ -48,6 +49,7 @@ export const dashboardNav: NavSection[] = [
       },
     ],
   },
+  // module:admin end
 ]
 
 // Shown instead of dashboardNav while inside /dashboard/settings.

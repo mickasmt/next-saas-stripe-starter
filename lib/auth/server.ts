@@ -8,7 +8,7 @@ import { nextCookies } from "better-auth/next-js"
 import { admin, organization } from "better-auth/plugins"
 import { revalidateTag } from "next/cache"
 
-import { isOrganizationManager } from "@/lib/auth/roles"
+import { isOrganizationManager, isPlatformAdmin } from "@/lib/auth/roles"
 import { db } from "@/lib/db"
 import * as schema from "@/lib/db/schema"
 import { stripeClient } from "@/lib/stripe"
@@ -122,6 +122,10 @@ export const auth = betterAuth({
 
           if (!member) return false
           if (action === "list-subscription") return true
+          // Platform admins already have the top plan: no checkout for them.
+          if (action === "upgrade-subscription" && isPlatformAdmin(user.role)) {
+            return false
+          }
 
           return isOrganizationManager(member.role)
         },

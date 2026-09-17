@@ -1,7 +1,6 @@
-import { ShieldCheck } from "lucide-react"
 import type { Metadata } from "next"
 
-import { EmptyState } from "@/components/dashboard/empty-state"
+import { UsersPreview } from "@/components/admin/users-preview"
 import { PageContent, PageHeader } from "@/components/dashboard/page-header"
 import { siteConfig } from "@/config/site"
 
@@ -16,11 +15,7 @@ export default function AdminPage() {
         title="Admin panel"
         description="Manage users across the platform."
       />
-      <EmptyState
-        icon={ShieldCheck}
-        title="No users to show yet"
-        description="User management for platform admins will show up here."
-      />
+      <UsersPreview />
     </PageContent>
   )
 }

@@ -6,6 +6,7 @@ import { getActiveOrganization } from "@/lib/auth/session"
 import { requireFeature } from "@/lib/features/guard"
 import { getFeatures } from "@/lib/features/resolve"
 import { filterNav } from "@/lib/nav"
+import { getViewRole } from "@/modules/admin/preview" // module:admin
 
 // Dashboard-only font; marketing keeps its own.
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
@@ -20,8 +21,13 @@ export default async function AppLayout({
   const { session, organization, member } = await getActiveOrganization()
 
   const features = await getFeatures()
-  const nav = filterNav(dashboardNav, { features, role: session.user.role })
-  const settings = filterNav(settingsNav, { features, role: session.user.role })
+  const viewer = { role: session.user.role }
+  // module:admin start
+  // Demo preview swaps the role shown in the nav, never the one in the DB.
+  viewer.role = await getViewRole(session)
+  // module:admin end
+  const nav = filterNav(dashboardNav, { features, role: viewer.role })
+  const settings = filterNav(settingsNav, { features, role: viewer.role })
 
   return (
     <DashboardShell

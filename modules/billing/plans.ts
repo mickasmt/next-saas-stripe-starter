@@ -16,3 +16,6 @@ export const plans = [
 ] satisfies StripePlan[]
 
 export type PlanName = (typeof plans)[number]["name"]
+
+// Platform admins get this plan without a subscription.
+export const adminPlan: PlanName = "business"

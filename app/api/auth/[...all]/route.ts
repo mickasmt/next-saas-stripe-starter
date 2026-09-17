@@ -11,7 +11,6 @@ const handler = toNextJsHandler(auth)
 const pluginRoutes: { prefix: string; feature: FeatureKey }[] = [
   { prefix: "/api/auth/subscription/", feature: "billing" },
   { prefix: "/api/auth/stripe/", feature: "billing" },
-  { prefix: "/api/auth/admin/", feature: "admin" },
 ]
 
 async function isAllowed(request: Request) {
@@ -19,6 +18,9 @@ async function isAllowed(request: Request) {
   if (!features.auth) return false
 
   const { pathname } = new URL(request.url)
+  // User management endpoints ship with Pro: the free admin panel only shows
+  // sample data, so nothing here may list, ban or impersonate real users.
+  if (pathname.startsWith("/api/auth/admin/")) return false
   return pluginRoutes.every(
     ({ prefix, feature }) => !pathname.startsWith(prefix) || features[feature]
   )

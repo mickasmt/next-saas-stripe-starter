@@ -64,5 +64,7 @@ export type BillingViewer =
   | {
       signedIn: true
       canManage: boolean
+      // Platform admin: has the admin plan without paying.
+      adminAccess: boolean
       subscription: { plan: PlanName; interval: "month" | "year" } | null
     }

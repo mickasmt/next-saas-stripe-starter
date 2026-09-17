@@ -2,7 +2,7 @@ import "server-only"
 
 import { headers } from "next/headers"
 
-import { isOrganizationManager } from "@/lib/auth/roles"
+import { isOrganizationManager, isPlatformAdmin } from "@/lib/auth/roles"
 import { auth } from "@/lib/auth/server"
 import { getSession } from "@/lib/auth/session"
 import type { PlanName } from "@/modules/billing/plans"
@@ -12,8 +12,9 @@ export async function getBillingViewer(): Promise<BillingViewer> {
   const session = await getSession()
   const organizationId = session?.session.activeOrganizationId
   if (!session) return { signedIn: false }
+  const adminAccess = isPlatformAdmin(session.user.role)
   if (!organizationId) {
-    return { signedIn: true, canManage: false, subscription: null }
+    return { signedIn: true, canManage: false, adminAccess, subscription: null }
   }
 
   const requestHeaders = await headers()
@@ -29,6 +30,7 @@ export async function getBillingViewer(): Promise<BillingViewer> {
   return {
     signedIn: true,
     canManage: member ? isOrganizationManager(member.role) : false,
+    adminAccess,
     subscription: subscription
       ? {
           plan: subscription.plan as PlanName,
