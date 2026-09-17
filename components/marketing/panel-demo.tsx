@@ -81,16 +81,17 @@ const appearance: Record<string, { icon: LucideIcon; tint: string }> = {
 }
 
 // What the mock app serves, and which module each route belongs to.
+// No leading slash: these are mock labels, not links for the prune check.
 const routes: { path: string; module: string | null }[] = [
-  { path: "/", module: null },
-  { path: "/pricing", module: "billing" },
-  { path: "/login", module: "auth" },
-  { path: "/dashboard", module: "auth" },
-  { path: "/dashboard/billing", module: "billing" },
-  { path: "/admin", module: "admin" },
-  { path: "/docs", module: "docs" },
-  { path: "/blog", module: "blog" },
-  { path: "/changelog", module: "changelog" },
+  { path: "", module: null },
+  { path: "pricing", module: "billing" },
+  { path: "login", module: "auth" },
+  { path: "dashboard", module: "auth" },
+  { path: "dashboard/billing", module: "billing" },
+  { path: "admin", module: "admin" },
+  { path: "docs", module: "docs" },
+  { path: "blog", module: "blog" },
+  { path: "changelog", module: "changelog" },
 ]
 
 const initial: OwnValues = Object.fromEntries(
@@ -461,7 +462,7 @@ function AppPreview({ isOn }: { isOn: (key: string) => boolean }) {
               const live = route.module === null || isOn(route.module)
               return (
                 <li
-                  key={route.path}
+                  key={route.path || "/"}
                   className="flex items-center justify-between px-3 py-2"
                 >
                   <span
@@ -470,7 +471,7 @@ function AppPreview({ isOn }: { isOn: (key: string) => boolean }) {
                       !live && "text-muted-foreground/60 line-through"
                     )}
                   >
-                    {route.path}
+                    /{route.path}
                   </span>
                   <span
                     className={cn(

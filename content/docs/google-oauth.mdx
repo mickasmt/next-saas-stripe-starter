@@ -1,0 +1,33 @@
+---
+title: Google OAuth
+description: Let users sign in with their Google account.
+---
+
+Email and password sign-in works without it. The Google button shows up once `GOOGLE_CLIENT_ID` is set.
+
+## Create the credentials
+
+1. Open the [Google Cloud console](https://console.cloud.google.com/apis/credentials) and select or create a project.
+2. Configure the **OAuth consent screen**: app name, support email, and your domain once you deploy.
+3. Go to **Credentials**, then **Create credentials** → **OAuth client ID**, type **Web application**.
+4. Add the authorized redirect URIs:
+
+```txt
+http://localhost:3000/api/auth/callback/google
+https://your-domain.com/api/auth/callback/google
+```
+
+5. Copy the client ID and secret:
+
+```bash
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+```
+
+<Callout type="warn">
+  The redirect URI is built from `BETTER_AUTH_URL`. If they don't match exactly (protocol, domain, no trailing slash), Google refuses the sign-in with `redirect_uri_mismatch`.
+</Callout>
+
+## Publish the app
+
+While the consent screen is in **Testing**, only the test users you listed can sign in. Publish it before launch.

@@ -1,0 +1,46 @@
+---
+title: Deployment
+description: Deploy the starter on Vercel.
+---
+
+## Import the project
+
+Push your repository to GitHub, then import it on [Vercel](https://vercel.com/new). The framework and build command are detected automatically.
+
+## Environment variables
+
+Add the variables of your `.env.local` in **Settings** → **Environment Variables**, with production values:
+
+| Variable | Production value |
+| --- | --- |
+| `DATABASE_URL`, `DATABASE_URL_UNPOOLED` | Your production database |
+| `BETTER_AUTH_SECRET` | A new secret: `openssl rand -base64 32` |
+| `BETTER_AUTH_URL` | `https://your-domain.com` |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Same client, with the production redirect URI added |
+| `STRIPE_SECRET_KEY` | Live key (`sk_live_...`) |
+| `STRIPE_WEBHOOK_SECRET` | Secret of the production webhook |
+| `STRIPE_*_PRICE_ID` | Live mode price IDs |
+
+<Callout type="warn">
+  Test and live mode don't share anything: recreate your products, prices and webhook in live mode, see [Stripe](/docs/stripe).
+</Callout>
+
+## Database
+
+Apply the migrations to the production database before the first deploy:
+
+```bash
+DATABASE_URL_UNPOOLED=... pnpm db:migrate
+```
+
+Run it again whenever you add a migration.
+
+## Deploy
+
+Deploy, then check:
+
+- sign-up and sign-in, with Google too;
+- a real subscription, refunded afterwards from the Stripe dashboard;
+- the webhook deliveries in Stripe, all in success.
+
+Environment variables and feature flags are read at build time: redeploy after changing one.

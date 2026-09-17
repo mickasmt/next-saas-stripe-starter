@@ -1,0 +1,3 @@
+{
+  "pages": ["index", "installation", "modules", "stripe", "google-oauth", "deployment"]
+}

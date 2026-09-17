@@ -1,7 +1,8 @@
 "use client"
 
-import { BookOpen, Menu } from "lucide-react"
-import Link from "next/link"
+import { BookOpen } from "lucide-react" // module:docs
+import { Menu } from "lucide-react"
+import Link from "next/link" // module:docs
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 
@@ -58,6 +59,7 @@ export function DashboardHeader(props: Omit<SidebarProps, "onNavigate">) {
       <p className="truncate text-center font-medium">{title}</p>
 
       <div className="flex items-center justify-end pr-2 md:pr-4">
+        {/* module:docs start */}
         <Button
           variant="ghost"
           size="sm"
@@ -68,6 +70,7 @@ export function DashboardHeader(props: Omit<SidebarProps, "onNavigate">) {
           <BookOpen className="text-muted-foreground" />
           <span className="hidden sm:inline">Docs</span>
         </Button>
+        {/* module:docs end */}
       </div>
     </header>
   )

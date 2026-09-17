@@ -1,0 +1,74 @@
+---
+title: Stripe
+description: Create your products, prices and webhook.
+---
+
+Billing needs a Stripe account. Work in **test mode** until you go live: test and live mode have separate keys, prices and webhooks.
+
+## API key
+
+Copy the secret key from [API keys](https://dashboard.stripe.com/test/apikeys):
+
+```bash
+STRIPE_SECRET_KEY=sk_test_...
+```
+
+## Products and prices
+
+Create two products in the [product catalog](https://dashboard.stripe.com/test/products), **Pro** and **Business**, each with two recurring prices: one monthly, one yearly. Copy each price ID (`price_...`):
+
+```bash
+STRIPE_PRO_MONTHLY_PRICE_ID=price_...
+STRIPE_PRO_YEARLY_PRICE_ID=price_...
+STRIPE_BUSINESS_MONTHLY_PRICE_ID=price_...
+STRIPE_BUSINESS_YEARLY_PRICE_ID=price_...
+```
+
+Amounts are never stored in the code: the pricing page reads them from Stripe. Plans are declared in `modules/billing/plans.ts`, add one there if you need a third tier.
+
+<Callout>
+  Only `STRIPE_PRO_MONTHLY_PRICE_ID` is required to switch billing on. A plan without a monthly price is hidden from the pricing page.
+</Callout>
+
+## Webhook
+
+The webhook keeps subscriptions in sync with your database. Its endpoint is `/api/auth/stripe/webhook`.
+
+### In development
+
+Install the [Stripe CLI](https://docs.stripe.com/stripe-cli) and forward events to your local app:
+
+```bash
+stripe login
+stripe listen --forward-to localhost:3000/api/auth/stripe/webhook
+```
+
+The command prints a signing secret (`whsec_...`). Keep it running while you test.
+
+```bash
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+### In production
+
+Add an endpoint in [Webhooks](https://dashboard.stripe.com/webhooks) pointing to `https://your-domain.com/api/auth/stripe/webhook`, with these events:
+
+- `checkout.session.completed`
+- `customer.subscription.created`
+- `customer.subscription.updated`
+- `customer.subscription.deleted`
+- `price.created`, `price.updated`, `price.deleted`
+- `product.updated`
+
+Price and product events refresh the pricing page right away. Without them, new prices show up within 5 minutes.
+
+## Customer portal
+
+The **Manage** button on the billing page opens the Stripe customer portal. Enable it in [portal settings](https://dashboard.stripe.com/test/settings/billing/portal) and choose what customers can do: cancel, switch plans, update their payment method.
+
+## Test a subscription
+
+1. Start `pnpm dev` and `stripe listen`.
+2. Sign up, then pick a plan on `/pricing`.
+3. Pay with the card `4242 4242 4242 4242`, any future date and any CVC.
+4. Back on `/dashboard/billing`, the plan is active. Cancel it from the portal to test the other way.
