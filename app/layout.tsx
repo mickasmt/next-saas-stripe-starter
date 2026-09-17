@@ -3,6 +3,7 @@ import { Geist_Mono, Inter } from "next/font/google"
 import "./globals.css"
 import { DevToolbar } from "@/components/dev/dev-toolbar"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/sonner"
 import { cn } from "@/lib/utils"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           {children}
+          <Toaster />
           {process.env.NODE_ENV === "development" && <DevToolbar />}
         </ThemeProvider>
       </body>
