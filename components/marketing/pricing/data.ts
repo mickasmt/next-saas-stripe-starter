@@ -1,33 +1,32 @@
 // Everything the pricing page shows: plans, the comparison table and the FAQ.
 //
 // TODO: after cloning, replace these placeholders with your product's real
-// plans and limits. Keep the paid plan keys in line with `modules/billing/plans.ts`
-// so the checkout resolves the same names.
+// plans and limits. Paid plan keys come from `modules/billing/plans.ts`, so the
+// checkout resolves the same names. Prices are never set here: they are read
+// from Stripe (see `modules/billing/prices.ts`).
 
-export type PlanKey = "free" | "pro" | "business"
+import type { PlanName } from "@/modules/billing/plans"
+
+export type PlanKey = "free" | PlanName
 
 export type Plan = {
   key: PlanKey
   name: string
   description: string
-  // Per month. `yearly` is the monthly equivalent when billed once a year.
-  price: { monthly: number; yearly: number }
   featuresTitle: string
   features: string[]
-  cta: { label: string; href: string }
+  // Shown to signed-out visitors; signed-in ones get a label for their plan.
+  cta: { label: string }
   highlighted?: boolean
 }
 
 export const contactHref = "mailto:sales@example.com"
-
-export const yearlyDiscountLabel = "2 months free"
 
 export const plans: Plan[] = [
   {
     key: "free",
     name: "Free",
     description: "For side projects and trying things out.",
-    price: { monthly: 0, yearly: 0 },
     featuresTitle: "What's included:",
     features: [
       "1 project",
@@ -36,13 +35,12 @@ export const plans: Plan[] = [
       "7-day activity history",
       "Community support",
     ],
-    cta: { label: "Start for free", href: "/register" },
+    cta: { label: "Start for free" },
   },
   {
     key: "pro",
     name: "Pro",
-    description: "For makers shipping a product to real customers.",
-    price: { monthly: 24, yearly: 20 },
+    description: "For makers with paying customers.",
     featuresTitle: "Everything in Free, plus:",
     features: [
       "10 projects",
@@ -52,14 +50,13 @@ export const plans: Plan[] = [
       "Custom domain",
       "Email support",
     ],
-    cta: { label: "Get started with Pro", href: "/register" },
+    cta: { label: "Get started with Pro" },
     highlighted: true,
   },
   {
     key: "business",
     name: "Business",
-    description: "For growing teams that need more control.",
-    price: { monthly: 60, yearly: 50 },
+    description: "For teams that need more control.",
     featuresTitle: "Everything in Pro, plus:",
     features: [
       "Unlimited projects",
@@ -70,7 +67,7 @@ export const plans: Plan[] = [
       "Webhooks",
       "Priority support",
     ],
-    cta: { label: "Get started with Business", href: "/register" },
+    cta: { label: "Get started with Business" },
   },
 ]
 
@@ -205,7 +202,7 @@ export const faqs: { question: string; answer: string }[] = [
   {
     question: "How does yearly billing work?",
     answer:
-      "Pay for the year upfront and get two months free. You can switch between monthly and yearly billing at any time from your billing settings.",
+      "Pay for the year upfront and save compared to monthly billing. You can switch between monthly and yearly billing at any time from your billing settings.",
   },
   {
     question: "What happens when I reach a limit?",

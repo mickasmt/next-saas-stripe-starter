@@ -2,6 +2,7 @@ import { Check, Minus } from "lucide-react"
 import Link from "next/link"
 import { Fragment } from "react"
 
+import { PlanCta } from "@/components/billing/plan-cta"
 import {
   comparison,
   enterprise,
@@ -11,30 +12,31 @@ import {
 } from "@/components/marketing/pricing/data"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import type { BillingViewer, PlanPrices } from "@/modules/billing/pricing"
 
 // Every plan side by side. The header row sticks under the site header while
 // the rows scroll past; on small screens the table scrolls sideways with the
 // feature names pinned to the left.
 
-const columns: {
+type Column = {
   key: ComparisonColumn
   name: string
-  cta: { label: string; href: string }
   highlighted?: boolean
-}[] = [
-  ...plans.map((plan) => ({
-    key: plan.key,
-    name: plan.name,
-    cta: {
-      label: plan.price.monthly === 0 ? "Start free" : "Get started",
-      href: plan.cta.href,
-    },
-    highlighted: plan.highlighted,
-  })),
-  { key: "enterprise", name: enterprise.name, cta: enterprise.cta },
-]
+}
 
-export function PricingComparison() {
+export function PricingComparison({
+  prices,
+  viewer,
+}: {
+  prices: PlanPrices
+  viewer: BillingViewer
+}) {
+  // Same plans as the cards: paid plans without a Stripe price are hidden.
+  const columns: Column[] = [
+    ...plans.filter((plan) => plan.key === "free" || prices[plan.key].month),
+    { key: "enterprise", name: enterprise.name },
+  ]
+
   return (
     <>
       <div className="px-4 pt-20 pb-12 text-center sm:px-12">
@@ -66,18 +68,31 @@ export function PricingComparison() {
                   <p className="mb-3 truncate font-display text-base font-medium">
                     {column.name}
                   </p>
-                  <Link
-                    href={column.cta.href}
-                    className={cn(
-                      buttonVariants({
-                        variant: column.highlighted ? "default" : "outline",
-                        size: "sm",
-                      }),
-                      "w-full"
-                    )}
-                  >
-                    {column.cta.label}
-                  </Link>
+                  {column.key === "enterprise" ? (
+                    <Link
+                      href={enterprise.cta.href}
+                      className={cn(
+                        buttonVariants({ variant: "outline", size: "sm" }),
+                        "w-full"
+                      )}
+                    >
+                      {enterprise.cta.label}
+                    </Link>
+                  ) : (
+                    <PlanCta
+                      plan={column.key}
+                      planName={column.name}
+                      interval="year"
+                      viewer={viewer}
+                      signedOutLabel={
+                        column.key === "free" ? "Start free" : "Get started"
+                      }
+                      compact
+                      variant={column.highlighted ? "default" : "outline"}
+                      size="sm"
+                      className="w-full"
+                    />
+                  )}
                 </th>
               ))}
             </tr>

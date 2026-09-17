@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
 
+import { SectionCard } from "@/components/dashboard/section-card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -32,26 +33,25 @@ function SettingsCard({
   children: React.ReactNode
 }) {
   return (
-    <section className="overflow-hidden rounded-lg border">
-      <div className="flex flex-col gap-3 bg-card p-5">
-        <div>
-          <h2 className="text-xl font-semibold tracking-[-0.02em]">{title}</h2>
-          <p className="mt-3 text-muted-foreground">{description}</p>
-        </div>
-        {children}
-      </div>
-      <footer className="flex min-h-14 items-center justify-between gap-4 border-t bg-background py-3 pr-3 pl-5">
-        <p className="text-muted-foreground">{hint}</p>
-        <Button
-          size="sm"
-          disabled={!dirty || pending}
-          onClick={onSave}
-          className="px-2.5 disabled:bg-muted disabled:text-muted-foreground disabled:opacity-100 disabled:ring-1 disabled:ring-border"
-        >
-          {pending ? "Saving..." : "Save"}
-        </Button>
-      </footer>
-    </section>
+    <SectionCard
+      title={title}
+      description={description}
+      footer={
+        <>
+          <p>{hint}</p>
+          <Button
+            size="sm"
+            disabled={!dirty || pending}
+            onClick={onSave}
+            className="px-2.5 disabled:bg-muted disabled:text-muted-foreground disabled:opacity-100 disabled:ring-1 disabled:ring-border"
+          >
+            {pending ? "Saving..." : "Save"}
+          </Button>
+        </>
+      }
+    >
+      {children}
+    </SectionCard>
   )
 }
 

@@ -6,20 +6,14 @@ import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { nextCookies } from "better-auth/next-js"
 import { admin, organization } from "better-auth/plugins"
-import Stripe from "stripe"
+import { revalidateTag } from "next/cache"
 
+import { isOrganizationManager } from "@/lib/auth/roles"
 import { db } from "@/lib/db"
 import * as schema from "@/lib/db/schema"
+import { stripeClient } from "@/lib/stripe"
 import { plans } from "@/modules/billing/plans"
-
-// Stripe throws on an empty key at construction time. The placeholder lets the
-// app and the Better Auth CLI boot without Stripe configured; billing calls
-// fail until a real key is set.
-const stripeClient = new Stripe(
-  process.env.STRIPE_SECRET_KEY || "sk_test_not_configured"
-)
-
-const BILLING_MANAGER_ROLES = new Set(["owner", "admin"])
+import { PRICES_CACHE_TAG } from "@/modules/billing/prices-tag"
 
 // Better Auth validates its config as soon as this file is imported, and
 // rejects in production without a secret, even with the auth module off. The
@@ -102,6 +96,15 @@ export const auth = betterAuth({
     stripe({
       stripeClient,
       stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET ?? "",
+      // Price or product edited in Stripe: drop the cached prices right away.
+      onEvent: async (event) => {
+        if (
+          event.type.startsWith("price.") ||
+          event.type.startsWith("product.")
+        ) {
+          revalidateTag(PRICES_CACHE_TAG, "max")
+        }
+      },
       organization: { enabled: true },
       subscription: {
         enabled: true,
@@ -120,9 +123,7 @@ export const auth = betterAuth({
           if (!member) return false
           if (action === "list-subscription") return true
 
-          return member.role
-            .split(",")
-            .some((role) => BILLING_MANAGER_ROLES.has(role.trim()))
+          return isOrganizationManager(member.role)
         },
       },
     }),

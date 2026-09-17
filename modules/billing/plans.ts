@@ -8,6 +8,11 @@ export const plans = [
     priceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
     annualDiscountPriceId: process.env.STRIPE_PRO_YEARLY_PRICE_ID,
   },
+  {
+    name: "business",
+    priceId: process.env.STRIPE_BUSINESS_MONTHLY_PRICE_ID,
+    annualDiscountPriceId: process.env.STRIPE_BUSINESS_YEARLY_PRICE_ID,
+  },
 ] satisfies StripePlan[]
 
 export type PlanName = (typeof plans)[number]["name"]

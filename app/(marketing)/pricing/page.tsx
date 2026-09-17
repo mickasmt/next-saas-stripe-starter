@@ -10,6 +10,8 @@ import { buttonVariants } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
 import { requireFeature } from "@/lib/features/guard"
 import { cn } from "@/lib/utils"
+import { getPlanPrices } from "@/modules/billing/prices"
+import { getBillingViewer } from "@/modules/billing/viewer"
 
 export const metadata: Metadata = {
   title: `Pricing | ${siteConfig.name}`,
@@ -18,10 +20,16 @@ export const metadata: Metadata = {
 
 export default async function PricingPage() {
   await requireFeature("billing")
+  const [prices, viewer] = await Promise.all([
+    getPlanPrices(),
+    getBillingViewer(),
+  ])
 
   return (
     <>
       <PricingPlans
+        prices={prices}
+        viewer={viewer}
         intro={
           <div className="mx-auto flex max-w-lg flex-col items-center text-center">
             <h1 className="animate-slide-up-fade font-display text-4xl font-medium text-balance [--offset:20px] motion-reduce:animate-none sm:text-5xl sm:leading-[1.15]">
@@ -37,7 +45,7 @@ export default async function PricingPage() {
       />
 
       <GridSection innerClassName="px-0 sm:px-0">
-        <PricingComparison />
+        <PricingComparison prices={prices} viewer={viewer} />
       </GridSection>
 
       <GridSection innerClassName="px-0 sm:px-0">
@@ -54,13 +62,13 @@ export default async function PricingPage() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              href="/register"
+              href={viewer.signedIn ? "/dashboard" : "/register"}
               className={cn(
                 buttonVariants({ size: "lg" }),
                 "px-5 shadow-sm hover:ring-4 hover:ring-neutral-200 dark:hover:ring-white/10"
               )}
             >
-              Start for free
+              {viewer.signedIn ? "Go to dashboard" : "Start for free"}
             </Link>
             <Link
               href={contactHref}
