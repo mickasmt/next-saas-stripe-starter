@@ -32,10 +32,10 @@ import { cn } from "@/lib/utils"
 // picture, four cards for what Pro adds, then a Free vs Pro table with the
 // price. Built on the same bands as the modules showcase above it.
 //
-// TODO: keep `proFeatures`, `comparison` and `pricing` in line with what the
+// TODO: keep `proFeatures`, `comparison` and `proPricing` in line with what the
 // Pro repository actually ships before launch.
 
-const pricing = {
+export const proPricing = {
   regular: "$199",
   earlyBird: "$99",
   earlyBirdNote: "Early-bird price for the first buyers",
@@ -161,7 +161,15 @@ const proExtras: { icon: LucideIcon; title: string; description: string }[] = [
   },
 ]
 
-export async function ProShowcase() {
+// `intro` shows the heading and onboarding demo; hide it under a page hero
+// that already covers them. `buyHref` is where the "Get Pro" button leads.
+export async function ProShowcase({
+  intro = true,
+  buyHref = siteConfig.links.pro,
+}: {
+  intro?: boolean
+  buyHref?: string
+}) {
   const cta = await getStarterCta()
 
   return (
@@ -174,32 +182,42 @@ export async function ProShowcase() {
         </div>
       }
     >
-      <div id="pro" className="scroll-mt-20 px-4 pt-20 text-center sm:px-12">
-        <div className="flex flex-col items-center">
-          <span className="flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-3 py-1 text-sm font-medium text-violet-700 dark:text-violet-300">
-            <Sparkles className="size-4" />
-            SaaS Starter Pro
-          </span>
-          <h2 className="mt-4 max-w-xl font-display text-3xl font-medium text-balance sm:text-4xl md:text-5xl">
-            The weeks of polish, already done
-          </h2>
-          <p className="mt-3 max-w-xl text-base text-pretty text-muted-foreground sm:text-lg">
-            The free starter gives you the foundation. Pro adds the parts
-            customers notice first: onboarding, emails, profiles and team
-            billing, designed and ready to ship.
-          </p>
-        </div>
-      </div>
+      {intro && (
+        <>
+          <div className="px-4 pt-20 text-center sm:px-12">
+            <div className="flex flex-col items-center">
+              <span className="flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-3 py-1 text-sm font-medium text-violet-700 dark:text-violet-300">
+                <Sparkles className="size-4" />
+                SaaS Starter Pro
+              </span>
+              <h2 className="mt-4 max-w-xl font-display text-3xl font-medium text-balance sm:text-4xl md:text-5xl">
+                The weeks of polish, already done
+              </h2>
+              <p className="mt-3 max-w-xl text-base text-pretty text-muted-foreground sm:text-lg">
+                The free starter gives you the foundation. Pro adds the parts
+                customers notice first: onboarding, emails, profiles and team
+                billing, designed and ready to ship.
+              </p>
+            </div>
+          </div>
 
-      <div className="px-4 py-12 sm:px-12">
-        <OnboardingDemo />
-        <p className="mt-4 text-center text-xs text-muted-foreground">
-          The onboarding flow included in Pro. Hover to pause, click a step to
-          jump.
-        </p>
-      </div>
+          <div className="px-4 py-12 sm:px-12">
+            <OnboardingDemo />
+            <p className="mt-4 text-center text-xs text-muted-foreground">
+              The onboarding flow included in Pro. Hover to pause, click a step
+              to jump.
+            </p>
+          </div>
+        </>
+      )}
 
-      <div className="grid grid-cols-1 border-t border-grid-border bg-background md:grid-cols-2">
+      <div
+        id="pro"
+        className={cn(
+          "grid scroll-mt-20 grid-cols-1 border-grid-border bg-background md:grid-cols-2",
+          intro && "border-t"
+        )}
+      >
         {proFeatures.map((feature, index) => (
           <div
             key={feature.title}
@@ -289,13 +307,13 @@ export async function ProShowcase() {
               />
               <PlanHeader
                 name="Pro"
-                price={pricing.earlyBird}
-                strike={pricing.regular}
+                price={proPricing.earlyBird}
+                strike={proPricing.regular}
                 note="One-time payment"
                 highlighted
                 action={
                   <Link
-                    href={siteConfig.links.pro}
+                    href={buyHref}
                     className={cn(buttonVariants({ size: "sm" }), "w-full")}
                   >
                     Get Pro
@@ -319,7 +337,7 @@ export async function ProShowcase() {
             </ul>
           </div>
           <p className="mt-4 text-center text-xs text-muted-foreground">
-            {pricing.earlyBirdNote}, then {pricing.regular}.
+            {proPricing.earlyBirdNote}, then {proPricing.regular}.
           </p>
         </div>
       </div>

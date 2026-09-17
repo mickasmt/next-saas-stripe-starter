@@ -60,7 +60,7 @@ export async function ClosingCta() {
               {cta.label}
             </Link>
             <Link
-              href="#pro"
+              href={siteConfig.links.pro}
               className={cn(
                 buttonVariants({ variant: "outline", size: "lg" }),
                 "px-5 shadow-sm hover:ring-4 hover:ring-neutral-200 dark:hover:ring-white/10"
