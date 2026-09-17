@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronLeft } from "lucide-react"
+import { ChevronLeft, House } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -71,7 +71,15 @@ export function Sidebar({
         </div>
       </div>
 
-      <div className="p-2">
+      <div className="flex flex-col gap-1 p-2">
+        <Link
+          href="/"
+          onClick={onNavigate}
+          className="flex h-9 items-center gap-2.5 rounded-lg px-2.5 font-medium tracking-[-0.02em] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
+        >
+          <House className="size-4 shrink-0" />
+          Back to homepage
+        </Link>
         <UserMenu user={user} />
       </div>
     </div>
