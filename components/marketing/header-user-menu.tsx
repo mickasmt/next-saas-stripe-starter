@@ -1,9 +1,11 @@
 "use client"
 
-import { Ellipsis, LogOut, Monitor, Moon, Sun } from "lucide-react"
+import { LogOut, Monitor, Moon, Sun } from "lucide-react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 
+import { navIcons } from "@/components/dashboard/nav-icons"
 import type { ShellUser } from "@/components/dashboard/types"
 import { UserAvatar } from "@/components/shared/user-avatar"
 import {
@@ -17,40 +19,58 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import type { NavItem } from "@/config/nav"
 import { authClient } from "@/lib/auth/client"
 
-export function UserMenu({ user }: { user: ShellUser }) {
+// The signed-in header's avatar: app shortcuts, theme and sign out in one
+// popover. `items` is the dashboard nav, already filtered by role and flags.
+export function HeaderUserMenu({
+  user,
+  items,
+}: {
+  user: ShellUser
+  items: NavItem[]
+}) {
   const router = useRouter()
   const { theme, setTheme } = useTheme()
 
   async function signOut() {
     await authClient.signOut()
-    router.replace("/login")
     router.refresh()
   }
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="group flex h-9 w-full items-center gap-2 rounded-full pr-1.5 pl-2.5 text-left transition-colors outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/50 data-popup-open:bg-accent">
-        <UserAvatar
-          user={user}
-          className="size-5"
-          fallbackClassName="text-[9px]"
-        />
-        <span className="min-w-0 flex-1 truncate">{user.name}</span>
-        <span className="grid size-6 shrink-0 place-items-center rounded-full bg-card text-muted-foreground ring-1 ring-input transition-colors group-hover:text-foreground">
-          <Ellipsis className="size-3.5" />
-        </span>
+      <DropdownMenuTrigger
+        aria-label="Open account menu"
+        className="rounded-full transition-shadow outline-none hover:ring-4 hover:ring-neutral-900/5 focus-visible:ring-2 focus-visible:ring-ring/50 data-popup-open:ring-4 data-popup-open:ring-neutral-900/5 dark:hover:ring-white/10 dark:data-popup-open:ring-white/10"
+      >
+        <UserAvatar user={user} fallbackClassName="text-xs" />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent side="top" align="start" sideOffset={6}>
+      <DropdownMenuContent align="end" sideOffset={8} className="min-w-56">
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="max-w-60">
+          <DropdownMenuLabel className="max-w-64">
             <span className="block truncate text-sm font-medium text-foreground">
               {user.name}
             </span>
             <span className="block truncate font-normal">{user.email}</span>
           </DropdownMenuLabel>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          {items.map((item) => {
+            const Icon = item.icon && navIcons[item.icon]
+            return (
+              <DropdownMenuItem
+                key={item.href}
+                render={<Link href={item.href} />}
+              >
+                {Icon && <Icon />}
+                {item.title}
+              </DropdownMenuItem>
+            )
+          })}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

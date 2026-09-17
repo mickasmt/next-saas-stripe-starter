@@ -178,6 +178,7 @@
     --animate-slide-up-fade: slide-up-fade 1s cubic-bezier(0.16, 1, 0.3, 1) both;
     --animate-deal-in: deal-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
     --animate-deal-out: deal-out 0.45s cubic-bezier(0.4, 0, 1, 1) both;
+    --animate-shine: shine 4s ease-in-out infinite;
 
     @keyframes infinite-scroll {
         to {
@@ -207,6 +208,18 @@
         to {
             opacity: 1;
             transform: translateY(0) scale(1);
+        }
+    }
+
+    /* Light sweeping across gradient text, pausing between passes. Used by
+       the header's Pro link. */
+    @keyframes shine {
+        0% {
+            background-position: 100% 0;
+        }
+        60%,
+        100% {
+            background-position: 0% 0;
         }
     }
 
