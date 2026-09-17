@@ -55,11 +55,11 @@ export const dashboardNav: NavSection[] = [
 // Shown instead of dashboardNav while inside /dashboard/settings.
 export const settingsNav: NavSection[] = [
   {
-    items: [
-      {
-        title: "General",
-        href: "/dashboard/settings/general",
-      },
-    ],
+    title: "Organization",
+    items: [{ title: "General", href: "/dashboard/settings/general" }],
+  },
+  {
+    title: "Account",
+    items: [{ title: "Profile", href: "/dashboard/settings/profile" }],
   },
 ]

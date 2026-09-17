@@ -3,8 +3,10 @@
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
 
-import { SectionCard } from "@/components/dashboard/section-card"
-import { Button } from "@/components/ui/button"
+import { OrganizationAvatar } from "@/components/dashboard/organization-avatar"
+import { AvatarCard } from "@/components/dashboard/settings/avatar-card"
+import { IdCard } from "@/components/dashboard/settings/id-card"
+import { SaveCard } from "@/components/dashboard/settings/save-card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { authClient } from "@/lib/auth/client"
@@ -13,46 +15,7 @@ type Organization = {
   id: string
   name: string
   slug: string
-}
-
-function SettingsCard({
-  title,
-  description,
-  hint,
-  dirty,
-  pending,
-  onSave,
-  children,
-}: {
-  title: string
-  description: string
-  hint: string
-  dirty: boolean
-  pending: boolean
-  onSave: () => void
-  children: React.ReactNode
-}) {
-  return (
-    <SectionCard
-      title={title}
-      description={description}
-      footer={
-        <>
-          <p>{hint}</p>
-          <Button
-            size="sm"
-            disabled={!dirty || pending}
-            onClick={onSave}
-            className="px-2.5 disabled:bg-muted disabled:text-muted-foreground disabled:opacity-100 disabled:ring-1 disabled:ring-border"
-          >
-            {pending ? "Saving..." : "Save"}
-          </Button>
-        </>
-      }
-    >
-      {children}
-    </SectionCard>
-  )
+  logo: string | null
 }
 
 export function GeneralSettingsForm({
@@ -101,7 +64,7 @@ export function GeneralSettingsForm({
         </p>
       )}
 
-      <SettingsCard
+      <SaveCard
         title="Organization Name"
         description="This is the name of your organization."
         hint="Please use 32 characters at maximum."
@@ -122,9 +85,9 @@ export function GeneralSettingsForm({
             onChange={(event) => setName(event.target.value)}
           />
         </div>
-      </SettingsCard>
+      </SaveCard>
 
-      <SettingsCard
+      <SaveCard
         title="Organization Slug"
         description="This is your organization's unique slug."
         hint="Only lowercase letters, numbers, and dashes."
@@ -147,7 +110,23 @@ export function GeneralSettingsForm({
             onChange={(event) => setSlug(event.target.value)}
           />
         </div>
-      </SettingsCard>
+      </SaveCard>
+
+      <AvatarCard
+        title="Organization Avatar"
+        description="This is your organization's avatar."
+      >
+        <OrganizationAvatar
+          organization={organization}
+          className="text-3xl max-sm:text-xl"
+        />
+      </AvatarCard>
+
+      <IdCard
+        title="Organization ID"
+        description="This is your organization's ID."
+        value={organization.id}
+      />
 
       {!canEdit && (
         <p className="text-muted-foreground">

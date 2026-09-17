@@ -8,6 +8,7 @@ import { nextCookies } from "better-auth/next-js"
 import { admin, organization } from "better-auth/plugins"
 import { revalidateTag } from "next/cache"
 
+import { prepareAccountDeletion } from "@/lib/auth/delete-account"
 import { isOrganizationManager, isPlatformAdmin } from "@/lib/auth/roles"
 import { db } from "@/lib/db"
 import * as schema from "@/lib/db/schema"
@@ -28,6 +29,12 @@ export const auth = betterAuth({
   baseURL,
   database: drizzleAdapter(db, { provider: "pg", schema }),
   emailAndPassword: { enabled: true },
+  user: {
+    deleteUser: {
+      enabled: true,
+      beforeDelete: (user) => prepareAccountDeletion(user.id),
+    },
+  },
   socialProviders: {
     // Callback URL: {BETTER_AUTH_URL}/api/auth/callback/google
     google: {

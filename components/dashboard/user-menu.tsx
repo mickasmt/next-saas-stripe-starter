@@ -1,6 +1,7 @@
 "use client"
 
-import { Ellipsis, LogOut, Monitor, Moon, Sun } from "lucide-react"
+import { Ellipsis, LogOut, Monitor, Moon, Sun, UserRound } from "lucide-react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 
@@ -51,6 +52,12 @@ export function UserMenu({ user }: { user: ShellUser }) {
             </span>
             <span className="block truncate font-normal">{user.email}</span>
           </DropdownMenuLabel>
+          <DropdownMenuItem
+            render={<Link href="/dashboard/settings/profile" />}
+          >
+            <UserRound />
+            Account settings
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

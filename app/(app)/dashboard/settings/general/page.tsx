@@ -20,6 +20,7 @@ export default async function GeneralSettingsPage() {
           id: organization.id,
           name: organization.name,
           slug: organization.slug,
+          logo: organization.logo ?? null,
         }}
         canEdit={isOrganizationManager(member.role)}
       />
