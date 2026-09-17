@@ -1,9 +1,11 @@
 import { CornerDownRight } from "lucide-react"
-import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 
-import { CategoryMenu, CategoryTabs } from "@/components/marketing/category-tabs"
+import {
+  CategoryMenu,
+  CategoryTabs,
+} from "@/components/marketing/category-tabs"
 import { GridSection } from "@/components/marketing/grid-section"
 import {
   Avatar,
@@ -12,16 +14,17 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import { blogAuthors, blogCategories, type BlogAuthor } from "@/config/blog"
-import { siteConfig } from "@/config/site"
 import { blogSource } from "@/lib/content/blog"
 import { requireFeature } from "@/lib/features/guard"
 import { isFeatureEnabled } from "@/lib/features/resolve"
+import { buildMetadata } from "@/lib/metadata"
 import { cn, formatDate } from "@/lib/utils"
 
-export const metadata: Metadata = {
-  title: `Blog | ${siteConfig.name}`,
+export const metadata = buildMetadata({
+  title: "Blog",
   description: "Guides, news and updates about the starter.",
-}
+  path: "/blog",
+})
 
 type Props = { searchParams: Promise<{ category?: string }> }
 
@@ -142,19 +145,17 @@ export default async function BlogPage({ searchParams }: Props) {
           {/* Complete a short last row with empty cells so the dividers close
               off the grid instead of trailing into blank space. */}
           {posts.length > 0 &&
-            Array.from({ length: (3 - (posts.length % 3)) % 3 }).map(
-              (_, i) => (
-                <div
-                  key={`filler-${i}`}
-                  aria-hidden
-                  className={cn(
-                    "relative hidden md:block",
-                    "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:z-10 before:h-px before:bg-grid-border md:[&:nth-child(-n+3)]:before:hidden",
-                    "after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:z-10 after:hidden after:w-px after:bg-grid-border md:after:block md:[&:nth-child(3n)]:after:hidden"
-                  )}
-                />
-              )
-            )}
+            Array.from({ length: (3 - (posts.length % 3)) % 3 }).map((_, i) => (
+              <div
+                key={`filler-${i}`}
+                aria-hidden
+                className={cn(
+                  "relative hidden md:block",
+                  "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:z-10 before:h-px before:bg-grid-border md:[&:nth-child(-n+3)]:before:hidden",
+                  "after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:z-10 after:hidden after:w-px after:bg-grid-border md:after:block md:[&:nth-child(3n)]:after:hidden"
+                )}
+              />
+            ))}
         </div>
       </GridSection>
     </>

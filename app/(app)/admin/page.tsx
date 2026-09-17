@@ -1,12 +1,11 @@
-import type { Metadata } from "next"
-
 import { UsersPreview } from "@/components/admin/users-preview"
 import { PageContent, PageHeader } from "@/components/dashboard/page-header"
-import { siteConfig } from "@/config/site"
+import { buildMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
-  title: `Admin | ${siteConfig.name}`,
-}
+export const metadata = buildMetadata({
+  title: "Admin",
+  noIndex: true,
+})
 
 export default function AdminPage() {
   return (

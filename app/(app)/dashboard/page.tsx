@@ -1,17 +1,17 @@
 import { Blocks } from "lucide-react"
-import type { Metadata } from "next"
 
 import { DemoBanner } from "@/components/admin/demo-banner" // module:admin
 import { EmptyState } from "@/components/dashboard/empty-state"
 import { PageContent, PageHeader } from "@/components/dashboard/page-header"
-import { siteConfig } from "@/config/site"
 import { getActiveOrganization } from "@/lib/auth/session"
 import { isFeatureEnabled } from "@/lib/features/resolve" // module:admin
+import { buildMetadata } from "@/lib/metadata"
 import { getViewRole, isDemoMode } from "@/modules/admin/preview" // module:admin
 
-export const metadata: Metadata = {
-  title: `Overview | ${siteConfig.name}`,
-}
+export const metadata = buildMetadata({
+  title: "Overview",
+  noIndex: true,
+})
 
 export default async function DashboardPage() {
   const { session, organization, member } = await getActiveOrganization()

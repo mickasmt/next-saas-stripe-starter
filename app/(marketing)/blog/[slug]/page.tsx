@@ -1,12 +1,11 @@
-import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
-import { GridSection } from "@/components/marketing/grid-section"
 import { getMDXComponents } from "@/components/content/mdx-components"
 import { ProCtaCard } from "@/components/content/pro-cta-card"
 import { TableOfContents } from "@/components/content/table-of-contents"
+import { GridSection } from "@/components/marketing/grid-section"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -15,9 +14,9 @@ import {
   type BlogAuthor,
   type BlogCategory,
 } from "@/config/blog"
-import { siteConfig } from "@/config/site"
 import { blogSource } from "@/lib/content/blog"
 import { requireFeature } from "@/lib/features/guard"
+import { buildMetadata } from "@/lib/metadata"
 import { formatDate } from "@/lib/utils"
 
 type Props = { params: Promise<{ slug: string }> }
@@ -76,7 +75,7 @@ export default async function BlogPostPage({ params }: Props) {
               />
             </div>
 
-            <article className="prose-neutral dark:prose-invert prose max-w-none px-5 py-10 sm:px-12 lg:prose-lg prose-headings:scroll-mt-24 prose-headings:font-display prose-a:font-medium prose-a:text-foreground prose-a:underline-offset-4 prose-img:rounded-xl prose-img:border">
+            <article className="prose-neutral dark:prose-invert lg:prose-lg prose max-w-none px-5 py-10 sm:px-12 prose-headings:scroll-mt-24 prose-headings:font-display prose-a:font-medium prose-a:text-foreground prose-a:underline-offset-4 prose-img:rounded-xl prose-img:border">
               <MDX components={getMDXComponents()} />
             </article>
 
@@ -134,7 +133,7 @@ export default async function BlogPostPage({ params }: Props) {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-sm font-semibold leading-none">
+                          <p className="text-sm leading-none font-semibold">
                             {author.name}
                           </p>
                           <p className="mt-1 text-xs text-muted-foreground">
@@ -162,13 +161,15 @@ export function generateStaticParams() {
   return blogSource.getPages().map((page) => ({ slug: page.slugs[0] }))
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props) {
   const { slug } = await params
   const post = blogSource.getPage([slug])
   if (!post) notFound()
 
-  return {
-    title: `${post.data.title} | ${siteConfig.name}`,
+  return buildMetadata({
+    title: post.data.title,
     description: post.data.description,
-  }
+    path: post.url,
+    image: post.data.image,
+  })
 }

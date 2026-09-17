@@ -1,4 +1,3 @@
-import type { Metadata } from "next"
 import Link from "next/link"
 
 import { GridSection } from "@/components/marketing/grid-section"
@@ -7,16 +6,17 @@ import { PricingComparison } from "@/components/marketing/pricing/pricing-compar
 import { PricingFaq } from "@/components/marketing/pricing/pricing-faq"
 import { PricingPlans } from "@/components/marketing/pricing/pricing-plans"
 import { buttonVariants } from "@/components/ui/button"
-import { siteConfig } from "@/config/site"
 import { requireFeature } from "@/lib/features/guard"
+import { buildMetadata } from "@/lib/metadata"
 import { cn } from "@/lib/utils"
 import { getPlanPrices } from "@/modules/billing/prices"
 import { getBillingViewer } from "@/modules/billing/viewer"
 
-export const metadata: Metadata = {
-  title: `Pricing | ${siteConfig.name}`,
+export const metadata = buildMetadata({
+  title: "Pricing",
   description: "Plans for every stage, from side project to enterprise.",
-}
+  path: "/pricing",
+})
 
 export default async function PricingPage() {
   await requireFeature("billing")

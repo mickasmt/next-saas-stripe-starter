@@ -1,18 +1,18 @@
-import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 
 import { getMDXComponents } from "@/components/content/mdx-components"
 import { GridSection } from "@/components/marketing/grid-section"
-import { siteConfig } from "@/config/site"
 import { changelogSource } from "@/lib/content/changelog"
 import { requireFeature } from "@/lib/features/guard"
+import { buildMetadata } from "@/lib/metadata"
 import { formatDate } from "@/lib/utils"
 
-export const metadata: Metadata = {
-  title: `Changelog | ${siteConfig.name}`,
+export const metadata = buildMetadata({
+  title: "Changelog",
   description: "New features, fixes and improvements.",
-}
+  path: "/changelog",
+})
 
 export default async function ChangelogPage() {
   await requireFeature("changelog")
@@ -70,7 +70,7 @@ export default async function ChangelogPage() {
                   </Link>
                 )}
 
-                <div className="prose prose-neutral dark:prose-invert mt-6 max-w-none">
+                <div className="prose-neutral dark:prose-invert prose mt-6 max-w-none">
                   <MDX components={getMDXComponents()} />
                 </div>
               </div>

@@ -5,12 +5,11 @@ import {
   DocsTitle,
 } from "fumadocs-ui/layouts/docs/page"
 import { createRelativeLink } from "fumadocs-ui/mdx"
-import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { getMDXComponents } from "@/components/content/mdx-components"
-import { siteConfig } from "@/config/site"
 import { docsSource } from "@/lib/content/docs"
+import { buildMetadata } from "@/lib/metadata"
 
 type Props = { params: Promise<{ slug?: string[] }> }
 
@@ -40,13 +39,14 @@ export function generateStaticParams() {
   return docsSource.generateParams()
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props) {
   const { slug } = await params
   const page = docsSource.getPage(slug)
   if (!page) notFound()
 
-  return {
-    title: `${page.data.title} | ${siteConfig.name}`,
+  return buildMetadata({
+    title: page.data.title,
     description: page.data.description,
-  }
+    path: page.url,
+  })
 }

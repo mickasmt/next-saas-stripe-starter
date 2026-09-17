@@ -1,12 +1,11 @@
 import { Link2 } from "lucide-react"
-import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { getMDXComponents } from "@/components/content/mdx-components"
 import { TableOfContents } from "@/components/content/table-of-contents"
 import { GridSection } from "@/components/marketing/grid-section"
-import { siteConfig } from "@/config/site"
 import { legalSource } from "@/lib/content/legal"
+import { buildMetadata } from "@/lib/metadata"
 import { formatDate } from "@/lib/utils"
 
 // Renders a page of content/legal: title band, numbered sections with a
@@ -52,14 +51,15 @@ export function LegalPage({ slug }: { slug: string }) {
   )
 }
 
-export function getLegalMetadata(slug: string): Metadata {
+export function getLegalMetadata(slug: string) {
   const page = legalSource.getPage([slug])
   if (!page) notFound()
 
-  return {
-    title: `${page.data.title} | ${siteConfig.name}`,
+  return buildMetadata({
+    title: page.data.title,
     description: page.data.description,
-  }
+    path: page.url,
+  })
 }
 
 // A `<Section>` wraps one `## heading` and its content in the MDX file. The

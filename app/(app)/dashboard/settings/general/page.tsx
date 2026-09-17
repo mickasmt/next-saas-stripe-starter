@@ -1,14 +1,13 @@
-import type { Metadata } from "next"
-
-import { GeneralSettingsForm } from "@/components/dashboard/settings/general-settings-form"
 import { PageContent } from "@/components/dashboard/page-header"
-import { siteConfig } from "@/config/site"
+import { GeneralSettingsForm } from "@/components/dashboard/settings/general-settings-form"
 import { isOrganizationManager } from "@/lib/auth/roles"
 import { getActiveOrganization } from "@/lib/auth/session"
+import { buildMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
-  title: `Settings | ${siteConfig.name}`,
-}
+export const metadata = buildMetadata({
+  title: "Settings",
+  noIndex: true,
+})
 
 export default async function GeneralSettingsPage() {
   const { organization, member } = await getActiveOrganization()

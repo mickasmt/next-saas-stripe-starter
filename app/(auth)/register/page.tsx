@@ -1,13 +1,15 @@
-import type { Metadata } from "next"
 import Link from "next/link"
 
 import { RegisterForm } from "@/components/auth/register-form"
 import { siteConfig } from "@/config/site"
 import { getSafeRedirect } from "@/lib/auth/redirect"
+import { buildMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
-  title: `Sign up | ${siteConfig.name}`,
-}
+export const metadata = buildMetadata({
+  title: "Sign up",
+  path: "/register",
+  noIndex: true,
+})
 
 export default async function RegisterPage({
   searchParams,

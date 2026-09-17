@@ -1,18 +1,18 @@
-import type { Metadata } from "next"
 import { headers } from "next/headers"
 
 import { BillingOverview } from "@/components/billing/billing-overview"
 import { PageContent, PageHeader } from "@/components/dashboard/page-header"
-import { siteConfig } from "@/config/site"
 import { isOrganizationManager, isPlatformAdmin } from "@/lib/auth/roles"
 import { auth } from "@/lib/auth/server"
 import { getActiveOrganization } from "@/lib/auth/session"
+import { buildMetadata } from "@/lib/metadata"
 import { plans, type PlanName } from "@/modules/billing/plans"
 import { getPlanPrices } from "@/modules/billing/prices"
 
-export const metadata: Metadata = {
-  title: `Billing | ${siteConfig.name}`,
-}
+export const metadata = buildMetadata({
+  title: "Billing",
+  noIndex: true,
+})
 
 export default async function BillingPage({
   searchParams,

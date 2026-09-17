@@ -1,15 +1,15 @@
-import type { Metadata } from "next"
 import { headers } from "next/headers"
 
 import { PageContent } from "@/components/dashboard/page-header"
 import { ProfileSettingsForm } from "@/components/dashboard/settings/profile-settings-form"
-import { siteConfig } from "@/config/site"
 import { auth } from "@/lib/auth/server"
 import { requireSession } from "@/lib/auth/session"
+import { buildMetadata } from "@/lib/metadata"
 
-export const metadata: Metadata = {
-  title: `Profile | ${siteConfig.name}`,
-}
+export const metadata = buildMetadata({
+  title: "Profile",
+  noIndex: true,
+})
 
 export default async function ProfileSettingsPage() {
   const { user } = await requireSession()

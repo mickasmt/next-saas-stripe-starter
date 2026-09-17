@@ -9,6 +9,9 @@ import { HeroStarter } from "@/components/marketing/hero-starter"
 import { ModulesShowcase } from "@/components/marketing/modules-showcase"
 import { StackMarquee } from "@/components/marketing/stack-marquee"
 import { WhyModular } from "@/components/marketing/why-modular"
+import { buildMetadata } from "@/lib/metadata"
+
+export const metadata = buildMetadata({ path: "/" })
 
 export default function HomePage() {
   return (
