@@ -52,7 +52,15 @@ export default async function PricingPage() {
         <PricingFaq />
       </GridSection>
 
-      <GridSection lines innerClassName="py-20">
+      <GridSection
+        lines
+        innerClassName="py-20"
+        background={
+          <div className="absolute inset-0 opacity-15 dark:opacity-25">
+            <div className="size-full bg-[linear-gradient(90deg,#8b5cf6,#d946ef)] mask-[linear-gradient(transparent_30%,black)]" />
+          </div>
+        }
+      >
         <div className="flex flex-col items-center text-center">
           <h2 className="max-w-md font-display text-3xl font-medium text-balance sm:text-4xl">
             Start free, upgrade when you&apos;re ready
