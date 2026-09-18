@@ -6,6 +6,7 @@ import {
   Box,
   Check,
   ChevronDown,
+  ChevronRight,
   Copy,
   CreditCard,
   History,
@@ -108,6 +109,10 @@ export function ModulesPanel({
   const [saving, startTransition] = useTransition()
   const [error, setError] = useState(false)
   const [confirming, setConfirming] = useState<Pending | null>(null)
+  // Collapsed unless something needs attention: the module list gets the room.
+  const [servicesOpen, setServicesOpen] = useState(() =>
+    services.some((service) => service.missingEnv.length > 0)
+  )
   const [own, applyOptimistic] = useOptimistic(
     serverOwn,
     (current, patch: OverridePatch | "reset") =>
@@ -123,6 +128,9 @@ export function ModulesPanel({
     (m) => resolved.get(m.key)!.enabled
   ).length
   const changedCount = modules.filter((m) => own[m.key] !== m.inherited).length
+  const unconfiguredCount = services.filter(
+    (service) => service.missingEnv.length > 0
+  ).length
   const envLines = toEnvLines(modules, own)
 
   useEffect(() => {
@@ -198,7 +206,7 @@ export function ModulesPanel({
         side="top"
         align="end"
         sideOffset={10}
-        className="w-[min(24rem,calc(100vw-2rem))] gap-0 overflow-hidden rounded-2xl p-0 shadow-2xl shadow-neutral-900/10 dark:shadow-black/50"
+        className="w-[min(26rem,calc(100vw-2rem))] gap-0 overflow-hidden rounded-2xl p-0 shadow-2xl shadow-neutral-900/10 dark:shadow-black/50"
       >
         <header className="flex items-start justify-between gap-3 border-b px-4 pt-3.5 pb-3">
           <div className="min-w-0">
@@ -248,9 +256,9 @@ export function ModulesPanel({
           </TabButton>
         </div>
 
-        <div className="max-h-[min(34rem,calc(100dvh-12rem))] overflow-y-auto overscroll-contain">
+        <div className="max-h-[min(34rem,calc(100dvh-12rem))] overflow-x-hidden overflow-y-auto overscroll-contain">
           {tab === "pro" ? (
-            <ul className="grid gap-0.5 p-1.5">
+            <ul className="grid grid-cols-1 gap-0.5 p-1.5">
               {proModules.map((module) => (
                 <li
                   key={module.key}
@@ -270,7 +278,7 @@ export function ModulesPanel({
             </ul>
           ) : (
             <>
-              <ul className="grid gap-0.5 p-1.5">
+              <ul className="grid grid-cols-1 gap-0.5 p-1.5">
                 {modules.map((module) => {
                   const state = resolved.get(module.key)!
                   const plan = state.enabled
@@ -332,15 +340,39 @@ export function ModulesPanel({
                 })}
               </ul>
 
-              <section className="border-t px-1.5 pt-2.5 pb-1.5">
-                <h3 className="px-2.5 pb-1 text-[11px] font-medium text-muted-foreground">
+              <section className="border-t">
+                <button
+                  type="button"
+                  aria-expanded={servicesOpen}
+                  onClick={() => setServicesOpen((value) => !value)}
+                  className="flex w-full items-center gap-1.5 px-4 py-2.5 text-[11px] font-medium text-muted-foreground outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                >
+                  <ChevronRight
+                    className={cn(
+                      "size-3 transition-transform duration-200",
+                      servicesOpen && "rotate-90"
+                    )}
+                  />
                   Services
-                </h3>
-                <ul className="grid gap-0.5">
-                  {services.map((service) => (
-                    <ServiceRow key={service.key} service={service} />
-                  ))}
-                </ul>
+                  <span className="ml-auto flex items-center gap-1.5">
+                    {unconfiguredCount > 0 ? (
+                      <span className="text-amber-600 dark:text-amber-400">
+                        {unconfiguredCount} to configure
+                      </span>
+                    ) : (
+                      <span className="tabular-nums">
+                        {services.length} configured
+                      </span>
+                    )}
+                  </span>
+                </button>
+                <Collapsible open={servicesOpen}>
+                  <ul className="grid grid-cols-1 gap-0.5 px-1.5 pb-1.5">
+                    {services.map((service) => (
+                      <ServiceRow key={service.key} service={service} />
+                    ))}
+                  </ul>
+                </Collapsible>
               </section>
             </>
           )}
