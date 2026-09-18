@@ -18,7 +18,7 @@ function assertDevelopment() {
 
 // Applies several overrides in one cookie write, so a module and the modules
 // it depends on switch together. `null` removes an override and falls back to
-// env/default.
+// the config default.
 export async function setFeatureOverrides(
   patch: Record<string, boolean | null>
 ) {

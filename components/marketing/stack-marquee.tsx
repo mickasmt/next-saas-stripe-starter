@@ -10,7 +10,7 @@ const logos = Object.keys(stack) as StackKey[]
 export function StackMarquee() {
   return (
     <GridSection innerClassName="py-8 sm:py-4">
-      <div className="sm:flex sm:items-center sm:gap-8">
+      <div className="animate-slide-up-fade [animation-delay:500ms] motion-reduce:animate-none sm:flex sm:items-center sm:gap-8">
         <p className="mx-auto max-w-sm text-center text-sm font-medium text-balance text-muted-foreground sm:mx-0 sm:shrink-0 sm:text-left sm:leading-snug">
           Built on a modern, <br className="hidden sm:block" />
           production-ready stack

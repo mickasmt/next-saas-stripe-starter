@@ -4,9 +4,8 @@
 // Flags only show or hide UI (routes, nav links). They never touch the
 // database schema: every table exists from the first migration.
 //
-// Override a default per environment with FEATURE_<SCREAMING_SNAKE_KEY>,
-// e.g. FEATURE_BILLING=false. Static pages keep the value they were built
-// with: rebuild after changing one.
+// Change a module's `default` to switch it on or off. Static pages keep the
+// value they were built with: rebuild after changing one.
 
 import type { FoundationKey } from "@/config/foundation"
 

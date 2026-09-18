@@ -26,7 +26,7 @@ An open-source, modular SaaS starter built with Next.js 16, Better Auth, Drizzle
 - **`blog`** — MDX articles with authors and categories: `/blog`. <!-- module:blog -->
 - **`changelog`** — product updates on a single page: `/changelog`. <!-- module:changelog -->
 
-A module stays off while a module it depends on is off, or while a service it requires misses its environment variables. In development, the flag button in the bottom-right corner shows the state of everything; in production, set `FEATURE_BILLING=false` and rebuild.
+A module stays off while a module it depends on is off, or while a service it requires misses its environment variables. In development, the flag button in the bottom-right corner shows the state of everything; in production, set `default: false` on the module in `config/features.ts` and rebuild.
 
 Don't need a module at all?
 

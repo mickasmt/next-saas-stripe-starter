@@ -5,32 +5,42 @@ description: Turn on what you need, turn off the rest.
 
 Modules are declared in `config/features.ts`.
 
-| Module | Depends on | Requires |
-| --- | --- | --- |
-| `auth` | | Database, Auth |
-| `billing` | `auth` | Payments |
-| `admin` | `auth` | |
-| `docs` | | |
-| `blog` | | |
-| `changelog` | | |
+| Module      | Depends on | Requires       |
+| ----------- | ---------- | -------------- |
+| `auth`      |            | Database, Auth |
+| `billing`   | `auth`     | Payments       |
+| `admin`     | `auth`     |                |
+| `docs`      |            |                |
+| `blog`      |            |                |
+| `changelog` |            |                |
 
 - **Depends on**: the module is forced off while one of these modules is off.
 - **Requires**: the module stays off while one of these services misses its environment variables (see `config/foundation.ts`).
 
 ## Switch a module off
 
-In development, use the dev panel. In production, set an environment variable and redeploy:
+Set its `default` to `false` in `config/features.ts` and redeploy. Nothing goes in your environment file: it only holds the secrets of the services you use.
 
-```bash
-FEATURE_BILLING=false
+```ts
+billing: {
+  // ...
+  default: false,
+},
 ```
 
-Flags are read when the app is built: static pages (home, blog posts, docs) keep the value they were built with. Changing a variable without rebuilding leaves some pages out of sync, so always rebuild. On Vercel, a redeploy does it for you.
+In development, the dev panel switches modules for your browser only. **Copy config** gives you the defaults to paste into `config/features.ts` once a setup feels right.
+
+Flags are read when the app is built: static pages (home, blog posts, docs) keep the value they were built with, so always rebuild. On Vercel, a redeploy does it for you.
 
 <Callout type="warn">
-  Switching billing off hides it from your users, but existing Stripe subscriptions keep being charged. Cancel them in Stripe first.
+  Switching billing off hides it from your users, but existing Stripe
+  subscriptions keep being charged. Cancel them in Stripe first.
 </Callout>
 
 ## Without authentication
 
 With `auth` off, the app no longer needs a database: you get a marketing site with docs, blog and changelog.
+
+## Changing a service
+
+`config/foundation.ts` lists the environment variables each service needs (Database, Auth, Payments). If you replace one, for example Stripe with another payment provider, update its `requiredEnv` there. Otherwise the modules that require it stay off, still waiting for the old variables.

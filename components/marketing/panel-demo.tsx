@@ -3,6 +3,7 @@
 import {
   BookOpen,
   Check,
+  Copy,
   CreditCard,
   History,
   KeyRound,
@@ -12,13 +13,13 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react"
-import { useState, type ReactNode } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 
 import {
   applyPatch,
   planChange,
   resolveModules,
-  toEnvLines,
+  toConfigLines,
   type Change,
   type OwnValues,
   type PanelModule,
@@ -32,7 +33,9 @@ import { cn } from "@/lib/utils"
 // dependency graph (components/dev/modules-graph.ts) with made-up data, and
 // keeps everything in local state: nothing is saved, no cookie is set.
 // Next to it, a mock of the app shows the routes each module serves, so a
-// switch visibly adds or removes pages.
+// switch visibly adds or removes pages. While nobody is touching it, it plays
+// a short scene on its own: turn Auth off, see Billing and Admin pause, then
+// bring it back.
 
 const demoModules: PanelModule[] = [
   demoModule("auth", "Authentication", "Sign-in, sign-up and the dashboard."),
@@ -95,24 +98,120 @@ const routes: { path: string; module: string | null }[] = [
 ]
 
 const initial: OwnValues = Object.fromEntries(
-  demoModules.map((m) => [m.key, m.inherited])
+  demoModules.map((m) => [m.key, m.default])
 )
 
 type Pending = { key: string; on: boolean; change: Change }
 
+// One step of the scene: how long to wait, then what to do.
+type SceneStep = { ms: number; run: () => void }
+// How long the demo stays still after the last touch before it plays again.
+const IDLE_RESUME_MS = 5000
+
 export function PanelDemo() {
   const [own, setOwn] = useState(initial)
   const [confirming, setConfirming] = useState<Pending | null>(null)
+  const [copied, setCopied] = useState(false)
+  const [step, setStep] = useState(0)
+  const [inView, setInView] = useState(false)
+  const [touched, setTouched] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(true)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const idleTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const sync = () => setReducedMotion(query.matches)
+    sync()
+    query.addEventListener("change", sync)
+    return () => query.removeEventListener("change", sync)
+  }, [])
+
+  useEffect(() => {
+    const el = rootRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) =>
+      setInView(entry.isIntersecting)
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => () => clearTimeout(idleTimer.current), [])
+
+  const playing = inView && !touched && !reducedMotion
+
+  useEffect(() => {
+    if (!playing) return
+    const flip = (key: string, on: boolean) =>
+      setOwn((current) =>
+        applyPatch(
+          demoModules,
+          current,
+          planChange(demoModules, demoServices, current, key, on).patch
+        )
+      )
+    const authOff = planChange(
+      demoModules,
+      demoServices,
+      initial,
+      "auth",
+      false
+    )
+    const scene: SceneStep[] = [
+      // Auth pauses Billing and Admin, so it asks first.
+      {
+        ms: 2500,
+        run: () => setConfirming({ key: "auth", on: false, change: authOff }),
+      },
+      {
+        ms: 2000,
+        run: () => {
+          setConfirming(null)
+          flip("auth", false)
+        },
+      },
+      { ms: 2800, run: () => setOwn(initial) },
+      // Independent modules just switch.
+      { ms: 1200, run: () => flip("blog", false) },
+      { ms: 1000, run: () => flip("changelog", false) },
+      { ms: 1000, run: () => flip("docs", false) },
+      { ms: 2600, run: () => setOwn(initial) },
+      { ms: 5000, run: () => {} },
+    ]
+    const id = setTimeout(() => {
+      scene[step].run()
+      setStep((step + 1) % scene.length)
+    }, scene[step].ms)
+    return () => clearTimeout(id)
+  }, [playing, step])
+
+  // Any touch hands the demo over; it starts again from scratch once idle.
+  function handOver() {
+    setTouched(true)
+    clearTimeout(idleTimer.current)
+    idleTimer.current = setTimeout(() => {
+      setConfirming(null)
+      setOwn(initial)
+      setStep(0)
+      setTouched(false)
+    }, IDLE_RESUME_MS)
+  }
 
   const resolved = resolveModules(demoModules, demoServices, own)
   const isOn = (key: string) => resolved.get(key)!.enabled
   const labelOf = (key: string) =>
     demoModules.find((m) => m.key === key)?.label ?? key
-  const enabledCount = demoModules.filter((m) => isOn(m.key)).length
   const changedCount = demoModules.filter(
-    (m) => own[m.key] !== m.inherited
+    (m) => own[m.key] !== m.default
   ).length
-  const envLines = toEnvLines(demoModules, own)
+  const configLines = toConfigLines(demoModules, own)
+
+  function copyConfig() {
+    navigator.clipboard?.writeText(configLines.join("\n")).catch(() => {})
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
 
   function commit(patch: Change["patch"] | "reset") {
     setConfirming(null)
@@ -131,7 +230,13 @@ export function PanelDemo() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center lg:gap-8">
+    <div
+      ref={rootRef}
+      onPointerDown={handOver}
+      onPointerMove={(e) => e.pointerType === "mouse" && handOver()}
+      onFocusCapture={handOver}
+      className="flex flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center lg:gap-8"
+    >
       <AppPreview isOn={isOn} />
 
       <div className="w-full max-w-sm shrink-0">
@@ -143,12 +248,9 @@ export function PanelDemo() {
                 <kbd className="inline-flex h-5 items-center rounded border bg-muted px-1.5 font-sans text-[10px] font-medium text-muted-foreground">
                   ⌥M
                 </kbd>
-              </p>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                <span className="tabular-nums">
-                  {enabledCount} of {demoModules.length} on
-                </span>{" "}
-                · Development only
+                <span className="inline-flex h-5 items-center rounded-sm bg-blue-500/10 px-1.5 font-sans text-[10px] font-semibold tracking-wide text-blue-600 uppercase dark:text-blue-400">
+                  Dev only
+                </span>
               </p>
             </div>
             <span
@@ -165,7 +267,7 @@ export function PanelDemo() {
                 key={module.key}
                 module={module}
                 enabled={isOn(module.key)}
-                changed={own[module.key] !== module.inherited}
+                changed={own[module.key] !== module.default}
                 paused={resolved.get(module.key)!.blockedBy}
                 labelOf={labelOf}
                 confirming={confirming?.key === module.key ? confirming : null}
@@ -176,54 +278,33 @@ export function PanelDemo() {
             ))}
           </ul>
 
-          <section className="border-t px-1.5 pt-2.5 pb-1.5 text-left">
-            <h3 className="px-2.5 pb-1 text-[11px] font-medium text-muted-foreground">
-              Services
-            </h3>
-            <ul className="grid grid-cols-[minmax(0,1fr)] gap-0.5">
-              {demoServices.map((service) => (
-                <li
-                  key={service.key}
-                  className="flex items-center gap-3 px-2.5 py-1.5"
-                >
-                  <span
-                    aria-hidden
-                    className="mx-[0.8125rem] size-1.5 shrink-0 rounded-full bg-emerald-500"
-                  />
-                  <span className="min-w-0 flex-1 truncate text-sm">
-                    {service.label}{" "}
-                    <span className="text-muted-foreground">
-                      · {service.providerLabel}
-                    </span>
-                  </span>
-                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Check className="size-3" />
-                    Configured
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
-
           <footer className="flex items-center justify-between gap-2 border-t bg-muted/40 px-3 py-2">
             <p
               aria-live="polite"
-              className="min-w-0 truncate pl-1 text-left font-mono text-[11px] text-muted-foreground"
-              title={envLines.join("\n")}
+              className="min-w-0 truncate pl-1 text-left text-xs text-muted-foreground"
             >
-              {envLines.length > 0
-                ? envLines.join(" ")
-                : "Matches your environment"}
+              For config/features.ts
             </p>
-            <Button
-              size="xs"
-              variant="ghost"
-              disabled={changedCount === 0}
-              onClick={() => commit("reset")}
-            >
-              <RotateCcw />
-              Reset
-            </Button>
+            <div className="flex shrink-0 items-center gap-1">
+              <Button
+                size="xs"
+                variant="ghost"
+                disabled={changedCount === 0}
+                onClick={copyConfig}
+              >
+                {copied ? <Check /> : <Copy />}
+                {copied ? "Copied" : "Copy config"}
+              </Button>
+              <Button
+                size="xs"
+                variant="ghost"
+                disabled={changedCount === 0}
+                onClick={() => commit("reset")}
+              >
+                <RotateCcw />
+                Reset
+              </Button>
+            </div>
           </footer>
         </div>
 
@@ -512,9 +593,6 @@ function demoModule(
     label,
     description,
     default: true,
-    inherited: true,
-    source: "default",
-    envName: `FEATURE_${key.toUpperCase()}`,
     dependsOn,
     requires: [],
   }

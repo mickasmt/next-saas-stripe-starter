@@ -15,9 +15,6 @@ export async function DevToolbar() {
         label: features[state.key].label,
         description: features[state.key].description,
         default: features[state.key].default,
-        inherited: state.inherited,
-        source: state.source,
-        envName: state.envName,
         dependsOn: [...(features[state.key].dependsOn ?? [])],
         requires: [...(features[state.key].requires ?? [])],
       }))}

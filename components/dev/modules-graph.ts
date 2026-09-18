@@ -1,4 +1,4 @@
-import type { FeatureSource, FeatureStatus } from "@/lib/features/resolve"
+import type { FeatureStatus } from "@/lib/features/resolve"
 
 // Client-side mirror of lib/features/resolve.ts. The panel resolves modules
 // itself so a switch reacts instantly and a change can be previewed (what it
@@ -9,9 +9,6 @@ export type PanelModule = {
   label: string
   description: string
   default: boolean
-  inherited: boolean
-  source: FeatureSource
-  envName: string
   dependsOn: string[]
   requires: string[]
 }
@@ -120,9 +117,9 @@ export function planChange(
   const patch: OverridePatch = {}
   for (const mod of modules) {
     if (next[mod.key] === own[mod.key]) continue
-    // An override equal to the inherited value is dropped, so the change
-    // count only reflects real departures from env/defaults.
-    patch[mod.key] = next[mod.key] === mod.inherited ? null : next[mod.key]
+    // An override equal to the default is dropped, so the change count only
+    // reflects real departures from the config.
+    patch[mod.key] = next[mod.key] === mod.default ? null : next[mod.key]
   }
 
   const others = modules.filter((mod) => mod.key !== key)
@@ -144,19 +141,20 @@ export function applyPatch(
   patch: OverridePatch | "reset"
 ): OwnValues {
   if (patch === "reset") {
-    return Object.fromEntries(modules.map((m) => [m.key, m.inherited]))
+    return Object.fromEntries(modules.map((m) => [m.key, m.default]))
   }
   const next = { ...own }
   for (const mod of modules) {
     if (!(mod.key in patch)) continue
-    next[mod.key] = patch[mod.key] ?? mod.inherited
+    next[mod.key] = patch[mod.key] ?? mod.default
   }
   return next
 }
 
-// FEATURE_* lines that reproduce the current setup in another environment.
-export function toEnvLines(modules: PanelModule[], own: OwnValues) {
+// One line per module that departs from its default, to paste into
+// config/features.ts.
+export function toConfigLines(modules: PanelModule[], own: OwnValues) {
   return modules
     .filter((mod) => own[mod.key] !== mod.default)
-    .map((mod) => `${mod.envName}=${own[mod.key]}`)
+    .map((mod) => `${mod.key}: default: ${own[mod.key]}`)
 }

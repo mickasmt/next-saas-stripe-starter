@@ -6,13 +6,11 @@ import {
   Box,
   Check,
   ChevronDown,
-  ChevronRight,
   Copy,
   CreditCard,
   History,
   KeyRound,
   LayoutGrid,
-  LoaderCircle,
   Newspaper,
   RotateCcw,
   ShieldCheck,
@@ -34,7 +32,7 @@ import {
   applyPatch,
   planChange,
   resolveModules,
-  toEnvLines,
+  toConfigLines,
   type Change,
   type OverridePatch,
   type OwnValues,
@@ -106,13 +104,9 @@ export function ModulesPanel({
 }) {
   const [open, setOpen] = useState(false)
   const [tab, setTab] = useState<"free" | "pro">("free")
-  const [saving, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
   const [error, setError] = useState(false)
   const [confirming, setConfirming] = useState<Pending | null>(null)
-  // Collapsed unless something needs attention: the module list gets the room.
-  const [servicesOpen, setServicesOpen] = useState(() =>
-    services.some((service) => service.missingEnv.length > 0)
-  )
   const [own, applyOptimistic] = useOptimistic(
     serverOwn,
     (current, patch: OverridePatch | "reset") =>
@@ -127,11 +121,8 @@ export function ModulesPanel({
   const enabledCount = modules.filter(
     (m) => resolved.get(m.key)!.enabled
   ).length
-  const changedCount = modules.filter((m) => own[m.key] !== m.inherited).length
-  const unconfiguredCount = services.filter(
-    (service) => service.missingEnv.length > 0
-  ).length
-  const envLines = toEnvLines(modules, own)
+  const changedCount = modules.filter((m) => own[m.key] !== m.default).length
+  const configLines = toConfigLines(modules, own)
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -215,26 +206,10 @@ export function ModulesPanel({
               <kbd className="hidden h-5 items-center rounded border bg-muted px-1.5 font-sans text-[10px] font-medium text-muted-foreground sm:inline-flex">
                 ⌥M
               </kbd>
+              <span className="inline-flex h-5 items-center rounded-sm bg-blue-500/10 px-1.5 font-sans text-[10px] font-semibold tracking-wide text-blue-600 uppercase dark:text-blue-400">
+                Dev only
+              </span>
             </h2>
-            <p
-              aria-live="polite"
-              className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground"
-            >
-              {saving ? (
-                <>
-                  <LoaderCircle className="size-3 animate-spin" />
-                  Applying…
-                </>
-              ) : (
-                <>
-                  <span className="tabular-nums">
-                    {enabledCount} of {modules.length} on
-                  </span>
-                  <span aria-hidden>·</span>
-                  Development only
-                </>
-              )}
-            </p>
           </div>
           <Button
             size="icon-xs"
@@ -277,104 +252,66 @@ export function ModulesPanel({
               ))}
             </ul>
           ) : (
-            <>
-              <ul className="grid grid-cols-1 gap-0.5 p-1.5">
-                {modules.map((module) => {
-                  const state = resolved.get(module.key)!
-                  const plan = state.enabled
-                    ? null
-                    : planChange(modules, services, own, module.key, true)
+            <ul className="grid grid-cols-1 gap-0.5 p-1.5">
+              {modules.map((module) => {
+                const state = resolved.get(module.key)!
+                const plan = state.enabled
+                  ? null
+                  : planChange(modules, services, own, module.key, true)
 
-                  return (
-                    <ModuleRow
-                      key={module.key}
-                      module={module}
-                      enabled={state.enabled}
-                      changed={own[module.key] !== module.inherited}
-                      // A module that can't be switched on says why.
-                      hint={
-                        state.unconfigured.length > 0 && own[module.key] ? (
-                          <Warning>
-                            {listOf(
-                              state.unconfigured.map(
-                                (s) => serviceOf(s)?.providerLabel ?? s
-                              )
-                            )}{" "}
-                            isn&apos;t configured
-                          </Warning>
-                        ) : state.status === "blocked" ? (
-                          <Warning>
-                            Paused · needs{" "}
-                            {listOf(state.blockedBy.map(labelOf))}
-                          </Warning>
-                        ) : plan && !plan.possible ? (
-                          <span>
-                            Needs{" "}
-                            {listOf(
-                              blockingServices(module, modules, services).map(
-                                (s) => s.providerLabel
-                              )
-                            )}{" "}
-                            to be configured
-                          </span>
-                        ) : null
-                      }
-                      locked={!!plan && !plan.possible}
-                      missingServices={
-                        plan && !plan.possible
-                          ? blockingServices(module, modules, services)
-                          : []
-                      }
-                      confirming={
-                        confirming?.key === module.key ? confirming : null
-                      }
-                      labelOf={labelOf}
-                      onToggle={(on) => toggle(module.key, on)}
-                      onConfirm={() =>
-                        confirming && commit(confirming.change.patch)
-                      }
-                      onCancel={() => setConfirming(null)}
-                      onRestore={() => toggle(module.key, module.inherited)}
-                    />
-                  )
-                })}
-              </ul>
-
-              <section className="border-t">
-                <button
-                  type="button"
-                  aria-expanded={servicesOpen}
-                  onClick={() => setServicesOpen((value) => !value)}
-                  className="flex w-full items-center gap-1.5 px-4 py-2.5 text-[11px] font-medium text-muted-foreground outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                >
-                  <ChevronRight
-                    className={cn(
-                      "size-3 transition-transform duration-200",
-                      servicesOpen && "rotate-90"
-                    )}
+                return (
+                  <ModuleRow
+                    key={module.key}
+                    module={module}
+                    enabled={state.enabled}
+                    changed={own[module.key] !== module.default}
+                    // A module that can't be switched on says why.
+                    hint={
+                      state.unconfigured.length > 0 && own[module.key] ? (
+                        <Warning>
+                          {listOf(
+                            state.unconfigured.map(
+                              (s) => serviceOf(s)?.providerLabel ?? s
+                            )
+                          )}{" "}
+                          isn&apos;t configured
+                        </Warning>
+                      ) : state.status === "blocked" ? (
+                        <Warning>
+                          Paused · needs {listOf(state.blockedBy.map(labelOf))}
+                        </Warning>
+                      ) : plan && !plan.possible ? (
+                        <span>
+                          Needs{" "}
+                          {listOf(
+                            blockingServices(module, modules, services).map(
+                              (s) => s.providerLabel
+                            )
+                          )}{" "}
+                          to be configured
+                        </span>
+                      ) : null
+                    }
+                    locked={!!plan && !plan.possible}
+                    missingServices={
+                      plan && !plan.possible
+                        ? blockingServices(module, modules, services)
+                        : []
+                    }
+                    confirming={
+                      confirming?.key === module.key ? confirming : null
+                    }
+                    labelOf={labelOf}
+                    onToggle={(on) => toggle(module.key, on)}
+                    onConfirm={() =>
+                      confirming && commit(confirming.change.patch)
+                    }
+                    onCancel={() => setConfirming(null)}
+                    onRestore={() => toggle(module.key, module.default)}
                   />
-                  Services
-                  <span className="ml-auto flex items-center gap-1.5">
-                    {unconfiguredCount > 0 ? (
-                      <span className="text-amber-600 dark:text-amber-400">
-                        {unconfiguredCount} to configure
-                      </span>
-                    ) : (
-                      <span className="tabular-nums">
-                        {services.length} configured
-                      </span>
-                    )}
-                  </span>
-                </button>
-                <Collapsible open={servicesOpen}>
-                  <ul className="grid grid-cols-1 gap-0.5 px-1.5 pb-1.5">
-                    {services.map((service) => (
-                      <ServiceRow key={service.key} service={service} />
-                    ))}
-                  </ul>
-                </Collapsible>
-              </section>
-            </>
+                )
+              })}
+            </ul>
           )}
         </div>
 
@@ -402,21 +339,19 @@ export function ModulesPanel({
             >
               {error
                 ? "Couldn't apply the change. Try again."
-                : changedCount > 0
-                  ? `${changedCount} ${changedCount === 1 ? "change" : "changes"} in this browser`
-                  : "Matches your environment"}
+                : "For config/features.ts"}
             </p>
             <div className="flex shrink-0 items-center gap-1">
               <CopyButton
-                text={envLines.join("\n")}
-                disabled={envLines.length === 0}
+                text={configLines.join("\n")}
+                disabled={configLines.length === 0}
                 title={
-                  envLines.length === 0
+                  configLines.length === 0
                     ? "All modules match their defaults"
-                    : `Copy ${envLines.join(", ")}`
+                    : "Copy the defaults to set in config/features.ts"
                 }
               >
-                Copy env
+                Copy config
               </CopyButton>
               <Button
                 size="xs"
@@ -527,23 +462,14 @@ function ModuleRow({
               <button
                 type="button"
                 onClick={onRestore}
-                title={`Modified in this browser. Click to restore (${module.inherited ? "on" : "off"}).`}
+                title={`Modified in this browser. Click to restore (${module.default ? "on" : "off"}).`}
                 className="group/restore flex h-4 items-center gap-1 rounded-full bg-blue-500/10 px-1.5 text-[10px] font-medium text-blue-600 outline-none hover:bg-blue-500/15 focus-visible:ring-2 focus-visible:ring-ring/50 dark:text-blue-400"
               >
                 <span className="size-1 rounded-full bg-current group-hover/restore:hidden group-focus-visible/restore:hidden" />
                 <RotateCcw className="hidden size-2.5 group-hover/restore:block group-focus-visible/restore:block" />
                 Modified
               </button>
-            ) : (
-              module.source === "env" && (
-                <span
-                  title={`Set by ${module.envName}`}
-                  className="flex h-4 items-center rounded-full border px-1.5 font-mono text-[10px] text-muted-foreground"
-                >
-                  env
-                </span>
-              )
-            )}
+            ) : null}
           </div>
           <p className="mt-0.5 truncate text-xs text-muted-foreground">
             {hint ?? module.description}
@@ -662,71 +588,6 @@ function ConfirmChange({
         </Button>
       </div>
     </div>
-  )
-}
-
-function ServiceRow({ service }: { service: PanelService }) {
-  const [open, setOpen] = useState(false)
-  const configured = service.missingEnv.length === 0
-
-  return (
-    <li className={cn("rounded-xl", open && "bg-muted/60")}>
-      <button
-        type="button"
-        disabled={configured}
-        aria-expanded={configured ? undefined : open}
-        onClick={() => setOpen((value) => !value)}
-        className="flex w-full items-center gap-3 rounded-xl px-2.5 py-1.5 text-left outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 enabled:hover:bg-muted/50"
-      >
-        <span
-          aria-hidden
-          className={cn(
-            "mx-[0.8125rem] size-1.5 shrink-0 rounded-full",
-            configured
-              ? "bg-emerald-500"
-              : "bg-amber-500 shadow-[0_0_0_3px] shadow-amber-500/20"
-          )}
-        />
-        <span className="min-w-0 flex-1 truncate text-sm">
-          {service.label}{" "}
-          <span className="text-muted-foreground">
-            · {service.providerLabel}
-          </span>
-        </span>
-        <span
-          className={cn(
-            "flex items-center gap-1 text-xs",
-            configured
-              ? "text-muted-foreground"
-              : "text-amber-600 dark:text-amber-400"
-          )}
-        >
-          {configured ? (
-            <>
-              <Check className="size-3" />
-              Configured
-            </>
-          ) : (
-            <>
-              {service.missingEnv.length} missing
-              <ChevronDown
-                className={cn(
-                  "size-3.5 transition-transform duration-200",
-                  open && "rotate-180"
-                )}
-              />
-            </>
-          )}
-        </span>
-      </button>
-      {!configured && (
-        <Collapsible open={open}>
-          <div className="px-2.5 pb-2.5 pl-[3.375rem]">
-            <EnvBlock service={service} />
-          </div>
-        </Collapsible>
-      )}
-    </li>
   )
 }
 

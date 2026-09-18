@@ -58,15 +58,15 @@ const features: Feature[] = [
     href: "/docs/modules", // module:docs
   },
   {
-    title: "One variable per module, per environment",
+    title: "One flag per module, in one file",
     description: (
       <>
         The panel only changes your browser. Once a setup feels right,{" "}
-        <Code>Copy env</Code> gives you the <Code>FEATURE_*</Code> lines to
-        paste into Vercel, staging or CI.
+        <Code>Copy config</Code> gives you the defaults to set in{" "}
+        <Code>config/features.ts</Code>. Nothing to add to your environment.
       </>
     ),
-    visual: <EnvFile />,
+    visual: <ConfigFile />,
     href: "/docs/modules", // module:docs
   },
   {
@@ -105,7 +105,7 @@ const facts: { icon: LucideIcon; title: string; description: string }[] = [
     icon: Zap,
     title: "Nothing extra in production",
     description:
-      "The panel only renders in development. Production reads your env and that's it.",
+      "The panel only renders in development. Production reads config/features.ts and that's it.",
   },
 ]
 
@@ -117,7 +117,7 @@ export function ModulesShowcase() {
           icon={LayoutGrid}
           eyebrow="Modular by design"
           title="Flip a switch, reshape the app"
-          description="Every feature is a module. Turn them on and off from a panel in your dev server, and watch routes, links and dependencies follow."
+          description="Turn a module off, and its routes and links go with it."
         />
       </div>
 
@@ -379,22 +379,22 @@ function GraphNode({
   )
 }
 
-function EnvFile() {
+function ConfigFile() {
   const lines: [string, string, boolean][] = [
-    ["FEATURE_AUTH", "true", false],
-    ["FEATURE_BILLING", "false", true],
-    ["FEATURE_ADMIN", "true", false],
-    ["FEATURE_DOCS", "true", false],
-    ["FEATURE_BLOG", "false", true],
-    ["FEATURE_CHANGELOG", "false", true],
+    ["auth", "true", false],
+    ["billing", "false", true],
+    ["admin", "true", false],
+    ["docs", "true", false],
+    ["blog", "false", true],
+    ["changelog", "false", true],
   ]
 
   return (
     <div className="relative mx-auto flex h-full max-w-md flex-col justify-center">
       <div className="overflow-hidden rounded-xl border bg-background font-mono text-[12.5px] shadow-lg shadow-neutral-900/5 dark:shadow-black/30">
         <div className="flex items-center justify-between border-b bg-muted/40 px-3 py-2 font-sans text-xs">
-          <span className="font-medium">.env.production</span>
-          <span className="text-muted-foreground">Vercel · Production</span>
+          <span className="font-medium">config/features.ts</span>
+          <span className="text-muted-foreground">Defaults</span>
         </div>
         <ol className="py-2">
           {lines.map(([name, value, changed], index) => (
@@ -410,7 +410,7 @@ function EnvFile() {
               </span>
               <span className="truncate">
                 {name}
-                <span className="text-muted-foreground">=</span>
+                <span className="text-muted-foreground">: default: </span>
                 <span
                   className={
                     value === "false"
