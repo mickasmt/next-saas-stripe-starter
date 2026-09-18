@@ -8,7 +8,6 @@ import type { ShellUser } from "@/components/dashboard/types"
 import { SectionCard } from "@/components/dashboard/section-card"
 import { AvatarCard } from "@/components/dashboard/settings/avatar-card"
 import { DeleteAccountCard } from "@/components/dashboard/settings/delete-account-card"
-import { IdCard } from "@/components/dashboard/settings/id-card"
 import { SaveCard } from "@/components/dashboard/settings/save-card"
 import { UserAvatar } from "@/components/shared/user-avatar"
 import { Badge } from "@/components/ui/badge"
@@ -78,12 +77,6 @@ export function ProfileSettingsForm({
           <Badge variant="outline">Primary</Badge>
         </div>
       </SectionCard>
-
-      <IdCard
-        title="User ID"
-        description="This is your user ID."
-        value={user.id}
-      />
 
       <DeleteAccountCard hasPassword={hasPassword} />
     </div>
