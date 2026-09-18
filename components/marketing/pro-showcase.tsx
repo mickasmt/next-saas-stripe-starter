@@ -1,22 +1,18 @@
 import {
-  Activity,
-  Bell,
-  Bot,
   Check,
   ChevronDown,
   CreditCard,
+  Gauge,
   KeyRound,
-  Languages,
   Lock,
   Mail,
   Minus,
-  RefreshCw,
   Route,
+  ScrollText,
   Send,
+  ShieldCheck,
   Sparkles,
-  Upload,
   Users,
-  Webhook,
   type LucideIcon,
 } from "lucide-react"
 import Link from "next/link"
@@ -36,7 +32,7 @@ import { cn } from "@/lib/utils"
 // Pro repository actually ships before launch.
 
 export const proPricing = {
-  regular: "$199",
+  regular: "$149",
   earlyBird: "$99",
   earlyBirdNote: "Early-bird price for the first buyers",
 }
@@ -87,17 +83,12 @@ const comparison: { label: string; free: boolean; pro: boolean }[] = [
   { label: "Team invitations, roles and permissions", free: false, pro: true },
   { label: "Seat-based team billing", free: false, pro: true },
   { label: "Transactional emails with Resend", free: false, pro: true },
-  { label: "File uploads, API keys and webhooks", free: false, pro: true },
-  {
-    label: "Notifications, translations and AI chatbot",
-    free: false,
-    pro: true,
-  },
+  { label: "Error monitoring with Sentry", free: false, pro: true },
   { label: "Private repository and lifetime updates", free: false, pro: true },
 ]
 
-// Everything Pro adds, as short tiles under the feature cards. Its sheer
-// length is part of the pitch.
+// Everything Pro adds, as short tiles under the feature cards. Mirrors the
+// locked modules in `config/pro-modules.ts`: keep the two lists in step.
 const proExtras: { icon: LucideIcon; title: string; description: string }[] = [
   {
     icon: Route,
@@ -120,44 +111,24 @@ const proExtras: { icon: LucideIcon; title: string; description: string }[] = [
     description: "React Email templates sent through Resend.",
   },
   {
-    icon: Upload,
-    title: "File uploads",
-    description: "Direct uploads to S3-compatible storage.",
+    icon: Gauge,
+    title: "Usage metering",
+    description: "Metered counters, plan limits and overage.",
+  },
+  {
+    icon: ScrollText,
+    title: "Audit log",
+    description: "Recorded events, filters and CSV export.",
   },
   {
     icon: KeyRound,
     title: "API keys",
-    description: "Let customers call your API with scoped keys.",
+    description: "Hashed keys, scopes, rate limits and revocation.",
   },
   {
-    icon: Webhook,
-    title: "Webhooks",
-    description: "Notify customers' servers when things happen.",
-  },
-  {
-    icon: Bell,
-    title: "Notifications",
-    description: "In-app inbox with read state and preferences.",
-  },
-  {
-    icon: Languages,
-    title: "Translations",
-    description: "i18n for the app, emails and marketing pages.",
-  },
-  {
-    icon: Bot,
-    title: "AI chatbot",
-    description: "Streaming chat with the model of your choice.",
-  },
-  {
-    icon: Activity,
-    title: "Error monitoring",
-    description: "Sentry wired for server and client errors.",
-  },
-  {
-    icon: RefreshCw,
-    title: "Lifetime updates",
-    description: "Private repository, new modules as they ship.",
+    icon: ShieldCheck,
+    title: "Account security",
+    description: "Password changes, two-factor and session revocation.",
   },
 ]
 
