@@ -219,7 +219,7 @@ export async function ProShowcase({
           Each one is a module: keep it, switch it off, or prune it.
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-px border-t border-grid-border bg-grid-border text-sm sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-px border-t border-grid-border bg-grid-border text-sm sm:grid-cols-2 lg:grid-cols-3">
         {proExtras.map(({ icon: Icon, title, description }) => (
           <div
             key={title}
