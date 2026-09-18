@@ -6,6 +6,7 @@ export type NavIcon =
   | "billing"
   | "emails"
   | "emailTemplates"
+  | "organization"
   | "settings"
   | "admin"
 
@@ -14,8 +15,9 @@ export type NavItem = {
   href: string
   // Icon name, not a component: nav items are passed to client components.
   icon?: NavIcon
-  // Shown with a Pro badge: the free version only previews the page.
-  pro?: boolean
+  // Pro badge. true: the free version only previews the page. "partial": a
+  // section whose panel mixes free pages with Pro ones.
+  pro?: boolean | "partial"
   // Platform role (user.role) required to see the item.
   authorizeOnly?: "admin"
   // Hidden while this flag is off. Must match the flag checked by the
@@ -26,6 +28,13 @@ export type NavItem = {
 export type NavSection = {
   title?: string
   items: NavItem[]
+}
+
+// A sub-nav that replaces dashboardNav while the route is under `prefix`.
+export type NavPanel = {
+  title: string
+  prefix: string
+  sections: NavSection[]
 }
 
 export const dashboardNav: NavSection[] = [
@@ -45,9 +54,16 @@ export const dashboardNav: NavSection[] = [
         feature: "billing",
       },
       {
+        title: "Organization",
+        href: "/dashboard/organization/general",
+        icon: "organization",
+        pro: "partial",
+      },
+      {
         title: "Settings",
-        href: "/dashboard/settings/general",
+        href: "/dashboard/settings/profile",
         icon: "settings",
+        pro: "partial",
       },
     ],
   },
@@ -84,39 +100,57 @@ export const dashboardNav: NavSection[] = [
   // module:admin end
 ]
 
-// Shown instead of dashboardNav while inside /dashboard/settings.
-export const settingsNav: NavSection[] = [
+// Longest prefix wins, so order here doesn't matter.
+export const navPanels: NavPanel[] = [
   {
     title: "Organization",
-    items: [
-      { title: "General", href: "/dashboard/settings/general" },
-      { title: "Members", href: "/dashboard/settings/members", pro: true },
-      // module:billing start
+    prefix: "/dashboard/organization",
+    sections: [
       {
-        title: "Billing",
-        href: "/dashboard/settings/billing",
-        pro: true,
-        feature: "billing",
+        items: [
+          { title: "General", href: "/dashboard/organization/general" },
+          {
+            title: "Members",
+            href: "/dashboard/organization/members",
+            pro: true,
+          },
+          // module:billing start
+          {
+            title: "Billing",
+            href: "/dashboard/organization/billing",
+            pro: true,
+            feature: "billing",
+          },
+          {
+            title: "Invoices",
+            href: "/dashboard/organization/invoices",
+            pro: true,
+            feature: "billing",
+          },
+          // module:billing end
+        ],
       },
-      {
-        title: "Invoices",
-        href: "/dashboard/settings/invoices",
-        pro: true,
-        feature: "billing",
-      },
-      // module:billing end
     ],
   },
   {
-    title: "Account",
-    items: [
-      { title: "Profile", href: "/dashboard/settings/profile" },
+    title: "Settings",
+    prefix: "/dashboard/settings",
+    sections: [
       {
-        title: "Notifications",
-        href: "/dashboard/settings/notifications",
-        pro: true,
+        items: [
+          { title: "Profile", href: "/dashboard/settings/profile" },
+          {
+            title: "Notifications",
+            href: "/dashboard/settings/notifications",
+            pro: true,
+          },
+          {
+            title: "Security",
+            href: "/dashboard/settings/security",
+            pro: true,
+          },
+        ],
       },
-      { title: "Security", href: "/dashboard/settings/security", pro: true },
     ],
   },
 ]

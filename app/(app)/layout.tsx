@@ -1,11 +1,11 @@
 import { Geist } from "next/font/google"
 
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
-import { dashboardNav, settingsNav } from "@/config/nav"
+import { dashboardNav, navPanels } from "@/config/nav"
 import { getActiveOrganization } from "@/lib/auth/session"
 import { requireFeature } from "@/lib/features/guard"
 import { getFeatures } from "@/lib/features/resolve"
-import { filterNav } from "@/lib/nav"
+import { filterNav, filterPanels } from "@/lib/nav"
 import { getViewRole } from "@/modules/admin/preview" // module:admin
 
 // Dashboard-only font; marketing keeps its own.
@@ -27,13 +27,13 @@ export default async function AppLayout({
   viewer.role = await getViewRole(session)
   // module:admin end
   const nav = filterNav(dashboardNav, { features, role: viewer.role })
-  const settings = filterNav(settingsNav, { features, role: viewer.role })
+  const panels = filterPanels(navPanels, { features, role: viewer.role })
 
   return (
     <DashboardShell
       className={geist.variable}
       nav={nav}
-      settingsNav={settings}
+      panels={panels}
       organization={{
         name: organization.name,
         logo: organization.logo ?? null,

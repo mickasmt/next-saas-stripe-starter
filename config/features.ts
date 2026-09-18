@@ -51,16 +51,16 @@ export const features = defineFeatures({
     files: [
       "app/(marketing)/pricing",
       "app/(app)/dashboard/billing",
-      "app/(app)/dashboard/settings/billing",
-      "app/(app)/dashboard/settings/invoices",
+      "app/(app)/dashboard/organization/billing",
+      "app/(app)/dashboard/organization/invoices",
       "components/marketing/pricing",
       "components/billing",
     ],
     routes: [
       "/pricing",
       "/dashboard/billing",
-      "/dashboard/settings/billing",
-      "/dashboard/settings/invoices",
+      "/dashboard/organization/billing",
+      "/dashboard/organization/invoices",
     ],
   },
   // module:admin start

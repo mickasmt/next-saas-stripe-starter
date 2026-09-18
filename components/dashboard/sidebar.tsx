@@ -10,12 +10,13 @@ import { ProSidebarCard } from "@/components/dashboard/pro/sidebar-card"
 import { SidebarNav } from "@/components/dashboard/sidebar-nav"
 import type { ShellOrganization, ShellUser } from "@/components/dashboard/types"
 import { UserMenu } from "@/components/dashboard/user-menu"
-import type { NavSection } from "@/config/nav"
+import type { NavPanel, NavSection } from "@/config/nav"
+import { getActivePanel } from "@/lib/nav"
 import { cn } from "@/lib/utils"
 
 export type SidebarProps = {
   nav: NavSection[]
-  settingsNav: NavSection[]
+  panels: NavPanel[]
   organization: ShellOrganization
   user: ShellUser
   onNavigate?: () => void
@@ -23,14 +24,14 @@ export type SidebarProps = {
 
 export function Sidebar({
   nav,
-  settingsNav,
+  panels,
   organization,
   user,
   onNavigate,
 }: SidebarProps) {
   const pathname = usePathname()
-  const inSettings = pathname.startsWith("/dashboard/settings")
-  const findItems = [...nav, ...settingsNav]
+  const panel = getActivePanel(pathname, panels)
+  const findItems = [...nav, ...panels.flatMap((p) => p.sections)]
     .flatMap((section) => section.items)
     .filter((item, i, all) => all.findIndex((x) => x.href === item.href) === i)
 
@@ -42,15 +43,15 @@ export function Sidebar({
       </div>
 
       <div className="mt-2.5 min-h-0 flex-1 overflow-x-hidden overflow-y-auto pb-3">
-        {/* Keyed so the panel slides when entering/leaving settings. */}
+        {/* Keyed so the panel slides when entering/leaving a sub-nav. */}
         <div
-          key={inSettings ? "settings" : "main"}
+          key={panel?.prefix ?? "main"}
           className={cn(
             "flex animate-in flex-col gap-px duration-200 fade-in",
-            inSettings ? "slide-in-from-right-4" : "slide-in-from-left-4"
+            panel ? "slide-in-from-right-4" : "slide-in-from-left-4"
           )}
         >
-          {inSettings && (
+          {panel && (
             <div className="px-2">
               <Link
                 href="/dashboard"
@@ -60,13 +61,15 @@ export function Sidebar({
                 <span className="grid size-9 place-items-center">
                   <ChevronLeft className="size-4" />
                 </span>
-                <span className="flex-1 text-center font-medium">Settings</span>
+                <span className="flex-1 text-center font-medium">
+                  {panel.title}
+                </span>
                 <span className="size-9" />
               </Link>
             </div>
           )}
           <SidebarNav
-            sections={inSettings ? settingsNav : nav}
+            sections={panel ? panel.sections : nav}
             onNavigate={onNavigate}
           />
         </div>

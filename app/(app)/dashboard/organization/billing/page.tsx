@@ -9,7 +9,7 @@ export const metadata = buildMetadata({
   noIndex: true,
 })
 
-export default async function BillingSettingsPage() {
+export default async function OrganizationBillingPage() {
   await requireFeature("billing")
 
   return (

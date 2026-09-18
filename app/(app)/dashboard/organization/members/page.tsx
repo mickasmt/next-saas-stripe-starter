@@ -8,7 +8,7 @@ export const metadata = buildMetadata({
   noIndex: true,
 })
 
-export default function MembersSettingsPage() {
+export default function OrganizationMembersPage() {
   return (
     <PageContent>
       <div className="flex flex-col gap-6">

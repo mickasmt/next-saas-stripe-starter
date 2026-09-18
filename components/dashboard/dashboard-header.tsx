@@ -15,18 +15,19 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { getActivePanel } from "@/lib/nav"
 
 // Three-column top bar: menu, page title, actions.
 export function DashboardHeader(props: Omit<SidebarProps, "onNavigate">) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const inSettings = pathname.startsWith("/dashboard/settings")
-  const title = inSettings
-    ? "Settings"
-    : getActiveItem(
-        pathname,
-        props.nav.flatMap((section) => section.items)
-      )?.title
+  const panel = getActivePanel(pathname, props.panels)
+  const title =
+    panel?.title ??
+    getActiveItem(
+      pathname,
+      props.nav.flatMap((section) => section.items)
+    )?.title
 
   return (
     <header className="sticky top-0 z-30 grid h-14 grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] items-center gap-2 border-b border-divider bg-background">

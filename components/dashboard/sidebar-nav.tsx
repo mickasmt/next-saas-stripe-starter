@@ -65,7 +65,17 @@ export function SidebarNav({
                 {item.pro && (
                   <Badge
                     variant="outline"
-                    className="ml-auto shrink-0 border-violet-500/40 bg-violet-500/10 text-violet-700 dark:border-violet-400/40 dark:bg-violet-400/12 dark:text-violet-200"
+                    title={
+                      item.pro === "partial"
+                        ? "Some pages in here are Pro"
+                        : undefined
+                    }
+                    className={cn(
+                      "ml-auto shrink-0",
+                      item.pro === "partial"
+                        ? "border-dashed border-violet-500/35 bg-transparent text-muted-foreground dark:border-violet-400/35"
+                        : "border-violet-500/40 bg-violet-500/10 text-violet-700 dark:border-violet-400/40 dark:bg-violet-400/12 dark:text-violet-200"
+                    )}
                   >
                     Pro
                   </Badge>

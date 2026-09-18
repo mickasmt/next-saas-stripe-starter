@@ -1,4 +1,5 @@
 import {
+  Building2,
   CreditCard,
   LayoutGrid,
   Mail,
@@ -17,6 +18,7 @@ export const navIcons: Record<NavIcon, LucideIcon> = {
   billing: CreditCard,
   emails: Mail,
   emailTemplates: MailOpen,
+  organization: Building2,
   settings: Settings,
   admin: ShieldCheck,
 }

@@ -5,11 +5,11 @@ import { getActiveOrganization } from "@/lib/auth/session"
 import { buildMetadata } from "@/lib/metadata"
 
 export const metadata = buildMetadata({
-  title: "Settings",
+  title: "General",
   noIndex: true,
 })
 
-export default async function GeneralSettingsPage() {
+export default async function OrganizationGeneralPage() {
   const { organization, member } = await getActiveOrganization()
 
   return (

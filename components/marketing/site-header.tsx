@@ -52,7 +52,7 @@ export async function SiteHeader() {
       .filter(
         (item) =>
           item.href === DEFAULT_LOGIN_REDIRECT ||
-          item.href === "/dashboard/settings/general" ||
+          item.href === "/dashboard/settings/profile" ||
           item.href === "/admin"
       )
   }
