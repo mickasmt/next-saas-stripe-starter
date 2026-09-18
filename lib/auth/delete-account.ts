@@ -1,5 +1,5 @@
 import { APIError } from "better-auth/api"
-import { and, count, eq, inArray, ne, notInArray } from "drizzle-orm"
+import { and, count, eq, inArray, isNull, ne, notInArray } from "drizzle-orm"
 
 import { db } from "@/lib/db"
 import { member, organization, subscription } from "@/lib/db/schema"
@@ -51,6 +51,8 @@ export async function prepareAccountDeletion(userId: string) {
   if (soloOrganizationIds.length === 0) return
 
   // Same rule as deleting an organization: cancel a running subscription first.
+  // A subscription set to end is fine: the portal sets cancelAt, and only some
+  // of Stripe's cancellations also set cancelAtPeriodEnd.
   const [{ running }] = await db
     .select({ running: count() })
     .from(subscription)
@@ -58,7 +60,8 @@ export async function prepareAccountDeletion(userId: string) {
       and(
         inArray(subscription.referenceId, soloOrganizationIds),
         notInArray(subscription.status, ENDED_STATUSES),
-        eq(subscription.cancelAtPeriodEnd, false)
+        eq(subscription.cancelAtPeriodEnd, false),
+        isNull(subscription.cancelAt)
       )
     )
 
@@ -68,6 +71,11 @@ export async function prepareAccountDeletion(userId: string) {
         "Cancel your subscription in Billing before deleting your account.",
     })
   }
+
+  // referenceId has no foreign key, so these rows outlive their organization.
+  await db
+    .delete(subscription)
+    .where(inArray(subscription.referenceId, soloOrganizationIds))
 
   await db
     .delete(organization)

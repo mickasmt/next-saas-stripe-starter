@@ -1,6 +1,6 @@
 "use client"
 
-import { Check, CircleCheck } from "lucide-react"
+import { Check, CircleAlert, CircleCheck } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
@@ -40,6 +40,7 @@ function formatDate(value: string | null) {
 
 export function BillingOverview({
   subscription,
+  canceled,
   canManage,
   adminAccess,
   prices,
@@ -47,6 +48,8 @@ export function BillingOverview({
   checkoutSucceeded,
 }: {
   subscription: Subscription | null
+  // Most recently ended subscription, shown only while there's no active one.
+  canceled: { plan: PlanName; canceledAt: string } | null
   prices: PlanPrices
   canManage: boolean
   // Platform admin: top plan without a subscription, no checkout.
@@ -116,6 +119,9 @@ export function BillingOverview({
     }
   }
 
+  const canceledPlanName =
+    canceled && pricingPlans.find((plan) => plan.key === canceled.plan)?.name
+
   const renewal = subscription?.cancelAt
     ? `Ends on ${formatDate(subscription.cancelAt)}`
     : subscription?.periodEnd
@@ -128,6 +134,13 @@ export function BillingOverview({
         <p className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-emerald-700 dark:text-emerald-400">
           <CircleCheck className="size-4 shrink-0" />
           Thanks! Your subscription is active.
+        </p>
+      )}
+      {!subscription && canceled && (
+        <p className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-amber-700 dark:text-amber-400">
+          <CircleAlert className="size-4 shrink-0" />
+          Your {canceledPlanName ?? canceled.plan} subscription was canceled
+          on {formatDate(canceled.canceledAt)}.
         </p>
       )}
       <SectionCard

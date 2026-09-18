@@ -8,6 +8,10 @@ import { getActiveOrganization } from "@/lib/auth/session"
 import { buildMetadata } from "@/lib/metadata"
 import { plans, type PlanName } from "@/modules/billing/plans"
 import { getPlanPrices } from "@/modules/billing/prices"
+import {
+  getLastEndedSubscription,
+  reconcileSubscription,
+} from "@/modules/billing/sync"
 
 export const metadata = buildMetadata({
   title: "Billing",
@@ -30,7 +34,16 @@ export default async function BillingPage({
     }),
     getPlanPrices(),
   ])
+  // The portal's plan-switch flow needs a confirmation click on Stripe's
+  // side, and cancellations land through a webhook: reconcile against the
+  // live Stripe subscription so a slow or missed event never leaves the
+  // page stuck on the old plan.
   const subscription = subscriptions[0]
+    ? await reconcileSubscription(subscriptions[0])
+    : null
+  const lastEndedSubscription = subscription
+    ? null
+    : await getLastEndedSubscription(organization.id)
 
   // Set by the pricing page when a signed-out visitor picked a paid plan.
   const resumePlan = adminAccess
@@ -57,6 +70,14 @@ export default async function BillingPage({
                     ? subscription.periodEnd
                     : subscription.cancelAt
                   )?.toISOString() ?? null,
+              }
+            : null
+        }
+        canceled={
+          lastEndedSubscription?.canceledAt
+            ? {
+                plan: lastEndedSubscription.plan as PlanName,
+                canceledAt: lastEndedSubscription.canceledAt.toISOString(),
               }
             : null
         }
