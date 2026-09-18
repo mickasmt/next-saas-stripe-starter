@@ -3,6 +3,7 @@
 import { Check, CircleCheck } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
+import { toast } from "sonner"
 
 import { useUpgrade, type Interval } from "@/components/billing/upgrade-button"
 import { SectionCard } from "@/components/dashboard/section-card"
@@ -54,13 +55,12 @@ export function BillingOverview({
   checkoutSucceeded: boolean
 }) {
   const router = useRouter()
-  const { upgrade, pending, error } = useUpgrade()
+  const { upgrade, pending } = useUpgrade()
   const [pendingPlan, setPendingPlan] = useState<PlanName | null>(null)
   const [interval, setBillingInterval] = useState<Interval>(
     resume?.interval ?? subscription?.interval ?? "year"
   )
   const [portalPending, setPortalPending] = useState(false)
-  const [portalError, setPortalError] = useState<string | null>(null)
   const resumed = useRef(false)
 
   const current = pricingPlans.find(
@@ -106,13 +106,12 @@ export function BillingOverview({
 
   async function openPortal() {
     setPortalPending(true)
-    setPortalError(null)
     const { error } = await authClient.subscription.billingPortal({
       customerType: "organization",
       returnUrl: "/dashboard/billing",
     })
     if (error) {
-      setPortalError(error.message ?? "Couldn't open the billing portal.")
+      toast.error(error.message ?? "Couldn't open the billing portal.")
       setPortalPending(false)
     }
   }
@@ -131,12 +130,6 @@ export function BillingOverview({
           Thanks! Your subscription is active.
         </p>
       )}
-      {(error || portalError) && (
-        <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-destructive">
-          {error ?? portalError}
-        </p>
-      )}
-
       <SectionCard
         title="Current Plan"
         description={

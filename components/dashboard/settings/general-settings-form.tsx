@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
+import { toast } from "sonner"
 
 import { OrganizationAvatar } from "@/components/dashboard/organization-avatar"
 import { AvatarCard } from "@/components/dashboard/settings/avatar-card"
@@ -28,42 +29,41 @@ export function GeneralSettingsForm({
   const router = useRouter()
   const [name, setName] = useState(organization.name)
   const [slug, setSlug] = useState(organization.slug)
-  const [error, setError] = useState<string | null>(null)
   const [nameSaving, startNameSave] = useTransition()
   const [slugSaving, startSlugSave] = useTransition()
 
   function saveName() {
-    setError(null)
     startNameSave(async () => {
       const { error } = await authClient.organization.update({
         organizationId: organization.id,
         data: { name },
       })
-      if (error) setError(error.message ?? "Couldn't update the name.")
-      else router.refresh()
+      if (error) {
+        toast.error(error.message ?? "Couldn't update the name.")
+        return
+      }
+      toast.success("Organization name updated.")
+      router.refresh()
     })
   }
 
   function saveSlug() {
-    setError(null)
     startSlugSave(async () => {
       const { error } = await authClient.organization.update({
         organizationId: organization.id,
         data: { slug },
       })
-      if (error) setError(error.message ?? "Couldn't update the slug.")
-      else router.refresh()
+      if (error) {
+        toast.error(error.message ?? "Couldn't update the slug.")
+        return
+      }
+      toast.success("Organization slug updated.")
+      router.refresh()
     })
   }
 
   return (
     <div className="flex flex-col gap-6">
-      {error && (
-        <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-destructive">
-          {error}
-        </p>
-      )}
-
       <SaveCard
         title="Organization Name"
         description="This is the name of your organization."
@@ -104,7 +104,7 @@ export function GeneralSettingsForm({
           <Input
             id="org-slug"
             value={slug}
-            pattern="^[a-z0-9-]+$"
+            pattern="^[a-z0-9\-]+$"
             className="bg-card dark:bg-card"
             disabled={!canEdit}
             onChange={(event) => setSlug(event.target.value)}

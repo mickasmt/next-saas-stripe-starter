@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth/client"
@@ -18,11 +19,9 @@ export function billingHref(plan: PlanName, interval: Interval) {
 export function useUpgrade() {
   const router = useRouter()
   const [pending, setPending] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   async function upgrade(plan: PlanName, interval: Interval) {
     setPending(true)
-    setError(null)
 
     const { data: session } = await authClient.getSession()
     if (!session) {
@@ -42,12 +41,12 @@ export function useUpgrade() {
 
     // On success the client redirects to Stripe, so only errors land here.
     if (error) {
-      setError(error.message ?? "Couldn't start the checkout.")
+      toast.error(error.message ?? "Couldn't start the checkout.")
       setPending(false)
     }
   }
 
-  return { upgrade, pending, error }
+  return { upgrade, pending }
 }
 
 export function UpgradeButton({
@@ -59,18 +58,15 @@ export function UpgradeButton({
   plan: PlanName
   interval: Interval
 }) {
-  const { upgrade, pending, error } = useUpgrade()
+  const { upgrade, pending } = useUpgrade()
 
   return (
-    <>
-      <Button
-        {...props}
-        disabled={pending || props.disabled}
-        onClick={() => upgrade(plan, interval)}
-      >
-        {pending ? "Redirecting..." : children}
-      </Button>
-      {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
-    </>
+    <Button
+      {...props}
+      disabled={pending || props.disabled}
+      onClick={() => upgrade(plan, interval)}
+    >
+      {pending ? "Redirecting..." : children}
+    </Button>
   )
 }

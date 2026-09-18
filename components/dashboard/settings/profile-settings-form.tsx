@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
+import { toast } from "sonner"
 
 import type { ShellUser } from "@/components/dashboard/types"
 import { SectionCard } from "@/components/dashboard/section-card"
@@ -24,26 +25,22 @@ export function ProfileSettingsForm({
 }) {
   const router = useRouter()
   const [name, setName] = useState(user.name)
-  const [error, setError] = useState<string | null>(null)
   const [saving, startSave] = useTransition()
 
   function saveName() {
-    setError(null)
     startSave(async () => {
       const { error } = await authClient.updateUser({ name: name.trim() })
-      if (error) setError(error.message ?? "Couldn't update your name.")
-      else router.refresh()
+      if (error) {
+        toast.error(error.message ?? "Couldn't update your name.")
+        return
+      }
+      toast.success("Display name updated.")
+      router.refresh()
     })
   }
 
   return (
     <div className="flex flex-col gap-6">
-      {error && (
-        <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-destructive">
-          {error}
-        </p>
-      )}
-
       <AvatarCard title="Avatar" description="This is your avatar.">
         <UserAvatar user={user} fallbackClassName="text-xl" />
       </AvatarCard>

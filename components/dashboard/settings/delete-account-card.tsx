@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
+import { toast } from "sonner"
 
 import { SectionCard } from "@/components/dashboard/section-card"
 import { Button } from "@/components/ui/button"
@@ -54,6 +55,7 @@ export function DeleteAccountCard({ hasPassword }: { hasPassword: boolean }) {
         )
         return
       }
+      toast.success("Your account has been deleted.")
       router.replace("/")
       router.refresh()
     })
