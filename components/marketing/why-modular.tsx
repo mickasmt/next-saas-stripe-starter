@@ -1,6 +1,7 @@
 import { Check, Minus } from "lucide-react"
 
 import { GridSection } from "@/components/marketing/grid-section"
+import { Reveal } from "@/components/marketing/reveal"
 import { cn } from "@/lib/utils"
 
 // The case for modules against all-in-one kits. It compares approaches and
@@ -39,9 +40,10 @@ export function WhyModular() {
       </div>
 
       <div className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-2">
-        {approaches.map((approach) => (
-          <div
+        {approaches.map((approach, index) => (
+          <Reveal
             key={approach.title}
+            delay={index * 60}
             className={cn(
               "rounded-2xl p-6 text-left",
               approach.highlighted
@@ -77,7 +79,7 @@ export function WhyModular() {
                 </li>
               ))}
             </ul>
-          </div>
+          </Reveal>
         ))}
       </div>
     </GridSection>

@@ -244,3 +244,22 @@
         linear-gradient(to bottom, currentColor 1px, transparent 1px);
     background-size: 60px 60px;
 }
+/* Scroll-in entrance, revealed by components/marketing/reveal.tsx. A
+   transition so it retargets cleanly; reduced motion keeps the fade only. */
+@utility reveal {
+    opacity: 0;
+    transform: translateY(var(--offset, 12px));
+    transition:
+        opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+
+    &[data-revealed] {
+        opacity: 1;
+        transform: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transform: none;
+        transition-duration: 300ms;
+    }
+}

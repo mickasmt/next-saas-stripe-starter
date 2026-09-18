@@ -15,6 +15,7 @@ import Link from "next/link"
 
 import { GridSection } from "@/components/marketing/grid-section"
 import { PanelDemo } from "@/components/marketing/panel-demo"
+import { Reveal } from "@/components/marketing/reveal"
 import { cn } from "@/lib/utils"
 
 // The landing page's case for the module system: a heading over a playable
@@ -197,34 +198,36 @@ function FeatureCard({
   return (
     <div
       className={cn(
-        "flex flex-col gap-10 border-grid-border px-4 py-6 sm:px-10 sm:py-14",
+        "border-grid-border px-4 py-6 sm:px-10 sm:py-14",
         className
       )}
     >
-      <div
-        aria-hidden
-        className={cn(
-          "relative h-80 overflow-hidden select-none",
-          // Only visuals taller than the frame fade out; the others fit whole.
-          feature.overflows && "mask-[linear-gradient(black_80%,transparent)]"
-        )}
-      >
-        {feature.visual}
-      </div>
-      <div className="flex flex-col text-left text-base">
-        <h3 className="font-medium">{feature.title}</h3>
-        <p className="mt-1 text-pretty text-muted-foreground">
-          {feature.description}
-        </p>
-        {feature.href && (
-          <Link
-            href={feature.href}
-            className="mt-6 w-fit rounded-lg border bg-background px-3 py-2 text-sm leading-none font-medium transition-colors hover:bg-muted"
-          >
-            Learn more
-          </Link>
-        )}
-      </div>
+      <Reveal className="flex flex-col gap-10">
+        <div
+          aria-hidden
+          className={cn(
+            "relative h-80 overflow-hidden select-none",
+            // Only visuals taller than the frame fade out; the others fit whole.
+            feature.overflows && "mask-[linear-gradient(black_80%,transparent)]"
+          )}
+        >
+          {feature.visual}
+        </div>
+        <div className="flex flex-col text-left text-base">
+          <h3 className="font-medium">{feature.title}</h3>
+          <p className="mt-1 text-pretty text-muted-foreground">
+            {feature.description}
+          </p>
+          {feature.href && (
+            <Link
+              href={feature.href}
+              className="mt-6 w-fit rounded-lg border bg-background px-3 py-2 text-sm leading-none font-medium transition-colors hover:bg-muted"
+            >
+              Learn more
+            </Link>
+          )}
+        </div>
+      </Reveal>
     </div>
   )
 }
