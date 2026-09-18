@@ -62,7 +62,8 @@ export async function reconcileSubscription<T extends SubscriptionLike>(
     const interval = item.price.recurring?.interval ?? null
     if (interval !== row.billingInterval) updates.billingInterval = interval
     const periodStart = new Date(item.current_period_start * 1000)
-    if (!sameTime(row.periodStart, periodStart)) updates.periodStart = periodStart
+    if (!sameTime(row.periodStart, periodStart))
+      updates.periodStart = periodStart
     const periodEnd = new Date(item.current_period_end * 1000)
     if (!sameTime(row.periodEnd, periodEnd)) updates.periodEnd = periodEnd
   }

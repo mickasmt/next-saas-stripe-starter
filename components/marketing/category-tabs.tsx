@@ -41,7 +41,10 @@ export function CategoryTabs({
     const update = () => {
       const containerRect = container.getBoundingClientRect()
       const elRect = el.getBoundingClientRect()
-      setIndicator({ left: elRect.left - containerRect.left, width: elRect.width })
+      setIndicator({
+        left: elRect.left - containerRect.left,
+        width: elRect.width,
+      })
     }
 
     update()

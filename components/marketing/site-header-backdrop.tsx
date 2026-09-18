@@ -21,9 +21,7 @@ export function SiteHeaderBackdrop() {
       aria-hidden
       className={cn(
         "absolute inset-0 border-b transition-all",
-        scrolled
-          ? "border-grid-border bg-background"
-          : "border-transparent"
+        scrolled ? "border-grid-border bg-background" : "border-transparent"
       )}
     />
   )

@@ -128,7 +128,7 @@ export function ModuleDeck() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <ul className="flex flex-wrap justify-center gap-y-5 sm:flex-nowrap sm:gap-y-0 pt-4 pb-12">
+      <ul className="flex flex-wrap justify-center gap-y-5 pt-4 pb-12 sm:flex-nowrap sm:gap-y-0">
         {modules.map((module, index) => (
           <li
             key={module.key}

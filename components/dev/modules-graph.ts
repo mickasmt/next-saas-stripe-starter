@@ -122,8 +122,7 @@ export function planChange(
     if (next[mod.key] === own[mod.key]) continue
     // An override equal to the inherited value is dropped, so the change
     // count only reflects real departures from env/defaults.
-    patch[mod.key] =
-      next[mod.key] === mod.inherited ? null : next[mod.key]
+    patch[mod.key] = next[mod.key] === mod.inherited ? null : next[mod.key]
   }
 
   const others = modules.filter((mod) => mod.key !== key)

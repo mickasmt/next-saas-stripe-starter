@@ -139,8 +139,8 @@ export function BillingOverview({
       {!subscription && canceled && (
         <p className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-amber-700 dark:text-amber-400">
           <CircleAlert className="size-4 shrink-0" />
-          Your {canceledPlanName ?? canceled.plan} subscription was canceled
-          on {formatDate(canceled.canceledAt)}.
+          Your {canceledPlanName ?? canceled.plan} subscription was canceled on{" "}
+          {formatDate(canceled.canceledAt)}.
         </p>
       )}
       <SectionCard

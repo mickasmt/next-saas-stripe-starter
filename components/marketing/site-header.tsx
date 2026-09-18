@@ -80,7 +80,7 @@ export async function SiteHeader() {
               href={siteConfig.links.pro}
               className={cn(linkClassName, "group flex items-center gap-1.5")}
             >
-              <Sparkles className="size-3.5 text-violet-500 transition-transform dark:text-violet-300 group-hover:rotate-12" />
+              <Sparkles className="size-3.5 text-violet-500 transition-transform group-hover:rotate-12 dark:text-violet-300" />
               <span className="animate-shine bg-[linear-gradient(110deg,#7c3aed_35%,#e879f9_50%,#7c3aed_65%)] bg-size-[250%_100%] bg-clip-text text-transparent motion-reduce:animate-none dark:bg-[linear-gradient(110deg,#c4b5fd_35%,#fae8ff_50%,#c4b5fd_65%)]">
                 Pro
               </span>

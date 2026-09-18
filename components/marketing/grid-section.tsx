@@ -45,20 +45,20 @@ export function GridSection({
                 1080px grid width plus 360px of run-off on each side. */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-y-0 left-1/2 w-[1800px] -translate-x-1/2 opacity-80 mask-[linear-gradient(transparent,black)]"
+              className="pointer-events-none absolute inset-y-0 left-1/2 w-[1800px] -translate-x-1/2 mask-[linear-gradient(transparent,black)] opacity-80"
             >
               <div className="absolute inset-x-[360px] inset-y-0">
-                <div className="grid-lines absolute right-full bottom-0 h-[600px] w-[360px] text-grid-border/60 mask-[linear-gradient(90deg,transparent,black)]" />
-                <div className="grid-lines absolute bottom-0 left-full h-[600px] w-[360px] text-grid-border/60 mask-[linear-gradient(270deg,transparent,black)]" />
+                <div className="absolute right-full bottom-0 h-[600px] w-[360px] grid-lines mask-[linear-gradient(90deg,transparent,black)] text-grid-border/60" />
+                <div className="absolute bottom-0 left-full h-[600px] w-[360px] grid-lines mask-[linear-gradient(270deg,transparent,black)] text-grid-border/60" />
               </div>
             </div>
 
             {/* Between the rails. inset-x-px keeps it off the rails themselves. */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-x-px inset-y-0 overflow-hidden opacity-80 mask-[linear-gradient(transparent,black)]"
+              className="pointer-events-none absolute inset-x-px inset-y-0 overflow-hidden mask-[linear-gradient(transparent,black)] opacity-80"
             >
-              <div className="grid-lines absolute bottom-0 left-1/2 h-[600px] w-grid-width -translate-x-1/2 text-grid-border/60" />
+              <div className="absolute bottom-0 left-1/2 h-[600px] w-grid-width -translate-x-1/2 grid-lines text-grid-border/60" />
             </div>
           </>
         )}
