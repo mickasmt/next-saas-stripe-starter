@@ -20,7 +20,7 @@ export const proModules: ProModule[] = [
   {
     key: "emails",
     label: "Transactional emails",
-    description: "Templates, provider setup and a delivery log.",
+    description: "React Email templates, provider setup and a delivery log.",
     url: "/pro",
   },
   {
@@ -33,24 +33,6 @@ export const proModules: ProModule[] = [
     key: "seats",
     label: "Seat billing",
     description: "Per-seat pricing, proration, invoices and billing details.",
-    url: "/pro",
-  },
-  {
-    key: "usage",
-    label: "Usage metering",
-    description: "Metered counters, plan limits and overage.",
-    url: "/pro",
-  },
-  {
-    key: "audit",
-    label: "Audit log",
-    description: "Recorded events, filters and CSV export.",
-    url: "/pro",
-  },
-  {
-    key: "apiKeys",
-    label: "API keys",
-    description: "Hashed keys, scopes, rate limits and revocation.",
     url: "/pro",
   },
   {

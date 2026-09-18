@@ -35,13 +35,6 @@ const emails = [
   },
 ]
 
-const templates = [
-  { name: "Welcome", trigger: "After the first sign-in" },
-  { name: "Sign-in link", trigger: "Passwordless sign-in" },
-  { name: "Invitation", trigger: "A member is invited" },
-  { name: "Receipt", trigger: "A payment succeeds" },
-]
-
 function statusVariant(status: string) {
   if (status === "Bounced") return "destructive" as const
   if (status === "Opened") return "default" as const
@@ -76,29 +69,6 @@ export function EmailsPreview() {
                   Resend
                 </Button>
               </div>
-            </div>
-          ))}
-        </div>
-      </SectionCard>
-
-      <SectionCard
-        title="Templates"
-        description="The emails your app sends, and what triggers them."
-        footer={<p>Templates are React components you can edit.</p>}
-      >
-        <div className="divide-y rounded-md border bg-background">
-          {templates.map((template) => (
-            <div
-              key={template.name}
-              className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
-            >
-              <div className="min-w-0">
-                <p className="truncate font-medium">{template.name}</p>
-                <p className="text-muted-foreground">{template.trigger}</p>
-              </div>
-              <Button variant="outline" size="sm" disabled>
-                Preview
-              </Button>
             </div>
           ))}
         </div>

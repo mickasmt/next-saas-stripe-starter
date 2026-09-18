@@ -18,7 +18,7 @@ export default function OnboardingPage() {
       <div className="flex flex-col gap-6">
         <ProBanner
           title="Onboarding is included in Pro"
-          description="This page shows sample data. Pro ships the working code: saved progress, resumable steps and a guided first project."
+          description="This page shows sample data. Pro ships the working code: saved progress, resumable steps and a guided first project — as a full page or as a modal over the dashboard."
         />
         <OnboardingPreview />
       </div>

@@ -2,16 +2,14 @@ import {
   Check,
   ChevronDown,
   CreditCard,
-  Gauge,
-  KeyRound,
   Lock,
   Mail,
   Minus,
   Route,
-  ScrollText,
   Send,
   ShieldCheck,
   Sparkles,
+  UserCog,
   Users,
   type LucideIcon,
 } from "lucide-react"
@@ -111,24 +109,14 @@ const proExtras: { icon: LucideIcon; title: string; description: string }[] = [
     description: "React Email templates sent through Resend.",
   },
   {
-    icon: Gauge,
-    title: "Usage metering",
-    description: "Metered counters, plan limits and overage.",
-  },
-  {
-    icon: ScrollText,
-    title: "Audit log",
-    description: "Recorded events, filters and CSV export.",
-  },
-  {
-    icon: KeyRound,
-    title: "API keys",
-    description: "Hashed keys, scopes, rate limits and revocation.",
-  },
-  {
     icon: ShieldCheck,
     title: "Account security",
     description: "Password changes, two-factor and session revocation.",
+  },
+  {
+    icon: UserCog,
+    title: "Admin panel",
+    description: "Real user management: roles, bans and impersonation.",
   },
 ]
 

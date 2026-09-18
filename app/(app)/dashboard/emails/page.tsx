@@ -18,7 +18,7 @@ export default function EmailsPage() {
       <div className="flex flex-col gap-6">
         <ProBanner
           title="Transactional emails are included in Pro"
-          description="This page shows sample data. Pro ships the working code: templates, provider setup, delivery log and resends."
+          description="This page shows sample data. Pro ships the working code: provider setup, a delivery log and one-click resends. The templates have their own page."
         />
         <EmailsPreview />
       </div>

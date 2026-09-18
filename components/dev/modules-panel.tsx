@@ -241,10 +241,10 @@ export function ModulesPanel({
 
         <div className="flex gap-1 border-b p-1.5">
           <TabButton active={tab === "free"} onClick={() => setTab("free")}>
-            Free · {modules.length}
+            Free
           </TabButton>
           <TabButton active={tab === "pro"} onClick={() => setTab("pro")}>
-            Pro · {proModules.length}
+            Pro
           </TabButton>
         </div>
 
@@ -418,7 +418,7 @@ function TabButton({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "h-7 flex-1 rounded-md text-xs font-medium tabular-nums transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "h-7 flex-1 rounded-md text-xs font-medium transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
         active
           ? "bg-accent text-foreground"
           : "text-muted-foreground hover:bg-accent/60"

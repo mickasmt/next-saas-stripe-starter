@@ -4,10 +4,8 @@ export type NavIcon =
   | "dashboard"
   | "onboarding"
   | "billing"
-  | "usage"
-  | "activity"
   | "emails"
-  | "apiKeys"
+  | "emailTemplates"
   | "settings"
   | "admin"
 
@@ -47,12 +45,6 @@ export const dashboardNav: NavSection[] = [
         feature: "billing",
       },
       {
-        title: "Usage",
-        href: "/dashboard/usage",
-        icon: "usage",
-        pro: true,
-      },
-      {
         title: "Settings",
         href: "/dashboard/settings/general",
         icon: "settings",
@@ -63,26 +55,15 @@ export const dashboardNav: NavSection[] = [
     title: "Monitoring",
     items: [
       {
-        title: "Activity",
-        href: "/dashboard/activity",
-        icon: "activity",
-        pro: true,
-      },
-      {
         title: "Emails",
         href: "/dashboard/emails",
         icon: "emails",
         pro: true,
       },
-    ],
-  },
-  {
-    title: "Developers",
-    items: [
       {
-        title: "API keys",
-        href: "/dashboard/api-keys",
-        icon: "apiKeys",
+        title: "Email templates",
+        href: "/dashboard/email-templates",
+        icon: "emailTemplates",
         pro: true,
       },
     ],
