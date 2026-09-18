@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
@@ -6,6 +5,7 @@ import { getMDXComponents } from "@/components/content/mdx-components"
 import { ProCtaCard } from "@/components/content/pro-cta-card"
 import { TableOfContents } from "@/components/content/table-of-contents"
 import { GridSection } from "@/components/marketing/grid-section"
+import { BlurImage } from "@/components/shared/blur-image"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -14,6 +14,7 @@ import {
   type BlogAuthor,
   type BlogCategory,
 } from "@/config/blog"
+import { getBlurDataURL } from "@/lib/content/blur"
 import { blogSource } from "@/lib/content/blog"
 import { requireFeature } from "@/lib/features/guard"
 import { buildMetadata } from "@/lib/metadata"
@@ -31,10 +32,18 @@ export default async function BlogPostPage({ params }: Props) {
   const authors = post.data.authors
     .map((key) => blogAuthors[key as BlogAuthor])
     .filter(Boolean)
-  const related = post.data.related
-    .map((relatedSlug) => blogSource.getPage([relatedSlug]))
-    .filter((page) => page !== undefined)
-    .slice(0, 3)
+  const related = await Promise.all(
+    post.data.related
+      .map((relatedSlug) => blogSource.getPage([relatedSlug]))
+      .filter((page) => page !== undefined)
+      .slice(0, 3)
+      .map(async (page) => ({
+        page,
+        blurDataURL: await getBlurDataURL(page.data.image),
+      }))
+  )
+
+  const blurDataURL = await getBlurDataURL(post.data.image)
 
   return (
     <>
@@ -66,10 +75,13 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="grid grid-cols-1 md:grid-cols-3">
           <div className="md:col-span-2">
             <div className="relative aspect-[1200/630] w-full overflow-hidden">
-              <Image
+              <BlurImage
                 src={post.data.image}
                 alt={post.data.title}
                 fill
+                sizes="(min-width: 768px) 740px, 100vw"
+                placeholder="blur"
+                blurDataURL={blurDataURL}
                 className="object-cover"
                 priority
               />
@@ -84,7 +96,7 @@ export default async function BlogPostPage({ params }: Props) {
                 <p className="font-display text-xl font-medium">Read more</p>
                 <div className="mt-4 flex flex-col gap-4">
                   {related.map(
-                    (page) =>
+                    ({ page, blurDataURL }) =>
                       page && (
                         <Link
                           key={page.url}
@@ -92,10 +104,13 @@ export default async function BlogPostPage({ params }: Props) {
                           className="group flex flex-col items-center gap-4 sm:flex-row"
                         >
                           <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-lg border sm:w-[200px]">
-                            <Image
+                            <BlurImage
                               src={page.data.image}
                               alt={page.data.title}
                               fill
+                              sizes="(min-width: 640px) 200px, 100vw"
+                              placeholder="blur"
+                              blurDataURL={blurDataURL}
                               className="object-cover"
                             />
                           </div>

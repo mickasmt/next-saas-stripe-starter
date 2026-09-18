@@ -1,4 +1,3 @@
-import Image from "next/image"
 import { notFound } from "next/navigation"
 
 import { getMDXComponents } from "@/components/content/mdx-components"
@@ -6,9 +5,11 @@ import { ProCtaCard } from "@/components/content/pro-cta-card"
 import { ShareRow } from "@/components/content/share-row"
 import { TableOfContents } from "@/components/content/table-of-contents"
 import { GridSection } from "@/components/marketing/grid-section"
+import { BlurImage } from "@/components/shared/blur-image"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { blogAuthors, type BlogAuthor } from "@/config/blog"
+import { getBlurDataURL } from "@/lib/content/blur"
 import { changelogSource } from "@/lib/content/changelog"
 import { requireFeature } from "@/lib/features/guard"
 import { buildMetadata } from "@/lib/metadata"
@@ -26,6 +27,7 @@ export default async function ChangelogEntryPage({ params }: Props) {
   const author = entry.data.author
     ? blogAuthors[entry.data.author as BlogAuthor]
     : undefined
+  const blurDataURL = await getBlurDataURL(entry.data.image)
 
   return (
     <>
@@ -58,10 +60,13 @@ export default async function ChangelogEntryPage({ params }: Props) {
           <div className="md:col-span-2">
             {entry.data.image && (
               <div className="relative aspect-[1200/630] w-full overflow-hidden">
-                <Image
+                <BlurImage
                   src={entry.data.image}
                   alt={entry.data.title}
                   fill
+                  sizes="(min-width: 768px) 740px, 100vw"
+                  placeholder="blur"
+                  blurDataURL={blurDataURL}
                   className="object-cover"
                   priority
                 />

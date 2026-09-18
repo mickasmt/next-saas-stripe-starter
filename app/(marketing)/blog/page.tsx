@@ -1,5 +1,4 @@
 import { CornerDownRight } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
 
 import {
@@ -7,6 +6,7 @@ import {
   CategoryTabs,
 } from "@/components/marketing/category-tabs"
 import { GridSection } from "@/components/marketing/grid-section"
+import { BlurImage } from "@/components/shared/blur-image"
 import {
   Avatar,
   AvatarFallback,
@@ -14,6 +14,7 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import { blogAuthors, blogCategories, type BlogAuthor } from "@/config/blog"
+import { getBlurDataURL } from "@/lib/content/blur"
 import { blogSource } from "@/lib/content/blog"
 import { requireFeature } from "@/lib/features/guard"
 import { isFeatureEnabled } from "@/lib/features/resolve"
@@ -36,6 +37,16 @@ export default async function BlogPage({ searchParams }: Props) {
     .getPages()
     .filter((post) => !category || post.data.categories.includes(category))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+  // Cover placeholders, generated from the files in /public at build time.
+  const blurDataURLs = new Map(
+    await Promise.all(
+      posts.map(
+        async (post) =>
+          [post.url, await getBlurDataURL(post.data.image)] as const
+      )
+    )
+  )
 
   const tabs = [
     { key: "all", label: "All", href: "/blog" },
@@ -95,12 +106,14 @@ export default async function BlogPage({ searchParams }: Props) {
               >
                 {/* In flow rather than `fill`: an absolutely positioned image
                     lands on sub-pixel offsets and can cover the cell borders. */}
-                <Image
+                <BlurImage
                   src={post.data.image}
                   alt={post.data.title}
                   width={1200}
                   height={630}
                   sizes="(min-width: 768px) 360px, 100vw"
+                  placeholder="blur"
+                  blurDataURL={blurDataURLs.get(post.url)}
                   className="aspect-[1200/630] w-full object-cover"
                 />
                 <div className="flex flex-1 flex-col justify-between p-6">

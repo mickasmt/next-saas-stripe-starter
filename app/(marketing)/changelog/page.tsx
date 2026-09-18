@@ -1,8 +1,9 @@
-import Image from "next/image"
 import Link from "next/link"
 
 import { getMDXComponents } from "@/components/content/mdx-components"
 import { GridSection } from "@/components/marketing/grid-section"
+import { BlurImage } from "@/components/shared/blur-image"
+import { getBlurDataURL } from "@/lib/content/blur"
 import { changelogSource } from "@/lib/content/changelog"
 import { requireFeature } from "@/lib/features/guard"
 import { buildMetadata } from "@/lib/metadata"
@@ -20,6 +21,16 @@ export default async function ChangelogPage() {
   const entries = changelogSource
     .getPages()
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+  // Cover placeholders, generated from the files in /public at build time.
+  const blurDataURLs = new Map(
+    await Promise.all(
+      entries.map(
+        async (entry) =>
+          [entry.url, await getBlurDataURL(entry.data.image)] as const
+      )
+    )
+  )
 
   return (
     <>
@@ -59,12 +70,14 @@ export default async function ChangelogPage() {
 
                 {entry.data.image && (
                   <Link href={entry.url} className="mt-6 block">
-                    <Image
+                    <BlurImage
                       src={entry.data.image}
                       alt={entry.data.title}
                       width={1200}
                       height={675}
                       sizes="(min-width: 768px) 740px, 100vw"
+                      placeholder="blur"
+                      blurDataURL={blurDataURLs.get(entry.url)}
                       className="aspect-video w-full rounded-xl border object-cover"
                     />
                   </Link>
