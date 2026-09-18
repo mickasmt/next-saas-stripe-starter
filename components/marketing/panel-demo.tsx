@@ -116,7 +116,10 @@ export function PanelDemo() {
   const [inView, setInView] = useState(false)
   const [touched, setTouched] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(true)
+  const [cursor, setCursor] = useState({ x: 0, y: 0 })
+  const [pressed, setPressed] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
   const idleTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   useEffect(() => {
@@ -158,26 +161,103 @@ export function PanelDemo() {
       "auth",
       false
     )
+    // The fake cursor: glide to a control, then click it. A click step waits
+    // long enough for the glide (700ms) to land first.
+    const pointAt = (selector: string) => {
+      const panel = panelRef.current
+      const el = panel?.querySelector(selector)
+      if (!panel || !el) return
+      const p = panel.getBoundingClientRect()
+      const r = el.getBoundingClientRect()
+      setCursor({
+        x: r.left - p.left + r.width / 2,
+        y: r.top - p.top + r.height / 2,
+      })
+    }
+    const press = () => {
+      setPressed(true)
+      setTimeout(() => setPressed(false), 180)
+    }
+    const park = () => {
+      const panel = panelRef.current
+      if (panel) setCursor({ x: panel.clientWidth - 40, y: panel.clientHeight })
+    }
     const scene: SceneStep[] = [
+      { ms: 1200, run: park },
+      { ms: 400, run: () => pointAt("li:has(#panel-demo-auth) [role=switch]") },
       // Auth pauses Billing and Admin, so it asks first.
       {
-        ms: 2500,
-        run: () => setConfirming({ key: "auth", on: false, change: authOff }),
-      },
-      {
-        ms: 2000,
+        ms: 900,
         run: () => {
+          press()
+          setConfirming({ key: "auth", on: false, change: authOff })
+        },
+      },
+      { ms: 1500, run: () => pointAt("[data-demo=confirm]") },
+      {
+        ms: 900,
+        run: () => {
+          press()
           setConfirming(null)
           flip("auth", false)
         },
       },
-      { ms: 2800, run: () => setOwn(initial) },
+      // Click Authentication again to bring everything back.
+      {
+        ms: 2400,
+        run: () => pointAt("li:has(#panel-demo-auth) [role=switch]"),
+      },
+      {
+        ms: 900,
+        run: () => {
+          press()
+          flip("auth", true)
+        },
+      },
       // Independent modules just switch.
-      { ms: 1200, run: () => flip("blog", false) },
-      { ms: 1000, run: () => flip("changelog", false) },
-      { ms: 1000, run: () => flip("docs", false) },
-      { ms: 2600, run: () => setOwn(initial) },
-      { ms: 5000, run: () => {} },
+      {
+        ms: 1800,
+        run: () => pointAt("li:has(#panel-demo-billing) [role=switch]"),
+      },
+      {
+        ms: 900,
+        run: () => {
+          press()
+          flip("billing", false)
+        },
+      },
+      {
+        ms: 500,
+        run: () => pointAt("li:has(#panel-demo-docs) [role=switch]"),
+      },
+      {
+        ms: 900,
+        run: () => {
+          press()
+          flip("docs", false)
+        },
+      },
+      {
+        ms: 500,
+        run: () => pointAt("li:has(#panel-demo-changelog) [role=switch]"),
+      },
+      {
+        ms: 900,
+        run: () => {
+          press()
+          flip("changelog", false)
+        },
+      },
+      { ms: 1800, run: () => pointAt("[data-demo=reset]") },
+      {
+        ms: 900,
+        run: () => {
+          press()
+          setOwn(initial)
+        },
+      },
+      { ms: 1500, run: park },
+      { ms: 3000, run: () => {} },
     ]
     const id = setTimeout(() => {
       scene[step].run()
@@ -232,15 +312,17 @@ export function PanelDemo() {
   return (
     <div
       ref={rootRef}
-      onPointerDown={handOver}
-      onPointerMove={(e) => e.pointerType === "mouse" && handOver()}
-      onFocusCapture={handOver}
       className="flex flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center lg:gap-8"
     >
       <AppPreview isOn={isOn} />
 
-      <div className="w-full max-w-sm shrink-0">
-        <div className="overflow-hidden rounded-2xl border bg-popover text-popover-foreground shadow-2xl ring-1 shadow-neutral-900/10 ring-foreground/5 dark:shadow-black/50">
+      <div ref={panelRef} className="relative w-full max-w-sm shrink-0">
+        <div
+          onPointerDown={handOver}
+          onPointerMove={(e) => e.pointerType === "mouse" && handOver()}
+          onFocusCapture={handOver}
+          className="overflow-hidden rounded-2xl border bg-popover text-popover-foreground shadow-2xl ring-1 shadow-neutral-900/10 ring-foreground/5 dark:shadow-black/50"
+        >
           <header className="flex items-start justify-between gap-3 border-b px-4 pt-3.5 pb-3">
             <div className="min-w-0 text-left">
               <p className="flex items-center gap-2 font-medium">
@@ -261,52 +343,85 @@ export function PanelDemo() {
             </span>
           </header>
 
-          <ul className="grid grid-cols-[minmax(0,1fr)] gap-0.5 p-1.5">
-            {demoModules.map((module) => (
-              <DemoRow
-                key={module.key}
-                module={module}
-                enabled={isOn(module.key)}
-                changed={own[module.key] !== module.default}
-                paused={resolved.get(module.key)!.blockedBy}
-                labelOf={labelOf}
-                confirming={confirming?.key === module.key ? confirming : null}
-                onToggle={(on) => toggle(module.key, on)}
-                onConfirm={() => confirming && commit(confirming.change.patch)}
-                onCancel={() => setConfirming(null)}
-              />
-            ))}
-          </ul>
+          <div className="relative">
+            <ul className="grid grid-cols-[minmax(0,1fr)] gap-0.5 p-1.5">
+              {demoModules.map((module) => (
+                <DemoRow
+                  key={module.key}
+                  module={module}
+                  enabled={isOn(module.key)}
+                  changed={own[module.key] !== module.default}
+                  paused={resolved.get(module.key)!.blockedBy}
+                  labelOf={labelOf}
+                  confirming={
+                    confirming?.key === module.key ? confirming : null
+                  }
+                  onToggle={(on) => toggle(module.key, on)}
+                  onCancel={() => setConfirming(null)}
+                />
+              ))}
+            </ul>
 
-          <footer className="flex items-center justify-between gap-2 border-t bg-muted/40 px-3 py-2">
-            <p
-              aria-live="polite"
-              className="min-w-0 truncate pl-1 text-left text-xs text-muted-foreground"
-            >
-              For config/features.ts
-            </p>
-            <div className="flex shrink-0 items-center gap-1">
-              <Button
-                size="xs"
-                variant="ghost"
-                disabled={changedCount === 0}
-                onClick={copyConfig}
+            <footer className="flex items-center justify-between gap-2 border-t bg-muted/40 px-3 py-2">
+              <p
+                aria-live="polite"
+                className="min-w-0 truncate pl-1 text-left text-xs text-muted-foreground"
               >
-                {copied ? <Check /> : <Copy />}
-                {copied ? "Copied" : "Copy config"}
-              </Button>
-              <Button
-                size="xs"
-                variant="ghost"
-                disabled={changedCount === 0}
-                onClick={() => commit("reset")}
-              >
-                <RotateCcw />
-                Reset
-              </Button>
-            </div>
-          </footer>
+                For config/features.ts
+              </p>
+              <div className="flex shrink-0 items-center gap-1">
+                <Button
+                  className="rounded-sm"
+                  size="xs"
+                  variant="ghost"
+                  disabled={changedCount === 0}
+                  onClick={copyConfig}
+                >
+                  {copied ? <Check /> : <Copy />}
+                  {copied ? "Copied" : "Copy config"}
+                </Button>
+                <Button
+                  data-demo="reset"
+                  className="rounded-sm"
+                  size="xs"
+                  variant="ghost"
+                  disabled={changedCount === 0}
+                  onClick={() => commit("reset")}
+                >
+                  <RotateCcw />
+                  Reset
+                </Button>
+              </div>
+            </footer>
+
+            {/* Drawer: blurs the list and floats over it, panel height stays fixed. */}
+            {confirming && (
+              <>
+                <div
+                  aria-hidden
+                  onClick={() => setConfirming(null)}
+                  className="absolute inset-0 animate-in bg-popover/50 backdrop-blur-[3px] duration-200 fade-in"
+                />
+                <div className="absolute inset-x-1.5 bottom-1.5 animate-slide-up-fade [--offset:6px]">
+                  <ConfirmChange
+                    module={demoModules.find((m) => m.key === confirming.key)!}
+                    pending={confirming}
+                    labelOf={labelOf}
+                    onConfirm={() => commit(confirming.change.patch)}
+                    onCancel={() => setConfirming(null)}
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
+
+        <FakeCursor
+          x={cursor.x}
+          y={cursor.y}
+          visible={playing}
+          pressed={pressed}
+        />
 
         <p className="mt-3 text-center text-xs text-muted-foreground">
           Try it: flip a switch. The real panel lives in the corner of your dev
@@ -325,7 +440,6 @@ function DemoRow({
   labelOf,
   confirming,
   onToggle,
-  onConfirm,
   onCancel,
 }: {
   module: PanelModule
@@ -335,7 +449,6 @@ function DemoRow({
   labelOf: (key: string) => string
   confirming: Pending | null
   onToggle: (on: boolean) => void
-  onConfirm: () => void
   onCancel: () => void
 }) {
   const { icon: Icon, tint } = appearance[module.key]
@@ -372,9 +485,9 @@ function DemoRow({
               {module.label}
             </label>
             {changed && (
-              <span className="flex h-4 items-center gap-1 rounded-full bg-blue-500/10 px-1.5 text-[10px] font-medium text-blue-600 dark:text-blue-400">
+              <span className="flex h-4 items-center gap-1 rounded-full bg-red-500/10 px-1.5 text-[10px] font-medium text-red-600 dark:text-red-400">
                 <span className="size-1 rounded-full bg-current" />
-                Modified
+                Disabled
               </span>
             )}
           </div>
@@ -394,30 +507,6 @@ function DemoRow({
           checked={confirming ? confirming.on : enabled}
           onCheckedChange={(on) => (confirming ? onCancel() : onToggle(on))}
         />
-      </div>
-
-      <div
-        inert={!confirming}
-        className={cn(
-          "grid transition-[grid-template-rows,opacity] duration-200 ease-out motion-reduce:transition-none",
-          confirming
-            ? "grid-rows-[1fr] opacity-100"
-            : "grid-rows-[0fr] opacity-0"
-        )}
-      >
-        <div className="min-h-0 overflow-hidden">
-          {confirming && (
-            <div className="px-2.5 pb-2.5 pl-[3.375rem]">
-              <ConfirmChange
-                module={module}
-                pending={confirming}
-                labelOf={labelOf}
-                onConfirm={onConfirm}
-                onCancel={onCancel}
-              />
-            </div>
-          )}
-        </div>
       </div>
     </li>
   )
@@ -441,7 +530,7 @@ function ConfirmChange({
   )
 
   return (
-    <div className="rounded-lg border bg-background p-3 shadow-xs">
+    <div className="rounded-lg border bg-background p-3 shadow-lg">
       <p className="text-xs leading-relaxed text-muted-foreground">
         {on ? (
           <>
@@ -456,10 +545,17 @@ function ConfirmChange({
         )}
       </p>
       <div className="mt-3 flex justify-end gap-1.5">
-        <Button size="xs" variant="ghost" onClick={onCancel}>
+        <Button
+          className="rounded-sm"
+          size="xs"
+          variant="ghost"
+          onClick={onCancel}
+        >
           Cancel
         </Button>
         <Button
+          data-demo="confirm"
+          className="rounded-sm"
           size="xs"
           variant={on ? "default" : "destructive"}
           onClick={onConfirm}
@@ -570,6 +666,50 @@ function AppPreview({ isOn }: { isOn: (key: string) => boolean }) {
           </ul>
         </div>
       </div>
+    </div>
+  )
+}
+
+function FakeCursor({
+  x,
+  y,
+  visible,
+  pressed,
+}: {
+  x: number
+  y: number
+  visible: boolean
+  pressed: boolean
+}) {
+  return (
+    <div
+      aria-hidden
+      style={{ transform: `translate(${x}px, ${y}px)` }}
+      className={cn(
+        "pointer-events-none absolute top-0 left-0 z-20 transition-[transform,opacity] duration-700 ease-in-out",
+        visible ? "opacity-100" : "opacity-0 duration-200"
+      )}
+    >
+      <span
+        className={cn(
+          "absolute -top-3 -left-3 size-6 rounded-full bg-foreground/20 transition-all duration-200",
+          pressed ? "scale-100 opacity-100" : "scale-50 opacity-0"
+        )}
+      />
+      <svg
+        viewBox="0 0 24 24"
+        className={cn(
+          "relative size-5 origin-top-left drop-shadow-md transition-transform duration-150",
+          pressed && "scale-90"
+        )}
+      >
+        <path
+          d="M4 2.5v17l4.6-4.3 3 6.8 3-1.3-3-6.7h6.2z"
+          className="fill-foreground stroke-background"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+      </svg>
     </div>
   )
 }
