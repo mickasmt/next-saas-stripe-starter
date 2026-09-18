@@ -49,6 +49,12 @@ export async function SiteHeader() {
           ? { ...item, title: "Dashboard" }
           : item
       )
+      .filter(
+        (item) =>
+          item.href === DEFAULT_LOGIN_REDIRECT ||
+          item.href === "/dashboard/settings/general" ||
+          item.href === "/admin"
+      )
   }
 
   return (

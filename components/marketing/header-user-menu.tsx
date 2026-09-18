@@ -1,12 +1,12 @@
 "use client"
 
-import { LogOut, Monitor, Moon, Sun } from "lucide-react"
+import { LogOut } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useTheme } from "next-themes"
 
 import { navIcons } from "@/components/dashboard/nav-icons"
 import type { ShellUser } from "@/components/dashboard/types"
+import { ThemeSwitcher } from "@/components/shared/theme-switcher"
 import { UserAvatar } from "@/components/shared/user-avatar"
 import {
   DropdownMenu,
@@ -14,8 +14,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -32,7 +30,6 @@ export function HeaderUserMenu({
   items: NavItem[]
 }) {
   const router = useRouter()
-  const { theme, setTheme } = useTheme()
 
   async function signOut() {
     await authClient.signOut()
@@ -73,28 +70,15 @@ export function HeaderUserMenu({
           })}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuLabel>Theme</DropdownMenuLabel>
-          <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
-            <DropdownMenuRadioItem value="light">
-              <Sun />
-              Light
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="dark">
-              <Moon />
-              Dark
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="system">
-              <Monitor />
-              System
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
         <DropdownMenuItem onClick={signOut}>
           <LogOut />
           Log out
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <div className="flex items-center justify-between px-2 py-1.5 text-sm">
+          <span>Theme</span>
+          <ThemeSwitcher />
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   )
