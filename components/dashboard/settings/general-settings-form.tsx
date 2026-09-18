@@ -6,7 +6,7 @@ import { toast } from "sonner"
 
 import { OrganizationAvatar } from "@/components/dashboard/organization-avatar"
 import { AvatarCard } from "@/components/dashboard/settings/avatar-card"
-import { IdCard } from "@/components/dashboard/settings/id-card"
+import { DeleteOrganizationCard } from "@/components/dashboard/settings/delete-organization-card"
 import { SaveCard } from "@/components/dashboard/settings/save-card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -122,11 +122,7 @@ export function GeneralSettingsForm({
         />
       </AvatarCard>
 
-      <IdCard
-        title="Organization ID"
-        description="This is your organization's ID."
-        value={organization.id}
-      />
+      <DeleteOrganizationCard organizationName={organization.name} />
 
       {!canEdit && (
         <p className="text-muted-foreground">
