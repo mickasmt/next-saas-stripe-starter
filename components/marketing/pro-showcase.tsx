@@ -32,7 +32,21 @@ import { cn } from "@/lib/utils"
 export const proPricing = {
   regular: "$149",
   earlyBird: "$99",
-  earlyBirdNote: "Early-bird price for the first buyers",
+  earlyBirdNote: "Launch price for the first customers",
+}
+
+export function LaunchBadge({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 rounded-full bg-violet-500/10 px-2 py-0.5 text-[10px] leading-none font-semibold tracking-wide text-violet-700 uppercase dark:text-violet-300",
+        className
+      )}
+    >
+      <Sparkles className="size-3" />
+      Launch price
+    </span>
+  )
 }
 
 type ProFeature = {
@@ -269,6 +283,7 @@ export async function ProShowcase({
                 price={proPricing.earlyBird}
                 strike={proPricing.regular}
                 note="One-time payment"
+                badge={<LaunchBadge className="max-sm:hidden" />}
                 highlighted
                 action={
                   <Link
@@ -295,7 +310,8 @@ export async function ProShowcase({
               ))}
             </ul>
           </div>
-          <p className="mt-4 text-center text-xs text-muted-foreground">
+          <p className="mt-5 flex items-center justify-center gap-2 text-center text-sm font-medium text-violet-700 dark:text-violet-300">
+            <Sparkles className="size-4 shrink-0" />
             {proPricing.earlyBirdNote}, then {proPricing.regular}.
           </p>
         </div>
@@ -317,6 +333,7 @@ function PlanHeader({
   price,
   strike,
   note,
+  badge,
   action,
   highlighted,
 }: {
@@ -324,6 +341,7 @@ function PlanHeader({
   price: string
   strike?: string
   note: string
+  badge?: React.ReactNode
   action: React.ReactNode
   highlighted?: boolean
 }) {
@@ -340,6 +358,7 @@ function PlanHeader({
         )}
         {name}
       </p>
+      {badge && <div className="flex justify-center">{badge}</div>}
       <p className="font-display text-2xl font-medium sm:text-3xl">
         {strike && (
           <span className="mr-1.5 text-base text-muted-foreground line-through max-sm:hidden">
