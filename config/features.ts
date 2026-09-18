@@ -113,6 +113,8 @@ export const features = defineFeatures({
       "app/(marketing)/changelog",
       "lib/content/changelog.ts",
       "content/changelog",
+      // Entries reuse the blog covers, so the folder survives a blog prune.
+      "public/_static/blog",
       "public/_static/avatars",
       "config/blog.ts",
       "components/content/share-row.tsx",
