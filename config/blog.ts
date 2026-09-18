@@ -15,7 +15,7 @@ export const blogAuthors = {
   mickasmt: {
     name: "mickasmt",
     role: "Maintainer",
-    image: "/_static/avatars/mickasmt.png",
+    image: "/_static/avatars/mickasmt.webp",
     twitter: "miickasmt",
   },
   shadcn: {

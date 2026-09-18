@@ -21,8 +21,8 @@ export default function OnboardingPage() {
           description="A full-screen first-run flow on its own routes — one URL per step, so back and refresh both work. Progress is saved on the account and resumes where the member left it, and the finished checklist comes back as a dismissible dashboard card."
         />
         <ProShot
-          src="/_static/pro/onboarding-light.png"
-          darkSrc="/_static/pro/onboarding-dark.png"
+          src="/_static/pro/onboarding-light.webp"
+          darkSrc="/_static/pro/onboarding-dark.webp"
           alt="The organization step of the Pro onboarding flow: a centered form with an organization name and slug, and a Continue button."
           width={1280}
           height={760}
