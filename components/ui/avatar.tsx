@@ -24,10 +24,17 @@ function Avatar({
   )
 }
 
-function AvatarImage({ className, ...props }: AvatarPrimitive.Image.Props) {
+function AvatarImage({
+  className,
+  // Provider CDNs answer 429 when the browser sends its default origin
+  // referrer, which drops the image to the fallback initials.
+  referrerPolicy = "no-referrer",
+  ...props
+}: AvatarPrimitive.Image.Props) {
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
+      referrerPolicy={referrerPolicy}
       className={cn(
         "aspect-square size-full rounded-full object-cover",
         className
