@@ -3,10 +3,12 @@ import Link from "next/link"
 import { getMDXComponents } from "@/components/content/mdx-components"
 import { GridSection } from "@/components/marketing/grid-section"
 import { BlurImage } from "@/components/shared/blur-image"
+import { Pagination } from "@/components/shared/pagination"
 import { getBlurDataURL } from "@/lib/content/blur"
 import { changelogSource } from "@/lib/content/changelog"
 import { requireFeature } from "@/lib/features/guard"
 import { buildMetadata } from "@/lib/metadata"
+import { paginate } from "@/lib/pagination"
 import { formatDate } from "@/lib/utils"
 
 export const metadata = buildMetadata({
@@ -15,12 +17,22 @@ export const metadata = buildMetadata({
   path: "/changelog",
 })
 
-export default async function ChangelogPage() {
-  await requireFeature("changelog")
+const PAGE_SIZE = 10
 
-  const entries = changelogSource
+type Props = { searchParams: Promise<{ page?: string }> }
+
+export default async function ChangelogPage({ searchParams }: Props) {
+  await requireFeature("changelog")
+  const { page: rawPage } = await searchParams
+
+  const sorted = changelogSource
     .getPages()
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  const {
+    items: entries,
+    page,
+    pageCount,
+  } = paginate(sorted, rawPage, PAGE_SIZE)
 
   // Cover placeholders, generated from the files in /public at build time.
   const blurDataURLs = new Map(
@@ -91,6 +103,16 @@ export default async function ChangelogPage() {
           )
         })}
       </GridSection>
+
+      {pageCount > 1 && (
+        <GridSection innerClassName="py-6">
+          <Pagination
+            page={page}
+            pageCount={pageCount}
+            href={(n) => (n > 1 ? `/changelog?page=${n}` : "/changelog")}
+          />
+        </GridSection>
+      )}
     </>
   )
 }

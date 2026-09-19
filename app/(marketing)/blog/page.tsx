@@ -7,6 +7,7 @@ import {
 } from "@/components/marketing/category-tabs"
 import { GridSection } from "@/components/marketing/grid-section"
 import { BlurImage } from "@/components/shared/blur-image"
+import { Pagination } from "@/components/shared/pagination"
 import {
   Avatar,
   AvatarFallback,
@@ -19,6 +20,7 @@ import { blogSource } from "@/lib/content/blog"
 import { requireFeature } from "@/lib/features/guard"
 import { isFeatureEnabled } from "@/lib/features/resolve"
 import { buildMetadata } from "@/lib/metadata"
+import { paginate } from "@/lib/pagination"
 import { cn, formatDate } from "@/lib/utils"
 
 export const metadata = buildMetadata({
@@ -27,16 +29,24 @@ export const metadata = buildMetadata({
   path: "/blog",
 })
 
-type Props = { searchParams: Promise<{ category?: string }> }
+// Three full rows of the grid.
+const PAGE_SIZE = 9
+
+type Props = { searchParams: Promise<{ category?: string; page?: string }> }
 
 export default async function BlogPage({ searchParams }: Props) {
   await requireFeature("blog")
-  const { category } = await searchParams
+  const { category, page: rawPage } = await searchParams
 
-  const posts = blogSource
+  const filtered = blogSource
     .getPages()
     .filter((post) => !category || post.data.categories.includes(category))
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  const {
+    items: posts,
+    page,
+    pageCount,
+  } = paginate(filtered, rawPage, PAGE_SIZE)
 
   // Cover placeholders, generated from the files in /public at build time.
   const blurDataURLs = new Map(
@@ -171,6 +181,22 @@ export default async function BlogPage({ searchParams }: Props) {
             ))}
         </div>
       </GridSection>
+
+      {pageCount > 1 && (
+        <GridSection innerClassName="py-6">
+          <Pagination
+            page={page}
+            pageCount={pageCount}
+            href={(n) => {
+              const params = new URLSearchParams()
+              if (category) params.set("category", category)
+              if (n > 1) params.set("page", String(n))
+              const query = params.toString()
+              return query ? `/blog?${query}` : "/blog"
+            }}
+          />
+        </GridSection>
+      )}
     </>
   )
 }

@@ -24,7 +24,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Pagination } from "@/components/shared/pagination"
 import { Input } from "@/components/ui/input"
+import { paginate } from "@/lib/pagination"
+
+const PAGE_SIZES = [5, 10, 25, 50, 100]
 
 function getInitials(name: string) {
   return name
@@ -55,11 +59,18 @@ function actionsFor(user: SampleUser) {
 // Sample data with inert actions: each one points to Pro instead of running.
 export function UsersPreview() {
   const [query, setQuery] = useState("")
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
   const [lockedAction, setLockedAction] = useState<string | null>(null)
 
-  const users = sampleUsers.filter((user) =>
+  const matches = sampleUsers.filter((user) =>
     `${user.name} ${user.email}`.toLowerCase().includes(query.toLowerCase())
   )
+  const {
+    items: users,
+    pageCount,
+    page: current,
+  } = paginate(matches, page, pageSize)
 
   function lock(label: string) {
     setLockedAction(label)
@@ -85,7 +96,10 @@ export function UsersPreview() {
           placeholder="Search users"
           aria-label="Search users"
           className="bg-card pl-8 dark:bg-card"
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => {
+            setQuery(event.target.value)
+            setPage(1)
+          }}
         />
       </div>
 
@@ -180,6 +194,18 @@ export function UsersPreview() {
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        page={current}
+        pageCount={pageCount}
+        onPageChange={setPage}
+        pageSize={pageSize}
+        pageSizes={PAGE_SIZES}
+        onPageSizeChange={(size) => {
+          setPageSize(size)
+          setPage(1)
+        }}
+      />
     </div>
   )
 }

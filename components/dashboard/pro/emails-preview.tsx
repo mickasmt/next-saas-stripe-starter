@@ -1,6 +1,12 @@
+"use client"
+
+import { useState } from "react"
+
 import { SectionCard } from "@/components/dashboard/section-card"
 import { Badge } from "@/components/ui/badge"
+import { Pagination } from "@/components/shared/pagination"
 import { Button } from "@/components/ui/button"
+import { paginate } from "@/lib/pagination"
 
 const emails = [
   {
@@ -33,7 +39,27 @@ const emails = [
     status: "Opened",
     at: "Aug 12, 10:20",
   },
+  {
+    to: "max@acme.com",
+    template: "Sign-in link",
+    status: "Delivered",
+    at: "Aug 9, 18:02",
+  },
+  {
+    to: "billing@acme.com",
+    template: "Receipt",
+    status: "Delivered",
+    at: "Aug 1, 00:05",
+  },
+  {
+    to: "jo@acme.com",
+    template: "Invitation",
+    status: "Opened",
+    at: "Jul 28, 09:37",
+  },
 ]
+
+const PAGE_SIZE = 5
 
 function statusVariant(status: string) {
   if (status === "Bounced") return "destructive" as const
@@ -42,6 +68,9 @@ function statusVariant(status: string) {
 }
 
 export function EmailsPreview() {
+  const [page, setPage] = useState(1)
+  const { items, page: current, pageCount } = paginate(emails, page, PAGE_SIZE)
+
   return (
     <div className="flex flex-col gap-6">
       <SectionCard
@@ -50,7 +79,7 @@ export function EmailsPreview() {
         footer={<p>Delivery events come from your email provider.</p>}
       >
         <div className="divide-y rounded-md border bg-background">
-          {emails.map((email) => (
+          {items.map((email) => (
             <div
               key={`${email.to}-${email.at}`}
               className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
@@ -72,6 +101,12 @@ export function EmailsPreview() {
             </div>
           ))}
         </div>
+        <Pagination
+          page={current}
+          pageCount={pageCount}
+          onPageChange={setPage}
+          className="mt-4"
+        />
       </SectionCard>
     </div>
   )
