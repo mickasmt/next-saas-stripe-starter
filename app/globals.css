@@ -300,3 +300,30 @@
         transition-duration: 300ms;
     }
 }
+
+/* Native <details> open/close: the content box animates height and fades.
+   Browsers without ::details-content just snap open. */
+@utility faq-details {
+    interpolate-size: allow-keywords;
+
+    &::details-content {
+        height: 0;
+        overflow: clip;
+        opacity: 0;
+        transition:
+            height 240ms cubic-bezier(0.23, 1, 0.32, 1),
+            opacity 180ms ease-out,
+            content-visibility 240ms allow-discrete;
+    }
+
+    &[open]::details-content {
+        height: auto;
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &::details-content {
+            transition-duration: 0.01ms;
+        }
+    }
+}

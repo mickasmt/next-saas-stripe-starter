@@ -19,10 +19,10 @@ export function PricingFaq() {
 
       <div className="divide-y divide-grid-border md:col-span-2">
         {faqs.map((faq) => (
-          <details key={faq.question} className="group py-2 first:pt-0">
+          <details key={faq.question} className="group faq-details py-2 first:pt-0">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-3 text-left font-medium sm:text-lg [&::-webkit-details-marker]:hidden">
               {faq.question}
-              <ChevronDown className="size-5 shrink-0 text-muted-foreground transition-transform duration-300 group-open:rotate-180" />
+              <ChevronDown className="size-5 shrink-0 text-muted-foreground transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-open:rotate-180 motion-reduce:transition-none" />
             </summary>
             <p className="pb-3 text-sm text-pretty text-muted-foreground sm:text-base">
               {faq.answer}
