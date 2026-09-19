@@ -6,6 +6,7 @@ import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { nextCookies } from "better-auth/next-js"
 import { admin, organization } from "better-auth/plugins"
+import { eq } from "drizzle-orm"
 import { revalidateTag } from "next/cache"
 
 import { prepareAccountDeletion } from "@/lib/auth/delete-account"
@@ -42,6 +43,32 @@ export const auth = betterAuth({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
       prompt: "select_account",
+      // Better Auth only copies the provider profile when it creates the user,
+      // so an account that signed up with a password and linked Google later
+      // never gets an avatar, and a Google picture URL that rotated stays
+      // stored as a dead link. Re-applying the profile on every sign-in fixes
+      // both; the mapping below keeps Google a *default* only.
+      overrideUserInfoOnSignIn: true,
+      mapProfileToUser: async (profile) => {
+        const [existing] = await db
+          .select({ name: schema.user.name, image: schema.user.image })
+          .from(schema.user)
+          .where(eq(schema.user.email, profile.email.toLowerCase()))
+          .limit(1)
+
+        if (!existing) return {}
+
+        // An avatar the user uploaded themselves wins; one Google gave us is
+        // the provider's to refresh, so a rotated URL heals on the next login.
+        const stored = existing.image ?? undefined
+        const custom = stored !== undefined && !isProviderAvatar(stored)
+
+        // `undefined` leaves the stored column untouched.
+        return {
+          name: existing.name || profile.name,
+          image: custom ? stored : profile.picture,
+        }
+      },
     },
   },
 
@@ -142,6 +169,16 @@ export const auth = betterAuth({
     nextCookies(),
   ],
 })
+
+// Avatars served by a social provider rather than uploaded by the user. These
+// URLs are disposable: the provider rotates them whenever the photo changes.
+function isProviderAvatar(url: string) {
+  try {
+    return new URL(url).hostname.endsWith(".googleusercontent.com")
+  } catch {
+    return false
+  }
+}
 
 export type Session = typeof auth.$Infer.Session
 
