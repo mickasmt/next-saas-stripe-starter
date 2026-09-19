@@ -3,6 +3,7 @@
 import { LogOut } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 import { navIcons } from "@/components/dashboard/nav-icons"
 import type { ShellUser } from "@/components/dashboard/types"
@@ -32,7 +33,12 @@ export function HeaderUserMenu({
   const router = useRouter()
 
   async function signOut() {
-    await authClient.signOut()
+    const { error } = await authClient.signOut()
+    if (error) {
+      toast.error(error.message ?? "Couldn't sign you out.")
+      return
+    }
+    toast.success("Signed out.")
     router.refresh()
   }
 

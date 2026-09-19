@@ -4,6 +4,7 @@ import { Ellipsis, LogOut, Monitor, Moon, Sun, UserRound } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
+import { toast } from "sonner"
 
 import type { ShellUser } from "@/components/dashboard/types"
 import { UserAvatar } from "@/components/shared/user-avatar"
@@ -25,7 +26,12 @@ export function UserMenu({ user }: { user: ShellUser }) {
   const { theme, setTheme } = useTheme()
 
   async function signOut() {
-    await authClient.signOut()
+    const { error } = await authClient.signOut()
+    if (error) {
+      toast.error(error.message ?? "Couldn't sign you out.")
+      return
+    }
+    toast.success("Signed out.")
     router.replace("/login")
     router.refresh()
   }
