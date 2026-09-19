@@ -1,6 +1,7 @@
 // The Pro sales page. Self-contained: deleting this folder leaves the rest of
 // the site working, since only siteConfig.links.pro points here.
 import { ProCta } from "./_components/pro-cta"
+import { ProFaq } from "./_components/pro-faq"
 import { ProHero } from "./_components/pro-hero"
 import { proPurchaseHref } from "./_components/purchase"
 import { ProShowcase } from "@/components/marketing/pro-showcase"
@@ -18,6 +19,7 @@ export default function ProPage() {
     <>
       <ProHero />
       <ProShowcase intro={false} buyHref={proPurchaseHref} />
+      <ProFaq />
       <ProCta />
     </>
   )
