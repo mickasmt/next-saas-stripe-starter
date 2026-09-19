@@ -1,11 +1,14 @@
 import {
+  Activity,
   Check,
   ChevronDown,
   CreditCard,
+  LayoutTemplate,
   Lock,
   Mail,
   Minus,
   Route,
+  Search,
   Send,
   ShieldCheck,
   Sparkles,
@@ -96,6 +99,7 @@ const comparison: { label: string; free: boolean; pro: boolean }[] = [
   { label: "Seat-based team billing", free: false, pro: true },
   { label: "Transactional emails with Resend", free: false, pro: true },
   { label: "Error monitoring with Sentry", free: false, pro: true },
+  { label: "SEO: metadata, JSON-LD and sitemap", free: false, pro: true },
   { label: "Private repository and lifetime updates", free: false, pro: true },
 ]
 
@@ -131,6 +135,21 @@ const proExtras: { icon: LucideIcon; title: string; description: string }[] = [
     icon: UserCog,
     title: "Admin panel",
     description: "Real user management: roles, bans and impersonation.",
+  },
+  {
+    icon: Activity,
+    title: "Error monitoring",
+    description: "Sentry wired for server and client errors.",
+  },
+  {
+    icon: LayoutTemplate,
+    title: "Marketing components",
+    description: "Extra landing page sections, ready to drop in.",
+  },
+  {
+    icon: Search,
+    title: "SEO",
+    description: "Metadata, JSON-LD, sitemap and Open Graph images.",
   },
 ]
 

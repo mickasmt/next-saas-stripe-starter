@@ -47,4 +47,11 @@ export const proModules: ProModule[] = [
     description: "Real user management: roles, bans and logging in as a user.",
     url: "/pro",
   },
+  {
+    key: "sentry",
+    label: "Error tracking",
+    description:
+      "Sentry error and performance monitoring, off until a DSN is set.",
+    url: "/pro",
+  },
 ]
