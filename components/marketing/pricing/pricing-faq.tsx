@@ -4,6 +4,7 @@ import { faqs } from "@/components/marketing/pricing/data"
 
 // Heading on the left, questions on the right. Native <details>, so the
 // answers open without JavaScript and stay findable with the browser search.
+// The shared `name` keeps only one of them open at a time.
 
 export function PricingFaq() {
   return (
@@ -19,7 +20,11 @@ export function PricingFaq() {
 
       <div className="divide-y divide-grid-border md:col-span-2">
         {faqs.map((faq) => (
-          <details key={faq.question} className="group faq-details py-2 first:pt-0">
+          <details
+            key={faq.question}
+            name="pricing-faq"
+            className="group faq-details py-2 first:pt-0"
+          >
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-3 text-left font-medium sm:text-lg [&::-webkit-details-marker]:hidden">
               {faq.question}
               <ChevronDown className="size-5 shrink-0 text-muted-foreground transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] group-open:rotate-180 motion-reduce:transition-none" />
