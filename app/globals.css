@@ -176,6 +176,10 @@
 @theme {
     --animate-infinite-scroll: infinite-scroll 40s linear infinite;
     --animate-slide-up-fade: slide-up-fade 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+    /* Confirm drawer of the modules panel: UI speed, out quicker than in. */
+    --animate-drawer-in: slide-up-fade 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
+    --animate-drawer-out: slide-down-fade 180ms cubic-bezier(0.32, 0.72, 0, 1) both;
     --animate-deal-in: deal-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
     --animate-deal-out: deal-out 0.45s cubic-bezier(0.4, 0, 1, 1) both;
     --animate-shine: shine 4s ease-in-out infinite;
@@ -194,6 +198,18 @@
         to {
             opacity: 1;
             transform: translateY(0);
+        }
+    }
+
+    /* slide-up-fade played backwards. */
+    @keyframes slide-down-fade {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(var(--offset, 10px));
         }
     }
 
@@ -235,6 +251,27 @@
     }
 }
 
+/* Reduced motion: keep the fade, drop the travel. The drawer unmounts on
+   `animationend`, so the animation must still run. */
+@media (prefers-reduced-motion: reduce) {
+    @keyframes slide-up-fade {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slide-down-fade {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+}
 
 /* 60px graph paper, drawn in the current text color so a section can tint and
    mask it. Used by the marketing grid bands. */

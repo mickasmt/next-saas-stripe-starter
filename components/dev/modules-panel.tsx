@@ -120,11 +120,26 @@ export function ModulesPanel({
   const [, startTransition] = useTransition()
   const [error, setError] = useState(false)
   const [confirming, setConfirming] = useState<Pending | null>(null)
+  // `leaving` keeps the drawer on screen until its exit animation ends.
+  const [leaving, setLeaving] = useState<Pending | null>(null)
   const [own, applyOptimistic] = useOptimistic(
     serverOwn,
     (current, patch: OverridePatch | "reset") =>
       applyPatch(modules, current, patch)
   )
+
+  const drawer = confirming ?? leaving
+
+  function dismiss() {
+    setLeaving(confirming)
+    setConfirming(null)
+  }
+
+  // Cuts the drawer with no exit: the panel it floats over is going away too.
+  function clearDrawer() {
+    setConfirming(null)
+    setLeaving(null)
+  }
 
   const resolved = resolveModules(modules, services, own)
   const labelOf = (key: string) =>
@@ -151,7 +166,7 @@ export function ModulesPanel({
   }, [])
 
   function commit(patch: OverridePatch | "reset") {
-    setConfirming(null)
+    dismiss()
     setError(false)
     startTransition(async () => {
       applyOptimistic(patch)
@@ -181,29 +196,33 @@ export function ModulesPanel({
       open={open}
       onOpenChange={(value) => {
         setOpen(value)
-        if (!value) setConfirming(null)
+        if (!value) clearDrawer()
       }}
     >
+      {/* Fixed circle, inset 4px tighter to share a centre line with the dev indicator. */}
       <PopoverTrigger
         render={
           <button
             type="button"
+            title={`Modules (⌥M) · ${enabledCount} of ${modules.length} on`}
             aria-label={`Modules, ${enabledCount} of ${modules.length} on`}
-            className="fixed right-5 bottom-16 z-50 flex h-9 items-center gap-2 rounded-full border border-neutral-900/10 bg-background/85 pr-3.5 pl-3 text-xs font-medium shadow-lg shadow-neutral-900/10 backdrop-blur-md transition-[transform,background-color] outline-none hover:bg-background focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-[0.97] aria-expanded:bg-background dark:border-white/10 dark:shadow-black/40"
+            className="fixed right-[18px] bottom-16 z-50 flex size-10 items-center justify-center rounded-full border border-neutral-900/10 bg-background/85 shadow-lg shadow-neutral-900/10 backdrop-blur-md transition-[transform,background-color] outline-none hover:bg-background focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-[0.97] aria-expanded:bg-background dark:border-white/10 dark:shadow-black/40"
           />
         }
       >
-        <LayoutGrid className="size-3.5 text-muted-foreground" />
-        <span className="tabular-nums">
+        <LayoutGrid className="size-5 text-muted-foreground" />
+        {/* Enabled count; blue once a module differs from its default. */}
+        <span
+          aria-hidden
+          className={cn(
+            "absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] leading-none font-semibold tabular-nums ring-2 ring-background",
+            changedCount > 0
+              ? "bg-blue-500 text-white"
+              : "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
+          )}
+        >
           {enabledCount}
-          <span className="text-muted-foreground">/{modules.length}</span>
         </span>
-        {changedCount > 0 && (
-          <span
-            aria-hidden
-            className="-mr-1 size-1.5 rounded-full bg-blue-500"
-          />
-        )}
       </PopoverTrigger>
 
       <PopoverContent
@@ -239,7 +258,13 @@ export function ModulesPanel({
           <TabButton active={tab === "free"} onClick={() => setTab("free")}>
             Free
           </TabButton>
-          <TabButton active={tab === "pro"} onClick={() => setTab("pro")}>
+          <TabButton
+            active={tab === "pro"}
+            onClick={() => {
+              clearDrawer()
+              setTab("pro")
+            }}
+          >
             Pro
           </TabButton>
           <span
@@ -349,7 +374,7 @@ export function ModulesPanel({
                         confirming?.key === module.key ? confirming : null
                       }
                       onToggle={(on) => toggle(module.key, on)}
-                      onCancel={() => setConfirming(null)}
+                      onCancel={dismiss}
                       onRestore={() => toggle(module.key, module.default)}
                     />
                   )
@@ -421,20 +446,36 @@ export function ModulesPanel({
           </div>
 
           {/* Drawer: blurs the list and floats over it, panel height stays fixed. */}
-          {tab === "free" && confirming && (
+          {tab === "free" && drawer && (
             <>
               <div
                 aria-hidden
-                onClick={() => setConfirming(null)}
-                className="absolute inset-0 animate-in bg-popover/50 backdrop-blur-[3px] duration-200 fade-in"
+                onClick={dismiss}
+                className={cn(
+                  "absolute inset-0 bg-popover/50 backdrop-blur-[3px]",
+                  confirming
+                    ? "animate-in duration-200 fade-in"
+                    : "pointer-events-none animate-out fill-mode-forwards duration-[180ms] fade-out"
+                )}
               />
-              <div className="absolute inset-x-1.5 bottom-1.5 animate-slide-up-fade [--offset:6px]">
+              <div
+                inert={!confirming}
+                // Unmount after the exit; ignore animations bubbling from children.
+                onAnimationEnd={(event) => {
+                  if (event.target !== event.currentTarget) return
+                  if (!confirming) setLeaving(null)
+                }}
+                className={cn(
+                  "absolute inset-x-1.5 bottom-1.5 [--offset:6px]",
+                  confirming ? "animate-drawer-in" : "animate-drawer-out"
+                )}
+              >
                 <ConfirmChange
-                  module={modules.find((m) => m.key === confirming.key)!}
-                  pending={confirming}
+                  module={modules.find((m) => m.key === drawer.key)!}
+                  pending={drawer}
                   labelOf={labelOf}
-                  onConfirm={() => commit(confirming.change.patch)}
-                  onCancel={() => setConfirming(null)}
+                  onConfirm={() => commit(drawer.change.patch)}
+                  onCancel={dismiss}
                 />
               </div>
             </>

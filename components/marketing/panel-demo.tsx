@@ -111,6 +111,8 @@ const IDLE_RESUME_MS = 5000
 export function PanelDemo() {
   const [own, setOwn] = useState(initial)
   const [confirming, setConfirming] = useState<Pending | null>(null)
+  // `leaving` keeps the drawer on screen until its exit animation ends.
+  const [leaving, setLeaving] = useState<Pending | null>(null)
   const [copied, setCopied] = useState(false)
   const [step, setStep] = useState(0)
   const [inView, setInView] = useState(false)
@@ -182,6 +184,7 @@ export function PanelDemo() {
       const panel = panelRef.current
       if (panel) setCursor({ x: panel.clientWidth - 40, y: panel.clientHeight })
     }
+    const authPending: Pending = { key: "auth", on: false, change: authOff }
     const scene: SceneStep[] = [
       { ms: 1200, run: park },
       { ms: 400, run: () => pointAt("li:has(#panel-demo-auth) [role=switch]") },
@@ -190,7 +193,7 @@ export function PanelDemo() {
         ms: 900,
         run: () => {
           press()
-          setConfirming({ key: "auth", on: false, change: authOff })
+          setConfirming(authPending)
         },
       },
       { ms: 1500, run: () => pointAt("[data-demo=confirm]") },
@@ -198,6 +201,8 @@ export function PanelDemo() {
         ms: 900,
         run: () => {
           press()
+          // `dismiss()` inlined: a render-scoped dep would restart the timer.
+          setLeaving(authPending)
           setConfirming(null)
           flip("auth", false)
         },
@@ -272,10 +277,18 @@ export function PanelDemo() {
     clearTimeout(idleTimer.current)
     idleTimer.current = setTimeout(() => {
       setConfirming(null)
+      setLeaving(null)
       setOwn(initial)
       setStep(0)
       setTouched(false)
     }, IDLE_RESUME_MS)
+  }
+
+  const drawer = confirming ?? leaving
+
+  function dismiss() {
+    setLeaving(confirming)
+    setConfirming(null)
   }
 
   const resolved = resolveModules(demoModules, demoServices, own)
@@ -294,7 +307,7 @@ export function PanelDemo() {
   }
 
   function commit(patch: Change["patch"] | "reset") {
-    setConfirming(null)
+    dismiss()
     setOwn((current) => applyPatch(demoModules, current, patch))
   }
 
@@ -357,7 +370,7 @@ export function PanelDemo() {
                     confirming?.key === module.key ? confirming : null
                   }
                   onToggle={(on) => toggle(module.key, on)}
-                  onCancel={() => setConfirming(null)}
+                  onCancel={dismiss}
                 />
               ))}
             </ul>
@@ -395,20 +408,36 @@ export function PanelDemo() {
             </footer>
 
             {/* Drawer: blurs the list and floats over it, panel height stays fixed. */}
-            {confirming && (
+            {drawer && (
               <>
                 <div
                   aria-hidden
-                  onClick={() => setConfirming(null)}
-                  className="absolute inset-0 animate-in bg-popover/50 backdrop-blur-[3px] duration-200 fade-in"
+                  onClick={dismiss}
+                  className={cn(
+                    "absolute inset-0 bg-popover/50 backdrop-blur-[3px]",
+                    confirming
+                      ? "animate-in duration-200 fade-in"
+                      : "pointer-events-none animate-out duration-[180ms] fill-mode-forwards fade-out"
+                  )}
                 />
-                <div className="absolute inset-x-1.5 bottom-1.5 animate-slide-up-fade [--offset:6px]">
+                <div
+                  inert={!confirming}
+                  // Unmount after the exit animation.
+                  onAnimationEnd={(event) => {
+                    if (event.target !== event.currentTarget) return
+                    if (!confirming) setLeaving(null)
+                  }}
+                  className={cn(
+                    "absolute inset-x-1.5 bottom-1.5 [--offset:6px]",
+                    confirming ? "animate-drawer-in" : "animate-drawer-out"
+                  )}
+                >
                   <ConfirmChange
-                    module={demoModules.find((m) => m.key === confirming.key)!}
-                    pending={confirming}
+                    module={demoModules.find((m) => m.key === drawer.key)!}
+                    pending={drawer}
                     labelOf={labelOf}
-                    onConfirm={() => commit(confirming.change.patch)}
-                    onCancel={() => setConfirming(null)}
+                    onConfirm={() => commit(drawer.change.patch)}
+                    onCancel={dismiss}
                   />
                 </div>
               </>
