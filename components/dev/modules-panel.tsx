@@ -10,11 +10,15 @@ import {
   CreditCard,
   History,
   KeyRound,
+  Lock,
+  Mail,
+  Rocket,
+  Armchair,
+  Users,
   LayoutGrid,
   Newspaper,
   RotateCcw,
   ShieldCheck,
-  Sparkles,
   X,
   type LucideIcon,
 } from "lucide-react"
@@ -84,6 +88,15 @@ const appearance: Record<string, { icon: LucideIcon; tint: string }> = {
     icon: History,
     tint: "bg-indigo-100 text-indigo-600 dark:bg-indigo-400/15 dark:text-indigo-300",
   },
+}
+
+const proAppearance: Record<string, { icon: LucideIcon }> = {
+  onboarding: { icon: Rocket },
+  emails: { icon: Mail },
+  teams: { icon: Users },
+  seats: { icon: Armchair },
+  security: { icon: Lock },
+  adminPro: { icon: ShieldCheck },
 }
 
 const fallbackAppearance = {
@@ -222,149 +235,211 @@ export function ModulesPanel({
           </Button>
         </header>
 
-        <div className="flex gap-1 border-b p-1.5">
+        <div role="tablist" className="relative grid grid-cols-2 border-b">
           <TabButton active={tab === "free"} onClick={() => setTab("free")}>
             Free
           </TabButton>
           <TabButton active={tab === "pro"} onClick={() => setTab("pro")}>
             Pro
           </TabButton>
+          <span
+            aria-hidden
+            className={cn(
+              "absolute bottom-0 left-0 h-0.5 w-1/2 bg-foreground transition-transform duration-250 ease-[cubic-bezier(0.77,0,0.175,1)] motion-reduce:transition-none",
+              tab === "pro" && "translate-x-full"
+            )}
+          />
         </div>
 
-        <div className="max-h-[min(34rem,calc(100dvh-12rem))] overflow-x-hidden overflow-y-auto overscroll-contain">
-          {tab === "pro" ? (
-            <ul className="grid grid-cols-1 gap-0.5 p-1.5">
-              {proModules.map((module) => (
-                <li
-                  key={module.key}
-                  className="flex items-start gap-2.5 rounded-lg px-2.5 py-2"
-                >
-                  <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-md bg-violet-100 text-violet-600 dark:bg-violet-400/15 dark:text-violet-300">
-                    <Sparkles className="size-3.5" />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="font-medium">{module.label}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {module.description}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <ul className="grid grid-cols-1 gap-0.5 p-1.5">
-              {modules.map((module) => {
-                const state = resolved.get(module.key)!
-                const plan = state.enabled
-                  ? null
-                  : planChange(modules, services, own, module.key, true)
+        <div className="relative">
+          <div className="max-h-[min(34rem,calc(100dvh-12rem))] overflow-x-hidden overflow-y-auto overscroll-contain">
+            {/* Both lists share one cell, so the panel keeps the taller height. */}
+            <div className="grid">
+              <ul
+                inert={tab !== "pro"}
+                className={cn(
+                  "col-start-1 row-start-1 grid grid-cols-1 gap-0.5 p-1.5 transition-[opacity,translate,filter,visibility] duration-250 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:duration-150",
+                  tab !== "pro" &&
+                    "invisible translate-x-5 opacity-0 blur-[2px] motion-reduce:translate-x-0"
+                )}
+              >
+                {proModules.map((module) => {
+                  const { icon: Icon } =
+                    proAppearance[module.key] ?? fallbackAppearance
+                  return (
+                    <li
+                      key={module.key}
+                      className="flex items-center gap-3 rounded-xl px-2.5 py-2"
+                    >
+                      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-violet-600 dark:bg-violet-400/15 dark:text-violet-300">
+                        <Icon className="size-4" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium">
+                          {module.label}
+                        </p>
+                        <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                          {module.description}
+                        </p>
+                      </div>
+                      <Switch
+                        checked={false}
+                        disabled
+                        aria-label={`${module.label} (Pro)`}
+                      />
+                    </li>
+                  )
+                })}
+              </ul>
+              <ul
+                inert={tab !== "free"}
+                className={cn(
+                  "col-start-1 row-start-1 grid grid-cols-1 gap-0.5 p-1.5 transition-[opacity,translate,filter,visibility] duration-250 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:duration-150",
+                  tab !== "free" &&
+                    "invisible -translate-x-5 opacity-0 blur-[2px] motion-reduce:translate-x-0"
+                )}
+              >
+                {modules.map((module) => {
+                  const state = resolved.get(module.key)!
+                  const plan = state.enabled
+                    ? null
+                    : planChange(modules, services, own, module.key, true)
 
-                return (
-                  <ModuleRow
-                    key={module.key}
-                    module={module}
-                    enabled={state.enabled}
-                    changed={own[module.key] !== module.default}
-                    // A module that can't be switched on says why.
-                    hint={
-                      state.unconfigured.length > 0 && own[module.key] ? (
-                        <Warning>
-                          {listOf(
-                            state.unconfigured.map(
-                              (s) => serviceOf(s)?.providerLabel ?? s
-                            )
-                          )}{" "}
-                          isn&apos;t configured
-                        </Warning>
-                      ) : state.status === "blocked" ? (
-                        <Warning>
-                          Paused · needs {listOf(state.blockedBy.map(labelOf))}
-                        </Warning>
-                      ) : plan && !plan.possible ? (
-                        <span>
-                          Needs{" "}
-                          {listOf(
-                            blockingServices(module, modules, services).map(
-                              (s) => s.providerLabel
-                            )
-                          )}{" "}
-                          to be configured
-                        </span>
-                      ) : null
-                    }
-                    locked={!!plan && !plan.possible}
-                    missingServices={
-                      plan && !plan.possible
-                        ? blockingServices(module, modules, services)
-                        : []
-                    }
-                    confirming={
-                      confirming?.key === module.key ? confirming : null
-                    }
-                    labelOf={labelOf}
-                    onToggle={(on) => toggle(module.key, on)}
-                    onConfirm={() =>
-                      confirming && commit(confirming.change.patch)
-                    }
-                    onCancel={() => setConfirming(null)}
-                    onRestore={() => toggle(module.key, module.default)}
-                  />
-                )
-              })}
-            </ul>
-          )}
-        </div>
+                  return (
+                    <ModuleRow
+                      key={module.key}
+                      module={module}
+                      enabled={state.enabled}
+                      changed={own[module.key] !== module.default}
+                      // A module that can't be switched on says why.
+                      hint={
+                        state.unconfigured.length > 0 && own[module.key] ? (
+                          <Warning>
+                            {listOf(
+                              state.unconfigured.map(
+                                (s) => serviceOf(s)?.providerLabel ?? s
+                              )
+                            )}{" "}
+                            isn&apos;t configured
+                          </Warning>
+                        ) : state.status === "blocked" ? (
+                          <Warning>
+                            Paused · needs{" "}
+                            {listOf(state.blockedBy.map(labelOf))}
+                          </Warning>
+                        ) : plan && !plan.possible ? (
+                          <span>
+                            Needs{" "}
+                            {listOf(
+                              blockingServices(module, modules, services).map(
+                                (s) => s.providerLabel
+                              )
+                            )}{" "}
+                            to be configured
+                          </span>
+                        ) : null
+                      }
+                      locked={!!plan && !plan.possible}
+                      missingServices={
+                        plan && !plan.possible
+                          ? blockingServices(module, modules, services)
+                          : []
+                      }
+                      confirming={
+                        confirming?.key === module.key ? confirming : null
+                      }
+                      onToggle={(on) => toggle(module.key, on)}
+                      onCancel={() => setConfirming(null)}
+                      onRestore={() => toggle(module.key, module.default)}
+                    />
+                  )
+                })}
+              </ul>
+            </div>
+          </div>
 
-        {tab === "pro" ? (
-          <footer className="flex items-center justify-between gap-2 border-t border-violet-500/20 bg-violet-500/8 px-3 py-2 dark:border-violet-400/20 dark:bg-violet-400/8">
-            <p className="min-w-0 truncate pl-1 text-xs text-violet-900/70 dark:text-violet-100/70">
-              Installed like any other module.
-            </p>
-            <Button
-              size="xs"
-              nativeButton={false}
-              render={<Link href={siteConfig.links.pro} />}
-              className="shrink-0 border-violet-500/40 bg-violet-500/10 text-violet-700 hover:bg-violet-500/15 hover:text-violet-800 dark:border-violet-400/50 dark:bg-violet-400/15 dark:text-violet-100 dark:hover:bg-violet-400/25"
-            >
-              Get Pro
-            </Button>
-          </footer>
-        ) : (
-          <footer className="flex items-center justify-between gap-2 border-t bg-muted/40 px-3 py-2">
-            <p
+          <div className="grid">
+            <footer
+              inert={tab !== "pro"}
               className={cn(
-                "min-w-0 truncate pl-1 text-xs text-muted-foreground",
-                error && "text-destructive"
+                "col-start-1 row-start-1 flex items-center justify-between gap-2 border-t border-violet-500/20 bg-violet-500/8 px-3 py-2 transition-[opacity,visibility] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] dark:border-violet-400/20 dark:bg-violet-400/8",
+                tab !== "pro" && "invisible opacity-0"
               )}
             >
-              {error
-                ? "Couldn't apply the change. Try again."
-                : "For config/features.ts"}
-            </p>
-            <div className="flex shrink-0 items-center gap-1">
-              <CopyButton
-                text={configLines.join("\n")}
-                disabled={configLines.length === 0}
-                title={
-                  configLines.length === 0
-                    ? "All modules match their defaults"
-                    : "Copy the defaults to set in config/features.ts"
-                }
-              >
-                Copy config
-              </CopyButton>
+              <p className="min-w-0 truncate pl-1 text-xs text-violet-900/70 dark:text-violet-100/70">
+                Installed like any other module.
+              </p>
               <Button
                 size="xs"
-                variant="ghost"
-                disabled={changedCount === 0}
-                onClick={() => commit("reset")}
+                nativeButton={false}
+                render={<Link href={siteConfig.links.pro} />}
+                className="shrink-0 border-violet-500/40 bg-violet-500/10 text-violet-700 hover:bg-violet-500/15 hover:text-violet-800 dark:border-violet-400/50 dark:bg-violet-400/15 dark:text-violet-100 dark:hover:bg-violet-400/25"
               >
-                <RotateCcw />
-                Reset
+                Get Pro
               </Button>
-            </div>
-          </footer>
-        )}
+            </footer>
+            <footer
+              inert={tab !== "free"}
+              className={cn(
+                "col-start-1 row-start-1 flex items-center justify-between gap-2 border-t bg-muted/40 px-3 py-2 transition-[opacity,visibility] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]",
+                tab !== "free" && "invisible opacity-0"
+              )}
+            >
+              <p
+                className={cn(
+                  "min-w-0 truncate pl-1 text-xs text-muted-foreground",
+                  error && "text-destructive"
+                )}
+              >
+                {error
+                  ? "Couldn't apply the change. Try again."
+                  : "For config/features.ts"}
+              </p>
+              <div className="flex shrink-0 items-center gap-1">
+                <CopyButton
+                  text={configLines.join("\n")}
+                  disabled={configLines.length === 0}
+                  title={
+                    configLines.length === 0
+                      ? "All modules match their defaults"
+                      : "Copy the defaults to set in config/features.ts"
+                  }
+                >
+                  Copy config
+                </CopyButton>
+                <Button
+                  size="xs"
+                  variant="ghost"
+                  disabled={changedCount === 0}
+                  onClick={() => commit("reset")}
+                >
+                  <RotateCcw />
+                  Reset
+                </Button>
+              </div>
+            </footer>
+          </div>
+
+          {/* Drawer: blurs the list and floats over it, panel height stays fixed. */}
+          {tab === "free" && confirming && (
+            <>
+              <div
+                aria-hidden
+                onClick={() => setConfirming(null)}
+                className="absolute inset-0 animate-in bg-popover/50 backdrop-blur-[3px] duration-200 fade-in"
+              />
+              <div className="absolute inset-x-1.5 bottom-1.5 animate-slide-up-fade [--offset:6px]">
+                <ConfirmChange
+                  module={modules.find((m) => m.key === confirming.key)!}
+                  pending={confirming}
+                  labelOf={labelOf}
+                  onConfirm={() => commit(confirming.change.patch)}
+                  onCancel={() => setConfirming(null)}
+                />
+              </div>
+            </>
+          )}
+        </div>
       </PopoverContent>
     </Popover>
   )
@@ -382,13 +457,14 @@ function TabButton({
   return (
     <button
       type="button"
+      role="tab"
       onClick={onClick}
-      aria-pressed={active}
+      aria-selected={active}
       className={cn(
-        "h-7 flex-1 rounded-md text-xs font-medium transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "h-10 text-sm font-medium transition-colors outline-none focus-visible:bg-accent/60",
         active
-          ? "bg-accent text-foreground"
-          : "text-muted-foreground hover:bg-accent/60"
+          ? "text-foreground"
+          : "text-muted-foreground hover:text-foreground"
       )}
     >
       {children}
@@ -404,9 +480,7 @@ function ModuleRow({
   locked,
   missingServices,
   confirming,
-  labelOf,
   onToggle,
-  onConfirm,
   onCancel,
   onRestore,
 }: {
@@ -417,22 +491,20 @@ function ModuleRow({
   locked: boolean
   missingServices: PanelService[]
   confirming: Pending | null
-  labelOf: (key: string) => string
   onToggle: (on: boolean) => void
-  onConfirm: () => void
   onCancel: () => void
   onRestore: () => void
 }) {
   const id = useId()
   const [showEnv, setShowEnv] = useState(false)
   const { icon: Icon, tint } = appearance[module.key] ?? fallbackAppearance
-  const expanded = !!confirming || (showEnv && missingServices.length > 0)
+  const expanded = showEnv && missingServices.length > 0
 
   return (
     <li
       className={cn(
         "group/row rounded-xl transition-colors",
-        expanded ? "bg-muted/60" : "hover:bg-muted/50"
+        expanded || confirming ? "bg-muted/60" : "hover:bg-muted/50"
       )}
     >
       <div className="flex items-center gap-3 px-2.5 py-2">
@@ -462,12 +534,17 @@ function ModuleRow({
               <button
                 type="button"
                 onClick={onRestore}
-                title={`Modified in this browser. Click to restore (${module.default ? "on" : "off"}).`}
-                className="group/restore flex h-4 items-center gap-1 rounded-full bg-blue-500/10 px-1.5 text-[10px] font-medium text-blue-600 outline-none hover:bg-blue-500/15 focus-visible:ring-2 focus-visible:ring-ring/50 dark:text-blue-400"
+                title={`${module.default ? "Disabled" : "Enabled"} in this browser. Click to restore (${module.default ? "on" : "off"}).`}
+                className={cn(
+                  "group/restore flex h-4 items-center gap-1 rounded-full px-1.5 text-[10px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                  module.default
+                    ? "bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-400"
+                    : "bg-blue-500/10 text-blue-600 hover:bg-blue-500/15 dark:text-blue-400"
+                )}
               >
                 <span className="size-1 rounded-full bg-current group-hover/restore:hidden group-focus-visible/restore:hidden" />
                 <RotateCcw className="hidden size-2.5 group-hover/restore:block group-focus-visible/restore:block" />
-                Modified
+                {module.default ? "Disabled" : "Enabled"}
               </button>
             ) : null}
           </div>
@@ -504,21 +581,11 @@ function ModuleRow({
 
       <Collapsible open={expanded}>
         <div className="px-2.5 pb-2.5 pl-[3.375rem]">
-          {confirming ? (
-            <ConfirmChange
-              module={module}
-              pending={confirming}
-              labelOf={labelOf}
-              onConfirm={onConfirm}
-              onCancel={onCancel}
-            />
-          ) : (
-            <div className="grid gap-2">
-              {missingServices.map((service) => (
-                <EnvBlock key={service.key} service={service} />
-              ))}
-            </div>
-          )}
+          <div className="grid gap-2">
+            {missingServices.map((service) => (
+              <EnvBlock key={service.key} service={service} />
+            ))}
+          </div>
         </div>
       </Collapsible>
     </li>
@@ -543,7 +610,7 @@ function ConfirmChange({
   )
 
   return (
-    <div className="rounded-lg border bg-background p-3 shadow-xs">
+    <div className="rounded-lg border bg-background p-3 shadow-lg">
       <p className="text-xs leading-relaxed text-muted-foreground">
         {on ? (
           <>
