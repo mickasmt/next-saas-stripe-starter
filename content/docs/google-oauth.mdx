@@ -17,15 +17,35 @@ http://localhost:3000/api/auth/callback/google
 https://your-domain.com/api/auth/callback/google
 ```
 
-5. Copy the client ID and secret:
+5. Add the authorized JavaScript origins, used by the One Tap prompt below:
+
+```txt
+http://localhost:3000
+https://your-domain.com
+```
+
+6. Copy the client ID and secret:
 
 ```bash
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=... # same client ID
 ```
 
 <Callout type="warn">
   The redirect URI is built from `BETTER_AUTH_URL`. If they don't match exactly (protocol, domain, no trailing slash), Google refuses the sign-in with `redirect_uri_mismatch`.
+</Callout>
+
+## One Tap
+
+Signed-out visitors on the marketing pages get Google's own prompt in the top
+right corner, listing the accounts they are already signed in with. It needs
+`NEXT_PUBLIC_GOOGLE_CLIENT_ID`; leave that one empty to turn the prompt off and
+keep the button only.
+
+<Callout>
+  Google rate-limits the prompt: once a visitor dismisses it, it stays hidden
+  for a while. Use a fresh profile or an incognito window when testing.
 </Callout>
 
 ## Publish the app

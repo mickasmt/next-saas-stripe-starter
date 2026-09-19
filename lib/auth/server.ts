@@ -5,7 +5,7 @@ import { stripe } from "@better-auth/stripe"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { nextCookies } from "better-auth/next-js"
-import { admin, organization } from "better-auth/plugins"
+import { admin, oneTap, organization } from "better-auth/plugins"
 import { eq } from "drizzle-orm"
 import { revalidateTag } from "next/cache"
 
@@ -124,6 +124,8 @@ export const auth = betterAuth({
 
   plugins: [
     admin(),
+    // Reuses the Google client ID above; only the prompt lives client-side.
+    oneTap(),
     organization({
       teams: { enabled: true },
     }),
