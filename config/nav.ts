@@ -140,11 +140,6 @@ export const navPanels: NavPanel[] = [
         items: [
           { title: "Profile", href: "/dashboard/settings/profile" },
           {
-            title: "Notifications",
-            href: "/dashboard/settings/notifications",
-            pro: true,
-          },
-          {
             title: "Security",
             href: "/dashboard/settings/security",
             pro: true,

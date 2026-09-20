@@ -4,8 +4,6 @@ import { SectionCard } from "@/components/dashboard/section-card"
 import { LockedCard } from "@/components/dashboard/pro/locked-card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 
 const sessions = [
   {
@@ -29,26 +27,6 @@ const sessions = [
 export function SecurityPreview() {
   return (
     <div className="flex flex-col gap-6">
-      <LockedCard
-        title="Password"
-        description="Used to sign in with your email address."
-        hint="Please use 8 characters at minimum."
-        action="Update"
-      >
-        <div className="max-w-[300px]">
-          <Label htmlFor="new-password" className="sr-only">
-            New password
-          </Label>
-          <Input
-            id="new-password"
-            type="password"
-            disabled
-            defaultValue="password"
-            className="bg-background"
-          />
-        </div>
-      </LockedCard>
-
       <LockedCard
         title="Two-factor authentication"
         description="Ask for a code from your authenticator app at sign-in."
