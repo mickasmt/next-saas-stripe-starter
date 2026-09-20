@@ -33,9 +33,9 @@ import { cn } from "@/lib/utils"
 // dependency graph (components/dev/modules-graph.ts) with made-up data, and
 // keeps everything in local state: nothing is saved, no cookie is set.
 // Next to it, a mock of the app shows the routes each module serves, so a
-// switch visibly adds or removes pages. While nobody is touching it, it plays
-// a short scene on its own: turn Auth off, see Billing and Admin pause, then
-// bring it back.
+// switch visibly adds or removes pages. It loops a short scene on its own:
+// turn Auth off, see Billing and Admin pause, then bring it back. A click
+// pauses it until the visitor goes idle.
 
 const demoModules: PanelModule[] = [
   demoModule("auth", "Authentication", "Sign-in, sign-up and the dashboard."),
@@ -106,7 +106,7 @@ type Pending = { key: string; on: boolean; change: Change }
 // One step of the scene: how long to wait, then what to do.
 type SceneStep = { ms: number; run: () => void }
 // How long the demo stays still after the last touch before it plays again.
-const IDLE_RESUME_MS = 5000
+const IDLE_RESUME_MS = 4000
 
 export function PanelDemo() {
   const [own, setOwn] = useState(initial)
@@ -120,6 +120,8 @@ export function PanelDemo() {
   const [reducedMotion, setReducedMotion] = useState(true)
   const [cursor, setCursor] = useState({ x: 0, y: 0 })
   const [pressed, setPressed] = useState(false)
+  // True while the cursor is being placed: it jumps there instead of gliding.
+  const [snap, setSnap] = useState(true)
   const rootRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const idleTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
@@ -164,7 +166,7 @@ export function PanelDemo() {
       false
     )
     // The fake cursor: glide to a control, then click it. A click step waits
-    // long enough for the glide (700ms) to land first.
+    // long enough for the glide (500ms) to land first.
     const pointAt = (selector: string) => {
       const panel = panelRef.current
       const el = panel?.querySelector(selector)
@@ -185,20 +187,30 @@ export function PanelDemo() {
       if (panel) setCursor({ x: panel.clientWidth - 40, y: panel.clientHeight })
     }
     const authPending: Pending = { key: "auth", on: false, change: authOff }
+    // Start from the parked spot with no glide, so it never flies in from a corner.
+    if (step === 0) {
+      setSnap(true)
+      park()
+    }
     const scene: SceneStep[] = [
-      { ms: 1200, run: park },
-      { ms: 400, run: () => pointAt("li:has(#panel-demo-auth) [role=switch]") },
+      {
+        ms: 500,
+        run: () => {
+          setSnap(false)
+          pointAt("li:has(#panel-demo-auth) [role=switch]")
+        },
+      },
       // Auth pauses Billing and Admin, so it asks first.
       {
-        ms: 900,
+        ms: 600,
         run: () => {
           press()
           setConfirming(authPending)
         },
       },
-      { ms: 1500, run: () => pointAt("[data-demo=confirm]") },
+      { ms: 1000, run: () => pointAt("[data-demo=confirm]") },
       {
-        ms: 900,
+        ms: 600,
         run: () => {
           press()
           // `dismiss()` inlined: a render-scoped dep would restart the timer.
@@ -209,11 +221,11 @@ export function PanelDemo() {
       },
       // Click Authentication again to bring everything back.
       {
-        ms: 2400,
+        ms: 1600,
         run: () => pointAt("li:has(#panel-demo-auth) [role=switch]"),
       },
       {
-        ms: 900,
+        ms: 600,
         run: () => {
           press()
           flip("auth", true)
@@ -221,48 +233,48 @@ export function PanelDemo() {
       },
       // Independent modules just switch.
       {
-        ms: 1800,
+        ms: 1100,
         run: () => pointAt("li:has(#panel-demo-billing) [role=switch]"),
       },
       {
-        ms: 900,
+        ms: 600,
         run: () => {
           press()
           flip("billing", false)
         },
       },
       {
-        ms: 500,
+        ms: 300,
         run: () => pointAt("li:has(#panel-demo-docs) [role=switch]"),
       },
       {
-        ms: 900,
+        ms: 600,
         run: () => {
           press()
           flip("docs", false)
         },
       },
       {
-        ms: 500,
+        ms: 300,
         run: () => pointAt("li:has(#panel-demo-changelog) [role=switch]"),
       },
       {
-        ms: 900,
+        ms: 600,
         run: () => {
           press()
           flip("changelog", false)
         },
       },
-      { ms: 1800, run: () => pointAt("[data-demo=reset]") },
+      { ms: 1100, run: () => pointAt("[data-demo=reset]") },
       {
-        ms: 900,
+        ms: 600,
         run: () => {
           press()
           setOwn(initial)
         },
       },
-      { ms: 1500, run: park },
-      { ms: 3000, run: () => {} },
+      { ms: 1000, run: park },
+      { ms: 2000, run: () => {} },
     ]
     const id = setTimeout(() => {
       scene[step].run()
@@ -332,7 +344,6 @@ export function PanelDemo() {
       <div ref={panelRef} className="relative w-full max-w-sm shrink-0">
         <div
           onPointerDown={handOver}
-          onPointerMove={(e) => e.pointerType === "mouse" && handOver()}
           onFocusCapture={handOver}
           className="overflow-hidden rounded-2xl border bg-popover text-popover-foreground shadow-2xl ring-1 shadow-neutral-900/10 ring-foreground/5 dark:shadow-black/50"
         >
@@ -450,11 +461,11 @@ export function PanelDemo() {
           y={cursor.y}
           visible={playing}
           pressed={pressed}
+          snap={snap}
         />
 
         <p className="mt-3 text-center text-xs text-muted-foreground">
-          Try it: flip a switch. The real panel lives in the corner of your dev
-          server.
+          The real panel sits in the bottom corner of your dev server.
         </p>
       </div>
     </div>
@@ -704,18 +715,23 @@ function FakeCursor({
   y,
   visible,
   pressed,
+  snap,
 }: {
   x: number
   y: number
   visible: boolean
   pressed: boolean
+  snap: boolean
 }) {
   return (
     <div
       aria-hidden
       style={{ transform: `translate(${x}px, ${y}px)` }}
       className={cn(
-        "pointer-events-none absolute top-0 left-0 z-20 transition-[transform,opacity] duration-700 ease-in-out",
+        "pointer-events-none absolute top-0 left-0 z-20",
+        snap
+          ? "transition-opacity duration-300"
+          : "transition-[transform,opacity] duration-500 ease-in-out",
         visible ? "opacity-100" : "opacity-0 duration-200"
       )}
     >

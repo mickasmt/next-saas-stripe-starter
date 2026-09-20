@@ -108,32 +108,26 @@ const STEP_MS = 2800
 
 export function ModuleDeck() {
   const [step, setStep] = useState(0)
-  const [paused, setPaused] = useState(false)
 
   useEffect(() => {
-    if (paused) return
     const id = setTimeout(
       () => setStep((s) => s + 1),
       step === 0 ? FIRST_STEP_MS : STEP_MS
     )
     return () => clearTimeout(id)
-  }, [step, paused])
+  }, [step])
 
   const setup = setups[step % setups.length]
   const enabled = resolve(setup.on)
 
   return (
-    <div
-      className="flex flex-col items-center"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <ul className="flex flex-wrap justify-center gap-y-5 pt-4 pb-12 sm:flex-nowrap sm:gap-y-0">
+    <div className="flex flex-col items-center">
+      <ul className="flex flex-wrap justify-center gap-y-5 pt-4 pb-12 select-none sm:flex-nowrap sm:gap-y-0">
         {modules.map((module, index) => (
           <li
             key={module.key}
             className={cn(
-              "relative -mx-0.5 w-[100px] sm:-mx-2 sm:w-36 lg:-mx-2 lg:w-52",
+              "relative -mx-0.5 w-[100px] transition-[scale] duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] hover:scale-[1.04] motion-reduce:hover:scale-100 sm:-mx-2 sm:w-36 lg:-mx-2 lg:w-52",
               module.pose
             )}
             style={{ zIndex: index + 1 }}
