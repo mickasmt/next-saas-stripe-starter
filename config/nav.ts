@@ -51,6 +51,7 @@ export const dashboardNav: NavSection[] = [
         title: "Billing",
         href: "/dashboard/billing",
         icon: "billing",
+        pro: "partial",
         feature: "billing",
       },
       {
@@ -114,24 +115,29 @@ export const navPanels: NavPanel[] = [
             href: "/dashboard/organization/members",
             pro: true,
           },
-          // module:billing start
-          {
-            title: "Billing",
-            href: "/dashboard/organization/billing",
-            pro: true,
-            feature: "billing",
-          },
-          {
-            title: "Invoices",
-            href: "/dashboard/organization/invoices",
-            pro: true,
-            feature: "billing",
-          },
-          // module:billing end
         ],
       },
     ],
   },
+  // module:billing start
+  {
+    title: "Billing",
+    prefix: "/dashboard/billing",
+    sections: [
+      {
+        items: [
+          { title: "Plan", href: "/dashboard/billing", feature: "billing" },
+          {
+            title: "Invoices",
+            href: "/dashboard/billing/invoices",
+            pro: true,
+            feature: "billing",
+          },
+        ],
+      },
+    ],
+  },
+  // module:billing end
   {
     title: "Settings",
     prefix: "/dashboard/settings",
