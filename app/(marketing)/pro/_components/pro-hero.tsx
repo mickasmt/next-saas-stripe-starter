@@ -46,7 +46,7 @@ export function ProHero() {
           )}
         >
           Get Pro for {proPricing.earlyBird}
-          <span className="ml-2 text-sm text-primary-foreground/60 line-through">
+          <span className="text-sm text-primary-foreground/60 line-through">
             {proPricing.regular}
           </span>
         </Link>
@@ -62,7 +62,7 @@ export function ProHero() {
       </div>
 
       <p className="mt-4 animate-slide-up-fade text-center text-sm text-muted-foreground [animation-delay:350ms] motion-reduce:animate-none">
-        {proPricing.earlyBirdNote}, then {proPricing.regular}. One-time payment.
+        One-time payment.
       </p>
 
       <div className="mt-12 animate-slide-up-fade [animation-delay:400ms] motion-reduce:animate-none">

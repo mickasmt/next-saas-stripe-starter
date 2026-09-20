@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ArrowUpRight, Sparkles } from "lucide-react"
 
-import { LaunchBadge, proPricing } from "@/components/marketing/pro-showcase"
+import { proPricing } from "@/components/marketing/pro-showcase"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
@@ -20,7 +20,6 @@ export function ProCtaCard({ className }: { className?: string }) {
       <span className="flex items-center gap-1.5 text-xs font-medium text-violet-600 dark:text-violet-400">
         <Sparkles className="size-3.5" />
         SaaS Starter Pro
-        <LaunchBadge className="ml-1" />
       </span>
       <p className="mt-2 pr-6 text-sm font-semibold">
         Get Pro for {proPricing.earlyBird}{" "}

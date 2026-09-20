@@ -3,7 +3,7 @@ import Link from "next/link"
 
 import { proPurchaseHref } from "./purchase"
 import { GridSection } from "@/components/marketing/grid-section"
-import { LaunchBadge, proPricing } from "@/components/marketing/pro-showcase"
+import { proPricing } from "@/components/marketing/pro-showcase"
 import { buttonVariants } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
@@ -42,15 +42,11 @@ export function ProCta() {
             <Sparkles className="size-4" />
             SaaS Starter Pro
           </p>
-          <LaunchBadge className="mt-4" />
           <p className="mt-3 font-display text-5xl font-medium">
             <span className="mr-2 text-2xl text-muted-foreground line-through">
               {proPricing.regular}
             </span>
             {proPricing.earlyBird}
-          </p>
-          <p className="mt-2 text-sm font-medium text-violet-700 dark:text-violet-300">
-            {proPricing.earlyBirdNote}, then {proPricing.regular}.
           </p>
 
           <ul className="mt-6 space-y-2 text-sm">

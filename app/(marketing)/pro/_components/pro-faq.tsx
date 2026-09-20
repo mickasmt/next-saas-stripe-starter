@@ -10,7 +10,7 @@ import { proPricing } from "@/components/marketing/pro-showcase"
 const faqs: { question: string; answer: string }[] = [
   {
     question: "How much does Pro cost?",
-    answer: `One payment of ${proPricing.earlyBird}, no subscription and no per-seat fee. Taxes may apply depending on your country.`,
+    answer: `One payment of ${proPricing.earlyBird} for the launch, then ${proPricing.regular}. No subscription and no per-seat fee. Taxes may apply depending on your country.`,
   },
   {
     question: "Is it really a one-time payment?",
