@@ -695,7 +695,7 @@ function AppPreview({ isOn }: { isOn: (key: string) => boolean }) {
                       "rounded-full px-1.5 py-0.5 text-[10px] leading-none transition-colors duration-300",
                       live
                         ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-                        : "bg-neutral-500/10 text-muted-foreground"
+                        : "bg-red-500/10 text-red-600 dark:text-red-400"
                     )}
                   >
                     {live ? "200" : "404"}
