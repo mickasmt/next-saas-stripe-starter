@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { LoginForm } from "@/components/auth/login-form"
+import { AuthForm } from "@/components/auth/auth-form"
 import { siteConfig } from "@/config/site"
 import { getSafeRedirect } from "@/lib/auth/redirect"
 import { buildMetadata } from "@/lib/metadata"
@@ -10,6 +10,16 @@ export const metadata = buildMetadata({
   path: "/login",
   noIndex: true,
 })
+
+// Better Auth redirects a link that has expired or was already spent back
+// here, with the reason in `?error=`.
+function describeError(error?: string) {
+  if (!error) return null
+  if (error === "INVALID_TOKEN") {
+    return "That link has expired or was already used. Ask for a new one."
+  }
+  return "Something went wrong. Please try again."
+}
 
 export default async function LoginPage({
   searchParams,
@@ -21,14 +31,17 @@ export default async function LoginPage({
 
   return (
     <>
-      <h1 className="mb-8 text-center text-xl font-semibold">
+      <h1 className="mb-2 text-center text-xl font-semibold">
         Log in to your {siteConfig.name} account
       </h1>
+      <p className="mb-8 text-center text-sm text-muted-foreground">
+        Continue with Google. Email sign-in comes with Pro.
+      </p>
 
-      <LoginForm
+      <AuthForm
         redirectTo={redirectTo}
         googleEnabled={Boolean(process.env.GOOGLE_CLIENT_ID)}
-        initialError={error ? "Something went wrong. Please try again." : null}
+        initialError={describeError(error)}
       />
 
       <p className="mt-6 text-center text-sm text-muted-foreground">

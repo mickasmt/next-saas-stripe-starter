@@ -29,7 +29,6 @@ export const auth = betterAuth({
   secret,
   baseURL,
   database: drizzleAdapter(db, { provider: "pg", schema }),
-  emailAndPassword: { enabled: true },
   user: {
     deleteUser: {
       enabled: true,
@@ -44,7 +43,7 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
       prompt: "select_account",
       // Better Auth only copies the provider profile when it creates the user,
-      // so an account that signed up with a password and linked Google later
+      // so an account that linked Google later
       // never gets an avatar, and a Google picture URL that rotated stays
       // stored as a dead link. Re-applying the profile on every sign-in fixes
       // both; the mapping below keeps Google a *default* only.

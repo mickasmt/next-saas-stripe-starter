@@ -22,21 +22,19 @@ import { authClient } from "@/lib/auth/client"
 
 const CONFIRM_PHRASE = "delete my account"
 
-export function DeleteAccountCard({ hasPassword }: { hasPassword: boolean }) {
+export function DeleteAccountCard() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [phrase, setPhrase] = useState("")
-  const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
-  const ready = phrase === CONFIRM_PHRASE && (!hasPassword || password)
+  const ready = phrase === CONFIRM_PHRASE
 
   function onOpenChange(next: boolean) {
     setOpen(next)
     if (!next) {
       setPhrase("")
-      setPassword("")
       setError(null)
     }
   }
@@ -44,9 +42,9 @@ export function DeleteAccountCard({ hasPassword }: { hasPassword: boolean }) {
   function deleteAccount() {
     setError(null)
     startTransition(async () => {
-      const { error } = await authClient.deleteUser(
-        hasPassword ? { password } : {}
-      )
+      // Nothing to re-enter: sign-in has no password. Better Auth falls back
+      // to requiring a session fresh enough to prove the account is theirs.
+      const { error } = await authClient.deleteUser({})
       if (error) {
         setError(
           error.code === "SESSION_EXPIRED"
@@ -107,18 +105,6 @@ export function DeleteAccountCard({ hasPassword }: { hasPassword: boolean }) {
                   onChange={(event) => setPhrase(event.target.value)}
                 />
               </div>
-              {hasPassword && (
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="delete-password">Your password</Label>
-                  <Input
-                    id="delete-password"
-                    type="password"
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                  />
-                </div>
-              )}
               {error && <p className="text-destructive">{error}</p>}
             </form>
 

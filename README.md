@@ -12,14 +12,14 @@ An open-source, modular SaaS starter built with Next.js 16, Better Auth, Drizzle
 | --------- | ------------------------------------------------------ |
 | Framework | Next.js 16 (App Router, Turbopack)                     |
 | Database  | Neon Postgres + Drizzle ORM                            |
-| Auth      | Better Auth (email/password, Google, organizations)    |
+| Auth      | Better Auth (Google, organizations)                   |
 | Payments  | Stripe (Checkout, customer portal, webhooks)           |
 | UI        | Tailwind CSS v4, shadcn/ui, Base UI                    |
 | Content   | MDX with Fumadocs (docs, blog, changelog, legal pages) |
 
 ## Modules
 
-- **`auth`** — sign-in, sign-up and the dashboard: `/login`, `/register`, `/dashboard`. Requires Database and Auth. <!-- module:auth -->
+- **`auth`** — Google sign-in and the dashboard: `/login`, `/register`, `/dashboard`. Requires Database and Auth. <!-- module:auth -->
 - **`billing`** — subscriptions and customer portal: `/pricing`, `/dashboard/billing`. Depends on `auth`, requires Payments. <!-- module:billing -->
 - **`admin`** — user management for platform admins: `/admin`. Depends on `auth`. <!-- module:admin -->
 - **`docs`** — MDX documentation: `/docs`. <!-- module:docs -->

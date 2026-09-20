@@ -17,10 +17,8 @@ import { authClient } from "@/lib/auth/client"
 
 export function ProfileSettingsForm({
   user,
-  hasPassword,
 }: {
   user: ShellUser & { id: string; emailVerified: boolean }
-  hasPassword: boolean
 }) {
   const router = useRouter()
   const [name, setName] = useState(user.name)
@@ -78,7 +76,7 @@ export function ProfileSettingsForm({
         </div>
       </SectionCard>
 
-      <DeleteAccountCard hasPassword={hasPassword} />
+      <DeleteAccountCard />
     </div>
   )
 }
