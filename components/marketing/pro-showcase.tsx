@@ -129,7 +129,7 @@ const proExtras: { icon: LucideIcon; title: string; description: string }[] = [
   {
     icon: ShieldCheck,
     title: "Account security",
-    description: "Password changes, two-factor and session revocation.",
+    description: "Two-factor authentication and session revocation.",
   },
   {
     icon: UserCog,

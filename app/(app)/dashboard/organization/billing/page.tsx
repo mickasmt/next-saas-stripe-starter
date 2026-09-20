@@ -17,7 +17,7 @@ export default async function OrganizationBillingPage() {
       <div className="flex flex-col gap-6">
         <ProBanner
           title="Billing details are included in Pro"
-          description="This page shows sample data. Pro ships the working code: payment method, billing email, address and tax ID."
+          description="This page shows sample data. Pro ships the working code: billing email, address and tax ID."
         />
         <BillingPreview />
       </div>

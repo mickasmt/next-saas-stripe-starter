@@ -38,7 +38,7 @@ export const proModules: ProModule[] = [
   {
     key: "security",
     label: "Account security",
-    description: "Password changes, two-factor and session revocation.",
+    description: "Two-factor authentication and session revocation.",
     url: "/pro",
   },
   {

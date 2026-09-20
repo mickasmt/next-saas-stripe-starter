@@ -17,7 +17,7 @@ export default async function OrganizationInvoicesPage() {
       <div className="flex flex-col gap-6">
         <ProBanner
           title="Invoices are included in Pro"
-          description="This page shows sample data. Pro ships the working code: invoice history, PDF downloads and open balances."
+          description="This page shows sample data. Pro ships the working code: the next invoice, invoice history and PDF downloads."
         />
         <InvoicesPreview />
       </div>

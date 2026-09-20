@@ -14,7 +14,7 @@ export default function SecuritySettingsPage() {
       <div className="flex flex-col gap-6">
         <ProBanner
           title="Account security is included in Pro"
-          description="This page shows sample data. Pro ships the working code: password changes, two-factor and session revocation."
+          description="This page shows sample data. Pro ships the working code: two-factor and session revocation."
         />
         <SecurityPreview />
       </div>
