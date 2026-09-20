@@ -1,4 +1,5 @@
 import {
+  Bug,
   Building2,
   CreditCard,
   LayoutGrid,
@@ -21,4 +22,5 @@ export const navIcons: Record<NavIcon, LucideIcon> = {
   organization: Building2,
   settings: Settings,
   admin: ShieldCheck,
+  sentry: Bug,
 }

@@ -9,6 +9,7 @@ export type NavIcon =
   | "organization"
   | "settings"
   | "admin"
+  | "sentry"
 
 export type NavItem = {
   title: string
@@ -93,6 +94,14 @@ export const dashboardNav: NavSection[] = [
         title: "Admin panel",
         href: "/admin",
         icon: "admin",
+        authorizeOnly: "admin",
+        feature: "admin",
+      },
+      {
+        title: "Sentry",
+        href: "/admin/sentry",
+        icon: "sentry",
+        pro: true,
         authorizeOnly: "admin",
         feature: "admin",
       },
