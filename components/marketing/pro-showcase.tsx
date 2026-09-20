@@ -258,8 +258,10 @@ export async function ProShowcase({
             key={title}
             className="flex flex-col items-start gap-2 bg-background p-6 text-left lg:px-8 lg:py-8"
           >
-            <Icon className="size-4 shrink-0 text-violet-600 dark:text-violet-400" />
-            <h4 className="font-medium">{title}</h4>
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400">
+              <Icon className="size-4.5" />
+            </span>
+            <h4 className="mt-1 font-medium">{title}</h4>
             <p className="text-pretty text-muted-foreground">{description}</p>
           </div>
         ))}
@@ -603,22 +605,22 @@ function SeatBilling() {
 }
 
 function ProPanelRows() {
-  const rows: { label: string; description: string; pro: boolean }[] = [
+  const rows: { icon: LucideIcon; label: string; description: string }[] = [
+    { icon: Route, label: "Onboarding", description: "Guided first-run flow." },
     {
-      label: "Authentication",
-      description: "Sign-in, sign-up and the dashboard.",
-      pro: false,
-    },
-    { label: "Onboarding", description: "Guided first-run flow.", pro: true },
-    {
+      icon: Mail,
       label: "Email templates",
       description: "React Email, sent with Resend.",
-      pro: true,
     },
     {
+      icon: Users,
+      label: "Teams and roles",
+      description: "Invites, admin and member access.",
+    },
+    {
+      icon: CreditCard,
       label: "Team billing",
       description: "Per-seat Stripe subscriptions.",
-      pro: true,
     },
   ]
 
@@ -631,24 +633,13 @@ function ProPanelRows() {
             key={row.label}
             className="flex items-center gap-3 rounded-xl px-2.5 py-2"
           >
-            <span
-              className={cn(
-                "flex size-8 shrink-0 items-center justify-center rounded-lg",
-                row.pro
-                  ? "bg-violet-100 text-violet-600 dark:bg-violet-400/15 dark:text-violet-300"
-                  : "bg-sky-100 text-sky-600 dark:bg-sky-400/15 dark:text-sky-300"
-              )}
-            >
-              {row.pro ? (
-                <Sparkles className="size-4" />
-              ) : (
-                <Check className="size-4" />
-              )}
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-violet-100 text-violet-600 dark:bg-violet-400/15 dark:text-violet-300">
+              <row.icon className="size-4" />
             </span>
             <div className="min-w-0 flex-1">
               <p className="flex items-center gap-1.5 text-sm font-medium">
                 {row.label}
-                {row.pro && <ProBadge />}
+                <ProBadge />
               </p>
               <p className="truncate text-xs text-muted-foreground">
                 {row.description}
