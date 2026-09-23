@@ -1,7 +1,6 @@
 import Link from "next/link"
 import { ArrowUpRight, Sparkles } from "lucide-react"
 
-import { proPricing } from "@/components/marketing/pro-showcase"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 
@@ -11,6 +10,8 @@ export function ProCtaCard({ className }: { className?: string }) {
   return (
     <Link
       href={siteConfig.links.pro}
+      target="_blank"
+      rel="noreferrer"
       className={cn(
         "group relative block overflow-hidden rounded-xl border bg-background p-4 transition-colors hover:bg-background/60",
         className
@@ -21,14 +22,10 @@ export function ProCtaCard({ className }: { className?: string }) {
         <Sparkles className="size-3.5" />
         SaaS Starter Pro
       </span>
-      <p className="mt-2 pr-6 text-sm font-semibold">
-        Get Pro for {proPricing.earlyBird}{" "}
-        <span className="text-muted-foreground line-through">
-          {proPricing.regular}
-        </span>
-      </p>
+      <p className="mt-2 pr-6 text-sm font-semibold">About Pro</p>
       <p className="mt-1 text-sm text-muted-foreground">
-        Onboarding, teams and billing, ready to ship. One-time payment.
+        Onboarding, teams and billing, ready to ship. See the README for
+        details.
       </p>
     </Link>
   )

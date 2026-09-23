@@ -74,10 +74,12 @@ export async function SiteHeader() {
               {link.title}
             </Link>
           ))}
-          {/* Signed-in visitors get the "Get Pro" button instead. */}
+          {/* Signed-in visitors get the "About Pro" button instead. */}
           {!session && (
             <Link
               href={siteConfig.links.pro}
+              target="_blank"
+              rel="noreferrer"
               className={cn(linkClassName, "group flex items-center gap-1.5")}
             >
               <Sparkles className="size-3.5 text-violet-500 transition-transform group-hover:rotate-12 dark:text-violet-300" />
@@ -93,13 +95,15 @@ export async function SiteHeader() {
             <>
               <Link
                 href={siteConfig.links.pro}
+                target="_blank"
+                rel="noreferrer"
                 className={cn(
                   buttonVariants({ variant: "outline", size: "sm" }),
                   "border-violet-500/40 bg-violet-500/10 px-3 text-violet-700 hover:bg-violet-500/15 hover:text-violet-800 dark:border-violet-400/50 dark:bg-violet-400/15 dark:text-violet-100 dark:hover:bg-violet-400/25 dark:hover:text-white"
                 )}
               >
                 <Sparkles />
-                Get Pro
+                About Pro
               </Link>
               <HeaderUserMenu
                 user={{

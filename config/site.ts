@@ -7,6 +7,8 @@ const url =
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
     : "http://localhost:3000")
 
+const github = "https://github.com/mickasmt/next-saas-stripe-starter"
+
 export const siteConfig = {
   name: "SaaS Starter",
   // Full title of the home page, also used on social cards.
@@ -15,9 +17,11 @@ export const siteConfig = {
     "Open-source SaaS starter built with Next.js 16, Better Auth, Drizzle, Neon and Stripe.",
   url,
   links: {
-    github: "https://github.com/mickasmt/next-saas-stripe-starter",
+    github,
     pricing: "/pricing",
-    pro: "/pro",
+    // The Pro page isn't part of this repository; this points at the
+    // README section describing it, keyed to its "## Pro version" heading.
+    pro: `${github}#pro-version`,
     terms: "/terms",
     privacy: "/privacy",
   },

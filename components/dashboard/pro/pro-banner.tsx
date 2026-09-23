@@ -28,10 +28,12 @@ export function ProBanner({
       <Button
         size="sm"
         nativeButton={false}
-        render={<Link href={siteConfig.links.pro} />}
+        render={
+          <Link href={siteConfig.links.pro} target="_blank" rel="noreferrer" />
+        }
         className="shrink-0 self-start border-violet-500/40 bg-violet-500/10 text-violet-700 hover:bg-violet-500/15 hover:text-violet-800 sm:self-auto dark:border-violet-400/50 dark:bg-violet-400/15 dark:text-violet-100 dark:hover:bg-violet-400/25"
       >
-        Get Pro
+        About Pro
       </Button>
     </div>
   )

@@ -68,6 +68,8 @@ export async function HeroStarter() {
         </Link>
         <Link
           href={siteConfig.links.pro}
+          target="_blank"
+          rel="noreferrer"
           className={cn(
             buttonVariants({ variant: "outline", size: "lg" }),
             "px-5 shadow-sm hover:ring-4 hover:ring-neutral-200",
@@ -75,7 +77,7 @@ export async function HeroStarter() {
           )}
         >
           <Sparkles className="text-violet-500 dark:text-violet-300" />
-          Explore Pro
+          About Pro
         </Link>
       </div>
 

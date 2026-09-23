@@ -6,8 +6,8 @@ export function toastIncludedInPro(feature: string) {
   toast(`${feature} is included in Pro`, {
     description: "Pro ships the working code, storage setup included.",
     action: {
-      label: "Get Pro",
-      onClick: () => window.location.assign(siteConfig.links.pro),
+      label: "About Pro",
+      onClick: () => window.open(siteConfig.links.pro, "_blank"),
     },
   })
 }

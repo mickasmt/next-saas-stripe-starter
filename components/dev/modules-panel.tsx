@@ -397,10 +397,16 @@ export function ModulesPanel({
               <Button
                 size="xs"
                 nativeButton={false}
-                render={<Link href={siteConfig.links.pro} />}
+                render={
+                  <Link
+                    href={siteConfig.links.pro}
+                    target="_blank"
+                    rel="noreferrer"
+                  />
+                }
                 className="shrink-0 border-violet-500/40 bg-violet-500/10 text-violet-700 hover:bg-violet-500/15 hover:text-violet-800 dark:border-violet-400/50 dark:bg-violet-400/15 dark:text-violet-100 dark:hover:bg-violet-400/25"
               >
-                Get Pro
+                About Pro
               </Button>
             </footer>
             <footer
@@ -455,7 +461,7 @@ export function ModulesPanel({
                   "absolute inset-0 bg-popover/50 backdrop-blur-[3px]",
                   confirming
                     ? "animate-in duration-200 fade-in"
-                    : "pointer-events-none animate-out fill-mode-forwards duration-[180ms] fade-out"
+                    : "pointer-events-none animate-out duration-[180ms] fill-mode-forwards fade-out"
                 )}
               />
               <div
