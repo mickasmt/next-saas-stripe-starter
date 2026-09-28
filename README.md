@@ -8,6 +8,8 @@ An open-source, modular SaaS starter built with Next.js 16, Better Auth, Drizzle
 
 Need onboarding, teams, seat-based billing and transactional emails? **[Get Pro](https://buy.polar.sh/polar_cl_P0l5APsd2ke0F23jE8JZXBCJv5xHbJzAHOMMN1g6u8k)** — $99 early bird until Oct 12 (then $149), one-time payment. See [Pro version](#pro-version).
 
+https://github.com/user-attachments/assets/6e002fc2-5adf-458d-9f42-442746d82a60
+
 ## Stack
 
 | Layer     | Choice                                                 |
