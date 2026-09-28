@@ -6,6 +6,8 @@ An open-source, modular SaaS starter built with Next.js 16, Better Auth, Drizzle
 - **Typed end to end**: TypeScript, Drizzle schema, Zod validation, server actions.
 - **Ready to charge**: Stripe Checkout, customer portal, webhooks, plan prices read from Stripe.
 
+Need onboarding, teams, seat-based billing and transactional emails? **[Get Pro](https://buy.polar.sh/polar_cl_P0l5APsd2ke0F23jE8JZXBCJv5xHbJzAHOMMN1g6u8k)** — one-time payment, see [Pro version](#pro-version).
+
 ## Stack
 
 | Layer     | Choice                                                 |
@@ -90,6 +92,8 @@ Titles, descriptions, canonical URLs and social cards come from `lib/metadata.ts
 
 A paid version adds what comes after launch — onboarding, transactional emails, team management and seat-based billing — on the same foundation. It isn't part of this repository; every "About Pro" link in the app points back to this section.
 
+**[Get Pro](https://buy.polar.sh/polar_cl_P0l5APsd2ke0F23jE8JZXBCJv5xHbJzAHOMMN1g6u8k)** — one-time payment, no subscription.
+
 <!-- TODO: replace with a short screen recording — onboarding, team members, emails — hosted on GitHub or linked to YouTube. -->
 
 ### What's included
@@ -123,7 +127,7 @@ A paid version adds what comes after launch — onboarding, transactional emails
 
 ### Pricing
 
-One-time payment, no subscription. [Get Pro](https://buy.polar.sh/polar_cl_P0l5APsd2ke0F23jE8JZXBCJv5xHbJzAHOMMN1g6u8k)
+One-time payment, no subscription. **[Get Pro](https://buy.polar.sh/polar_cl_P0l5APsd2ke0F23jE8JZXBCJv5xHbJzAHOMMN1g6u8k)**
 
 The dashboard previews those features on locked pages: sample data, inert controls and an "About Pro" banner. When you ship your own product, delete `components/dashboard/pro`, the routes that use it and the `pro: true` nav items in `config/nav.ts`.
 
