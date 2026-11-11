@@ -8,6 +8,7 @@ import {
   Rocket,
   Settings,
   ShieldCheck,
+  Sparkles, // module:assistant
   type LucideIcon,
 } from "lucide-react"
 
@@ -23,4 +24,5 @@ export const navIcons: Record<NavIcon, LucideIcon> = {
   settings: Settings,
   admin: ShieldCheck,
   sentry: Bug,
+  assistant: Sparkles, // module:assistant
 }

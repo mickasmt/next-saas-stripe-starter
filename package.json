@@ -18,9 +18,13 @@
     "auth:generate": "auth generate --config lib/auth/server.ts --output lib/db/schema/auth.ts --yes && prettier --write lib/db/schema/auth.ts"
   },
   "dependencies": {
+    "@ai-sdk/react": "^4.0.167",
+    "@aws-sdk/client-s3": "^3.1163.0",
     "@base-ui/react": "^1.8.0",
     "@better-auth/stripe": "^1.7.5",
+    "@neon/ai-sdk-provider": "^1.3.2",
     "@neondatabase/serverless": "^1.1.0",
+    "ai": "^7.0.163",
     "better-auth": "^1.7.5",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.3.0",
@@ -42,6 +46,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@neon/config": "^1.14.0",
     "@next/env": "16.3.4",
     "@tailwindcss/postcss": "^4",
     "@types/mdx": "^2.0.14",
