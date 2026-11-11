@@ -47,6 +47,33 @@ export const foundation = defineFoundation({
     ],
     setupUrl: "https://dashboard.stripe.com/test/apikeys",
   },
+  // module:uploads start
+  // Optional. Variables written by `neon deploy` (see neon.ts) or created by
+  // hand: https://neon.com/docs/storage/get-started
+  storage: {
+    label: "File storage",
+    provider: "neon",
+    providerLabel: "Neon Object Storage",
+    requiredEnv: [
+      "AWS_ACCESS_KEY_ID",
+      "AWS_SECRET_ACCESS_KEY",
+      "AWS_ENDPOINT_URL_S3",
+      "AWS_REGION",
+    ],
+    setupUrl: "https://neon.com/docs/storage/get-started",
+  },
+  // module:uploads end
+  // module:assistant start
+  // Optional. Variables written by `neon deploy` (see neon.ts) or copied from
+  // the Console: https://neon.com/docs/ai-gateway/get-started
+  ai: {
+    label: "AI",
+    provider: "neon",
+    providerLabel: "Neon AI Gateway",
+    requiredEnv: ["NEON_AI_GATEWAY_BASE_URL", "NEON_AI_GATEWAY_TOKEN"],
+    setupUrl: "https://neon.com/docs/ai-gateway/get-started",
+  },
+  // module:assistant end
 })
 
 export type FoundationKey = keyof typeof foundation

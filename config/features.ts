@@ -65,6 +65,43 @@ export const features = defineFeatures({
     routes: ["/admin"],
   },
   // module:admin end
+  // module:uploads start
+  // Avatar and organization logo uploads. Stays off until Neon Object Storage
+  // is configured: the avatar cards keep their default behavior until then.
+  uploads: {
+    label: "File uploads",
+    description: "Avatar and organization logo uploads on Neon Object Storage.",
+    default: true,
+    dependsOn: ["auth"],
+    requires: ["storage"],
+    files: [
+      "app/api/files",
+      "app/api/uploads",
+      "components/uploads",
+      "modules/uploads",
+    ],
+    packages: ["@aws-sdk/client-s3"],
+  },
+  // module:uploads end
+  // module:assistant start
+  // A streaming chat page. Stays off until Neon AI Gateway is configured.
+  assistant: {
+    label: "AI assistant",
+    description:
+      "A chat assistant in the dashboard, powered by Neon AI Gateway.",
+    default: true,
+    dependsOn: ["auth"],
+    requires: ["ai"],
+    files: [
+      "app/(app)/dashboard/assistant",
+      "app/api/assistant",
+      "components/assistant",
+      "modules/assistant",
+    ],
+    packages: ["ai", "@ai-sdk/react", "@neon/ai-sdk-provider"],
+    routes: ["/dashboard/assistant"],
+  },
+  // module:assistant end
   // module:docs start
   docs: {
     label: "Documentation",

@@ -17,8 +17,10 @@ import { authClient } from "@/lib/auth/client"
 
 export function ProfileSettingsForm({
   user,
+  canUpload, // module:uploads
 }: {
   user: ShellUser & { id: string; emailVerified: boolean }
+  canUpload?: boolean // module:uploads
 }) {
   const router = useRouter()
   const [name, setName] = useState(user.name)
@@ -38,7 +40,11 @@ export function ProfileSettingsForm({
 
   return (
     <div className="flex flex-col gap-6">
-      <AvatarCard title="Avatar" description="This is your avatar.">
+      <AvatarCard
+        title="Avatar"
+        description="This is your avatar."
+        uploadTarget={canUpload ? "avatar" : undefined} // module:uploads
+      >
         <UserAvatar user={user} fallbackClassName="text-xl" />
       </AvatarCard>
 

@@ -16,6 +16,14 @@ import * as schema from "@/lib/db/schema"
 import { stripeClient } from "@/lib/stripe"
 import { plans } from "@/modules/billing/plans"
 import { PRICES_CACHE_TAG } from "@/modules/billing/prices-tag"
+// module:uploads start
+import {
+  avatarPrefix,
+  bestEffort,
+  deleteFilesByPrefix,
+  logoPrefix,
+} from "@/modules/uploads/storage"
+// module:uploads end
 
 // Better Auth validates its config as soon as this file is imported, and
 // rejects in production without a secret, even with the auth module off. The
@@ -33,6 +41,12 @@ export const auth = betterAuth({
     deleteUser: {
       enabled: true,
       beforeDelete: (user) => prepareAccountDeletion(user.id),
+      // module:uploads start
+      afterDelete: (user) =>
+        bestEffort("deleting the user's files", () =>
+          deleteFilesByPrefix(avatarPrefix(user.id))
+        ),
+      // module:uploads end
     },
   },
   socialProviders: {
@@ -127,6 +141,14 @@ export const auth = betterAuth({
     oneTap(),
     organization({
       teams: { enabled: true },
+      // module:uploads start
+      organizationHooks: {
+        afterDeleteOrganization: ({ organization }) =>
+          bestEffort("deleting the organization's files", () =>
+            deleteFilesByPrefix(logoPrefix(organization.id))
+          ),
+      },
+      // module:uploads end
     }),
     stripe({
       stripeClient,

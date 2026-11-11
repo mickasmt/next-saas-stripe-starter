@@ -10,6 +10,7 @@ export type NavIcon =
   | "settings"
   | "admin"
   | "sentry"
+  | "assistant" // module:assistant
 
 export type NavItem = {
   title: string
@@ -42,6 +43,14 @@ export const dashboardNav: NavSection[] = [
   {
     items: [
       { title: "Overview", href: "/dashboard", icon: "dashboard" },
+      // module:assistant start
+      {
+        title: "Assistant",
+        href: "/dashboard/assistant",
+        icon: "assistant",
+        feature: "assistant",
+      },
+      // module:assistant end
       {
         title: "Onboarding",
         href: "/dashboard/onboarding",

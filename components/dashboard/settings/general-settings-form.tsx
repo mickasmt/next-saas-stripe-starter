@@ -22,9 +22,11 @@ type Organization = {
 export function GeneralSettingsForm({
   organization,
   canEdit,
+  canUpload, // module:uploads
 }: {
   organization: Organization
   canEdit: boolean
+  canUpload?: boolean // module:uploads
 }) {
   const router = useRouter()
   const [name, setName] = useState(organization.name)
@@ -115,6 +117,7 @@ export function GeneralSettingsForm({
       <AvatarCard
         title="Organization Avatar"
         description="This is your organization's avatar."
+        uploadTarget={canUpload && canEdit ? "logo" : undefined} // module:uploads
       >
         <OrganizationAvatar
           organization={organization}

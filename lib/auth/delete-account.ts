@@ -3,6 +3,13 @@ import { and, count, eq, inArray, isNull, ne, notInArray } from "drizzle-orm"
 
 import { db } from "@/lib/db"
 import { member, organization, subscription } from "@/lib/db/schema"
+// module:uploads start
+import {
+  bestEffort,
+  deleteFilesByPrefix,
+  logoPrefix,
+} from "@/modules/uploads/storage"
+// module:uploads end
 
 const ENDED_STATUSES = ["canceled", "incomplete", "incomplete_expired"]
 
@@ -80,4 +87,14 @@ export async function prepareAccountDeletion(userId: string) {
   await db
     .delete(organization)
     .where(inArray(organization.id, soloOrganizationIds))
+
+  // module:uploads start
+  // Deleted directly rather than through the organization API, so the
+  // afterDeleteOrganization hook doesn't run for these.
+  for (const organizationId of soloOrganizationIds) {
+    await bestEffort("deleting the organization's files", () =>
+      deleteFilesByPrefix(logoPrefix(organizationId))
+    )
+  }
+  // module:uploads end
 }
